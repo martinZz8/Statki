@@ -134,10 +134,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Deploying.cpp" />
+    <ClCompile Include="Field.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Ship.cpp" />
+    <ClCompile Include="State.cpp" />
     <ClCompile Include="Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Board.h" />
+    <ClInclude Include="Deploying.h" />
+    <ClInclude Include="Field.h" />
+    <ClInclude Include="Ship.h" />
+    <ClInclude Include="State.h" />
     <ClInclude Include="Utils.h" />
   </ItemGroup>
   <ItemGroup>
