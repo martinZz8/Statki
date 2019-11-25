@@ -6,11 +6,11 @@ Ship::Ship(Utils& utils) :u(utils)
 	number_of_fields = 0;
 }
 
-Ship::Ship()
-{
-	remaining_parts = 0;
-	number_of_fields = 0;
-}
+//Ship::Ship()
+//{
+//	remaining_parts = 0;
+//	number_of_fields = 0;
+//}
 
 Ship::~Ship()
 {

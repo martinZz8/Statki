@@ -6,7 +6,7 @@ using namespace std;
 
 class Board
 {
-	Utils u;
+	Utils& u;
 	float offset_x; //offset w osi x
 	float offset_y; //offset w osi y
 	float width; //szerokosc
@@ -22,7 +22,7 @@ class Board
 
 public:
 	Board(Utils& utils, float offset_x, float offset_y);
-	Board();
+	/*Board();*/
 	~Board();
 	float getXOffset();
 	float getYOffset();

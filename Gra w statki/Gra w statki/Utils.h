@@ -14,6 +14,7 @@ using namespace std;
 #define WINDOW_MENU 1
 #define WINDOW_GAME 2
 #define WINDOW_DEPLOYING 3
+#define AUDIO_PLACED_SHIP 0
 
 
 class Utils
@@ -31,8 +32,8 @@ class Utils
 	int number_of_three_masted_ships; //ilosc trojmasztowcow
 	int number_of_four_masted_ships; //ilosc czteromasztowcow
 public:
-	static int ship_size; //rozmiar statku w danym momencie
-	static int ship_orientation; //orientacja statku w danym momencie (1 - do dolu, 2 - na bok)
+	int ship_size; //rozmiar statku w danym momencie (ilosc fieldow)
+	int ship_orientation; //orientacja statku w danym momencie (1 - do dolu, 2 - na bok)
 	Utils();
 	~Utils();
 	ALLEGRO_COLOR color(float r, float g, float b);

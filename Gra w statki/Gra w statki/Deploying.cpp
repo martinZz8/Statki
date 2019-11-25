@@ -1,17 +1,14 @@
 #include "Deploying.h"
 
-Deploying::Deploying(Utils& utils, Board& board1, Board& board2):windowID(WINDOW_DEPLOYING)
+Deploying::Deploying(Utils& utils, Board& board1, Board& board2):windowID(WINDOW_DEPLOYING), u(utils), b1(board1), b2(board2)
 {
-	u = utils;
-	b1 = board1;
-	b2 = board2;
 	
 }
 
-Deploying::Deploying():windowID(WINDOW_DEPLOYING)
-{
-	
-}
+//Deploying::Deploying():windowID(WINDOW_DEPLOYING)
+//{
+//	
+//}
 
 Deploying::~Deploying()
 {

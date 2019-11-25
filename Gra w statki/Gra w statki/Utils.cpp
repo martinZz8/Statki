@@ -1,10 +1,9 @@
 #include "Utils.h"
 
-int Utils::ship_size = 1;
-int Utils::ship_orientation = 1;
-
 Utils::Utils()
 {
+	ship_size = 1;
+	ship_orientation = 1;
 	audio_samples = 1; //do zmiany jezeli bedzie wiecej audio sampli
 	display_x = 1000;
 	display_y = 600;

@@ -1,3 +1,6 @@
+//PRZEKAZAC MOUSE_X I MOUSE_Y DO UTILSOW
+//PRZEKAZAC MOUSE_CLICKED DO UTILOW (ZMIENIAC POIEDZY PRZYCISNIECIEM - TRUE, A PUSZCZENIEM - FALSE)
+
 #pragma once
 #include "Utils.h"
 #include "Deploying.h"
@@ -48,6 +51,9 @@ int main()
 	float mouse_x = 0, mouse_y = 0;
 	audio_placed_ship = al_load_sample("placed_ship.wav");
 	assert(audio_placed_ship != NULL); //sprawdzenie, czy dzwiek zostal poprawnie wgrany
+	vector <ALLEGRO_SAMPLE*> songs;
+	songs.push_back(audio_placed_ship);
+	
 	al_start_timer(timer);
 
 	while (running)
@@ -70,7 +76,7 @@ int main()
 			if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
 			{
 				al_play_sample(audio_placed_ship, 1.0, 0, 1, ALLEGRO_PLAYMODE_ONCE, NULL);
-				cout << b1.whichField(mouse_x, mouse_y) << endl;
+				
 			}
 		}
 

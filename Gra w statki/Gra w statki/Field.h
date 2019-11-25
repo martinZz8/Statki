@@ -3,7 +3,7 @@
 
 class Field
 {
-	Utils u;
+	Utils& u;
 	float c_x; //co-ordinates x
 	float c_y; //co-orginates y
 	int x_board_pos, y_board_pos;
@@ -13,7 +13,7 @@ class Field
 
 public:
 	Field(Utils& utils);
-	Field();
+	//Field();
 	~Field();
 	void setCoords(float x, float y);
 	void setOccupied(bool o);

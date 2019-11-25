@@ -4,14 +4,14 @@
 
 class Ship
 {
-	Utils u;
+	Utils& u;
 	vector <Field> fields;
 	//STWORZYC VECTOR INTOW SHIPOW
 	int remaining_parts; //pozostale nie trafione pola statku
 	int number_of_fields; //liczba pol statku
 public:
 	Ship(Utils& utils);
-	Ship();
+	//Ship();
 	~Ship();
 	void setFields(Field f);
 	void setNumberOfFields(int n);

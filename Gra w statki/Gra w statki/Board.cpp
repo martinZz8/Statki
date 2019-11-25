@@ -12,19 +12,19 @@ Board::Board(Utils& utils, float offset_x, float offset_y) :u(utils), offset_x(o
 	number_of_four_masted_ships = u.getNumberOfFourMastedShips();
 }
 
-Board::Board()
-{
-	offset_x = 0;
-	offset_y = 0;
-	width = u.getBoardSize();
-	height = u.getBoardSize();
-	setted_fields = false;
-	made_ships = false;
-	number_of_one_masted_ships = u.getNumberOfOneMastedShips();
-	number_of_two_masted_ships = u.getNumberOfTwoMastedShips();
-	number_of_three_masted_ships = u.getNumberOfThreeMastedShips();
-	number_of_four_masted_ships = u.getNumberOfFourMastedShips();
-}
+//Board::Board()
+//{
+//	offset_x = 0;
+//	offset_y = 0;
+//	width = u.getBoardSize();
+//	height = u.getBoardSize();
+//	setted_fields = false;
+//	made_ships = false;
+//	number_of_one_masted_ships = u.getNumberOfOneMastedShips();
+//	number_of_two_masted_ships = u.getNumberOfTwoMastedShips();
+//	number_of_three_masted_ships = u.getNumberOfThreeMastedShips();
+//	number_of_four_masted_ships = u.getNumberOfFourMastedShips();
+//}
 
 Board::~Board()
 {
