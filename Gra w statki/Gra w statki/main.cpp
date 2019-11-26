@@ -1,5 +1,6 @@
-//PRZEKAZAC MOUSE_X I MOUSE_Y DO UTILSOW
-//PRZEKAZAC MOUSE_CLICKED DO UTILOW (ZMIENIAC POIEDZY PRZYCISNIECIEM - TRUE, A PUSZCZENIEM - FALSE)
+//PRZEKAZAC MOUSE_CLICKED DO UTILOW (ZMIENIAC POMIEDZY PRZYCISNIECIEM - TRUE, A PUSZCZENIEM - FALSE)
+//ZROBIC FUNKCJE PRZYPORZADKOWUJACA STATKOWI POLA
+//ZROBIC FUNKCJE ROZSTAWIANIA STATKOW
 
 #pragma once
 #include "Utils.h"
@@ -44,11 +45,8 @@ int main()
 	al_register_event_source(queue, al_get_display_event_source(display));
 	al_register_event_source(queue, al_get_timer_event_source(timer));
 	
-	
-
 
 	bool running = true;
-	float mouse_x = 0, mouse_y = 0;
 	audio_placed_ship = al_load_sample("placed_ship.wav");
 	assert(audio_placed_ship != NULL); //sprawdzenie, czy dzwiek zostal poprawnie wgrany
 	vector <ALLEGRO_SAMPLE*> songs;
@@ -66,9 +64,9 @@ int main()
 		/***MYSZ***/
 		if (event.type == ALLEGRO_EVENT_MOUSE_AXES)
 		{
-			mouse_x = event.mouse.x;
-			mouse_y = event.mouse.y;
-			cout << "X: " << mouse_x << "\t" << "Y: " << mouse_y << endl;
+			u.setMouseX(event.mouse.x);
+			u.setMouseY(event.mouse.y);
+			cout << "X: " << u.getMouseX() << "\t" << "Y: " << u.getMouseY() << endl;
 		}
 		// GDY MAMY OKNO DEPLOYING
 		if (s->getWindowID() == WINDOW_DEPLOYING)
@@ -91,31 +89,31 @@ int main()
 			{
 				if (al_key_down(&keyState, ALLEGRO_KEY_UP))
 				{
-					u.ship_size++;
-					if (u.ship_size > 4)
-						u.ship_size = 1;
-					cout << "Rozmiar: " << u.ship_size << endl;
+					u.setShipSize(u.getShipSize()+1);
+					if (u.getShipSize() > 4)
+						u.setShipSize(1);
+					cout << "Rozmiar: " << u.getShipSize() << endl;
 				}
 				else if (al_key_down(&keyState, ALLEGRO_KEY_DOWN))
 				{
-					u.ship_size--;
-					if (u.ship_size < 1)
-						u.ship_size = 4;
-					cout << "Rozmiar: " << u.ship_size << endl;
+					u.setShipSize(u.getShipSize() - 1);
+					if (u.getShipSize() < 1)
+						u.setShipSize(4);
+					cout << "Rozmiar: " << u.getShipSize() << endl;
 				}
 				else if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
 				{
-					u.ship_orientation++;
-					if (u.ship_orientation > 2)
-						u.ship_orientation = 1;
-					cout << "Orientacja: " << u.ship_orientation << endl;
+					u.setShipOrientation(u.getShipOrientation() + 1);
+					if (u.getShipOrientation() > 2)
+						u.setShipOrientation(1);
+					cout << "Orientacja: " << u.getShipOrientation() << endl;
 				}
 				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT))
 				{
-					u.ship_orientation--;
-					if (u.ship_orientation < 1)
-						u.ship_orientation = 2;
-					cout << "Orientacja: " << u.ship_orientation << endl;
+					u.setShipOrientation(u.getShipOrientation() - 1);
+					if (u.getShipOrientation() < 1)
+						u.setShipOrientation(2);
+					cout << "Orientacja: " << u.getShipOrientation() << endl;
 				}
 			}
 		}
@@ -137,7 +135,7 @@ int main()
 
 			al_clear_to_color(u.getColorOfBackground());
 			s->tick();
-			s->render(mouse_x, mouse_y);
+			s->render();
 
 			al_flip_display();
 

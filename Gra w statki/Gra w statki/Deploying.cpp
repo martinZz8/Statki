@@ -21,11 +21,11 @@ void Deploying::tick()
 	b2.setFields();
 }
 
-void Deploying::render(float mouse_x, float mouse_y)
+void Deploying::render()
 {
 	b1.paintBoard();
 	b2.paintBoard();
-	b1.paintShip(mouse_x, mouse_y);
+	b1.paintShip(u.getMouseX(), u.getMouseY());
 }
 
 int Deploying::getWindowID()

@@ -127,7 +127,7 @@ int Board::whichShip(float mouse_x, float mouse_y)
 void Board::paintShip(float mouse_x, float mouse_y)
 {
 	//RYSOWANIE GDY MAMY USTAWIONE STATKI DOMYSLNE
-	if (u.ship_size == 1)
+	if (u.getShipSize() == 1)
 	{
 		float x1 = mouse_x - 0.5 * u.getFieldSize();
 		float y1 = mouse_y - 0.5 * u.getFieldSize();
@@ -135,9 +135,9 @@ void Board::paintShip(float mouse_x, float mouse_y)
 		float y2 = mouse_y + 0.5 * u.getFieldSize();
 		al_draw_filled_rectangle(x1, y1, x2, y2, u.getColorOfShip());
 	}
-	else if (u.ship_orientation == 1)
+	else if (u.getShipOrientation() == 1)
 	{
-		if (u.ship_size == 2)
+		if (u.getShipSize() == 2)
 		{
 			float x1 = mouse_x - 0.5 * u.getFieldSize();
 			float y1 = mouse_y - u.getFieldSize();
@@ -145,7 +145,7 @@ void Board::paintShip(float mouse_x, float mouse_y)
 			float y2 = mouse_y + u.getFieldSize();
 			al_draw_filled_rectangle(x1, y1, x2, y2, u.getColorOfShip());
 		}
-		else if (u.ship_size == 3)
+		else if (u.getShipSize() == 3)
 		{
 			float x1 = mouse_x - 0.5 * u.getFieldSize();
 			float y1 = mouse_y - 1.5 * u.getFieldSize();
@@ -153,7 +153,7 @@ void Board::paintShip(float mouse_x, float mouse_y)
 			float y2 = mouse_y + 1.5 * u.getFieldSize();
 			al_draw_filled_rectangle(x1, y1, x2, y2, u.getColorOfShip());
 		}
-		else if (u.ship_size == 4)
+		else if (u.getShipSize() == 4)
 		{
 			float x1 = mouse_x - 0.5 * u.getFieldSize();
 			float y1 = mouse_y - 2 * u.getFieldSize();
@@ -162,9 +162,9 @@ void Board::paintShip(float mouse_x, float mouse_y)
 			al_draw_filled_rectangle(x1, y1, x2, y2, u.getColorOfShip());
 		}
 	}
-	else if (u.ship_orientation == 2)
+	else if (u.getShipOrientation() == 2)
 	{
-		if (u.ship_size == 2)
+		if (u.getShipSize() == 2)
 		{
 			float x1 = mouse_x - u.getFieldSize();
 			float y1 = mouse_y - 0.5 * u.getFieldSize();
@@ -172,7 +172,7 @@ void Board::paintShip(float mouse_x, float mouse_y)
 			float y2 = mouse_y + 0.5 * u.getFieldSize();
 			al_draw_filled_rectangle(x1, y1, x2, y2, u.getColorOfShip());
 		}
-		else if (u.ship_size == 3)
+		else if (u.getShipSize() == 3)
 		{
 			float x1 = mouse_x - 1.5 * u.getFieldSize();
 			float y1 = mouse_y - 0.5 * u.getFieldSize();
@@ -180,7 +180,7 @@ void Board::paintShip(float mouse_x, float mouse_y)
 			float y2 = mouse_y + 0.5 * u.getFieldSize();
 			al_draw_filled_rectangle(x1, y1, x2, y2, u.getColorOfShip());
 		}
-		else if (u.ship_size == 4)
+		else if (u.getShipSize() == 4)
 		{
 			float x1 = mouse_x - 2 * u.getFieldSize();
 			float y1 = mouse_y - 0.5 * u.getFieldSize();

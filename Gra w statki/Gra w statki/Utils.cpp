@@ -1,5 +1,8 @@
 #include "Utils.h"
 
+float Utils::mouse_x = 0;
+float Utils::mouse_y = 0;
+
 Utils::Utils()
 {
 	ship_size = 1;
@@ -27,6 +30,26 @@ Utils::~Utils()
 ALLEGRO_COLOR Utils::color(float r, float g, float b)
 {
 	return al_map_rgb(r, g, b);
+}
+
+float Utils::getMouseX()
+{
+	return mouse_x;
+}
+
+float Utils::getMouseY()
+{
+	return mouse_y;
+}
+
+int Utils::getShipSize()
+{
+	return ship_size;
+}
+
+int Utils::getShipOrientation()
+{
+	return ship_orientation;
 }
 
 int Utils::getAudioSamples()
@@ -82,6 +105,26 @@ int Utils::getNumberOfThreeMastedShips()
 int Utils::getNumberOfFourMastedShips()
 {
 	return number_of_four_masted_ships;
+}
+
+void Utils::setMouseX(float x)
+{
+	mouse_x = x;
+}
+
+void Utils::setMouseY(float y)
+{
+	mouse_y = y;
+}
+
+void Utils::setShipSize(int s)
+{
+	ship_size = s;
+}
+
+void Utils::setShipOrientation(int o)
+{
+	ship_orientation = o;
 }
 
 void Utils::setNumberOfOneMastedShips(int n)

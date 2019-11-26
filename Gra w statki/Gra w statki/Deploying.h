@@ -14,7 +14,7 @@ public:
 	//Deploying();
 	~Deploying();
 	void tick(); //metoda wykonujaca obliczenia
-	void render(float mouse_x, float mouse_y); //metoda wykonujaca rysowanie
+	void render(); //metoda wykonujaca rysowanie
 	int getWindowID(); //metoda zwracajaca indeks okna;
 	
 };

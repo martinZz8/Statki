@@ -19,6 +19,10 @@ using namespace std;
 
 class Utils
 {
+	static float mouse_x;
+	static float mouse_y;
+	int ship_size; //rozmiar statku w danym momencie (ilosc fieldow)
+	int ship_orientation; //orientacja statku w danym momencie (1 - do dolu, 2 - na bok)
 	int audio_samples;
 	float display_x;
 	float display_y;
@@ -32,11 +36,13 @@ class Utils
 	int number_of_three_masted_ships; //ilosc trojmasztowcow
 	int number_of_four_masted_ships; //ilosc czteromasztowcow
 public:
-	int ship_size; //rozmiar statku w danym momencie (ilosc fieldow)
-	int ship_orientation; //orientacja statku w danym momencie (1 - do dolu, 2 - na bok)
 	Utils();
 	~Utils();
 	ALLEGRO_COLOR color(float r, float g, float b);
+	float getMouseX();
+	float getMouseY();
+	int getShipSize();
+	int getShipOrientation();
 	int getAudioSamples();
 	float getDisplayX();
 	float getDisplayY();
@@ -48,6 +54,10 @@ public:
 	int getNumberOfTwoMastedShips();
 	int getNumberOfThreeMastedShips();
 	int getNumberOfFourMastedShips();
+	void setMouseX(float x);
+	void setMouseY(float y);
+	void setShipSize(int s);
+	void setShipOrientation(int o);
 	void setNumberOfOneMastedShips(int n);
 	void setNumberOfTwoMastedShips(int n);
 	void setNumberOfThreeMastedShips(int n);
