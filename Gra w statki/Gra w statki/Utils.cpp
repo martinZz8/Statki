@@ -5,9 +5,14 @@ float Utils::mouse_y = 0;
 
 Utils::Utils()
 {
+	audio_setted = false;
+	running = true;
+	mouse1_clicked = false;
+	mouse2_clicked = false;
+	space_pressed = false;
 	ship_size = 1;
 	ship_orientation = 1;
-	audio_samples = 1; //do zmiany jezeli bedzie wiecej audio sampli
+	audio_samples = 2; //do zmiany jezeli bedzie wiecej audio sampli
 	display_x = 1000;
 	display_y = 600;
 	timer = 1.0 / 60;
@@ -19,17 +24,24 @@ Utils::Utils()
 	number_of_two_masted_ships = 3;
 	number_of_three_masted_ships = 2;
 	number_of_four_masted_ships = 1;
+	loadAudio();
 	
 }
 
 Utils::~Utils()
 {
-
+	for (int i = 0; i < audio_samples; i++)
+		al_destroy_sample(samples[i]);
 }
 
 ALLEGRO_COLOR Utils::color(float r, float g, float b)
 {
 	return al_map_rgb(r, g, b);
+}
+
+bool Utils::getRunning()
+{
+	return running;
 }
 
 float Utils::getMouseX()
@@ -40,6 +52,21 @@ float Utils::getMouseX()
 float Utils::getMouseY()
 {
 	return mouse_y;
+}
+
+bool Utils::getMouse1Clicked()
+{
+	return mouse1_clicked;
+}
+
+bool Utils::getMouse2Clicked()
+{
+	return mouse2_clicked;
+}
+
+bool Utils::getSpacePressed()
+{
+	return space_pressed;
 }
 
 int Utils::getShipSize()
@@ -107,6 +134,11 @@ int Utils::getNumberOfFourMastedShips()
 	return number_of_four_masted_ships;
 }
 
+void Utils::setRunning(bool b)
+{
+	running = b;
+}
+
 void Utils::setMouseX(float x)
 {
 	mouse_x = x;
@@ -115,6 +147,21 @@ void Utils::setMouseX(float x)
 void Utils::setMouseY(float y)
 {
 	mouse_y = y;
+}
+
+void Utils::setMouse1Clicked(bool b)
+{
+	mouse1_clicked = b;
+}
+
+void Utils::setMouse2Clicked(bool b)
+{
+	mouse2_clicked = b;
+}
+
+void Utils::setSpacePressed(bool b)
+{
+	space_pressed = b;
 }
 
 void Utils::setShipSize(int s)
@@ -145,6 +192,21 @@ void Utils::setNumberOfThreeMastedShips(int n)
 void Utils::setNumberOfFourMastedShips(int n)
 {
 	number_of_four_masted_ships = n;
+}
+
+void Utils::loadAudio()
+{
+	if (audio_setted == false)
+	{
+		samples.push_back(al_load_sample("menu_click.wav")); //0
+		samples.push_back(al_load_sample("placed_ship.wav")); //1
+		audio_setted = true;
+	}
+}
+
+void Utils::playSample(int ID)
+{
+	al_play_sample(samples[ID], 1.0, 0, 1, ALLEGRO_PLAYMODE_ONCE, NULL);
 }
 
 ALLEGRO_COLOR Utils::getColorOfBackground()

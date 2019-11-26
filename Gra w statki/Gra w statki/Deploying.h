@@ -8,6 +8,7 @@ class Deploying:public State
 	Board& b1;
 	Board& b2;
 	const int windowID;
+	bool play_sample_guard; //true - mozna grac, false - nie mozna grac
 
 public:
 	Deploying(Utils &utils, Board &board1, Board &board2);
