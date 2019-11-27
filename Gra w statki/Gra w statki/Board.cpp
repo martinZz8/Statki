@@ -46,11 +46,13 @@ void Board::setFields()
 	if (!setted_fields)
 	{
 		int iter = 0;
-		for (float i = 0; i < u.getNumberOfFields(); i++) //y
-			for (float j = 0; j < u.getNumberOfFields(); j++) //x
+		int number_of_fields = u.getNumberOfFields();
+		float field_size = u.getFieldSize();
+		for (float i = 0; i < number_of_fields; i++) //y
+			for (float j = 0; j < number_of_fields; j++) //x
 			{
-				float x1 = offset_x + (j * u.getFieldSize());
-				float y1 = offset_y + (i * u.getFieldSize());
+				float x1 = offset_x + (j * field_size);
+				float y1 = offset_y + (i * field_size);
 				Field field(u);
 				field.setCoords(x1, y1);
 				fields.push_back(field);
@@ -76,12 +78,13 @@ void Board::paintBoard()
 
 int Board::whichField(float mouse_x, float mouse_y)
 {
+	float field_size = u.getFieldSize();
 	for (size_t i = 0; i < fields.size(); i++)
 	{
 		float l_x = fields[i].getCoordX(); //lewe x
-		float r_x = fields[i].getCoordX() + u.getFieldSize(); //prawe x
+		float r_x = fields[i].getCoordX() + field_size; //prawe x
 		float u_y = fields[i].getCoordY(); //gorne y
-		float d_y = fields[i].getCoordY() + u.getFieldSize(); //dolne y
+		float d_y = fields[i].getCoordY() + field_size; //dolne y
 		if (mouse_x >= l_x && mouse_x < r_x && mouse_y >= u_y && mouse_y < d_y)
 		{
 			cout << i << endl;
@@ -97,11 +100,6 @@ void Board::setFieldOccupy(float mouse_x, float mouse_y, bool occupied)
 	fields[indeks].setOccupied(occupied);
 }
 
-void Board::makeShip()
-{
-
-}
-
 int Board::whichShip(float mouse_x, float mouse_y)
 {
 	//sprawdzam czy isnieje statek o zadanych parametrach x i y - w tym celu przeszukuje caly vector shipow
@@ -109,7 +107,8 @@ int Board::whichShip(float mouse_x, float mouse_y)
 	{
 		//przeszukuje kazde pole z vectora pol w danym statku
 		int indeks = 0;
-		for (size_t j = 0; j < ships[i].getNumberOfFields(); j++)
+		int number_of_fields = ships[i].getNumberOfFields();
+		for (size_t j = 0; j < number_of_fields; j++)
 		{
 			float l_x = ships[j].getCoordX(indeks); //lewe x
 			float r_x = ships[j].getCoordX(indeks) + u.getFieldSize(); //prawe x
@@ -124,7 +123,7 @@ int Board::whichShip(float mouse_x, float mouse_y)
 	}
 }
 
-void Board::paintShip(float mouse_x, float mouse_y)
+void Board::paintStandardShip(float mouse_x, float mouse_y)
 {
 	//RYSOWANIE GDY MAMY USTAWIONE STATKI DOMYSLNE
 	if (u.getShipSize() == 1)
@@ -191,7 +190,7 @@ void Board::paintShip(float mouse_x, float mouse_y)
 	}
 }
 
-void Board::deployShip(float mouse_x, float mouse_y, int size, int orientation)
+void Board::deployStandardShip(float mouse_x, float mouse_y, int size, int orientation)
 {
 	//int indeks = whichField(mouse_x, mouse_y);
 	//if (size == 1)

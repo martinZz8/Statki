@@ -28,9 +28,13 @@ class Utils
 	bool running; //true - program dziala, false - program jest wylaczany
 	static float mouse_x;
 	static float mouse_y;
-	bool mouse1_clicked; //true - klikniete, false - puszczone
-	bool mouse2_clicked; //true - klikniete, false - puszczone
-	bool space_pressed; //true - wcisniete, false - puszczone
+	bool mouse1_clicked;     /*                                     */
+	bool mouse2_clicked;     /*                                     */
+	bool key_space_pressed;  /*                                     */
+	bool key_up_pressed;     /* true - klikniete, false - puszczone */
+	bool key_down_pressed;   /*                                     */
+	bool key_left_pressed;   /*                                     */
+	bool key_right_pressed;  /*                                     */
 	int ship_size; //rozmiar statku w danym momencie (ilosc fieldow)
 	int ship_orientation; //orientacja statku w danym momencie (1 - do dolu, 2 - na bok)
 	int audio_samples;
@@ -54,7 +58,11 @@ public:
 	float getMouseY();
 	bool getMouse1Clicked();
 	bool getMouse2Clicked();
-	bool getSpacePressed();
+	bool getKeySpacePressed();
+	bool getKeyUpPressed();
+	bool getKeyDownPressed();
+	bool getKeyLeftPressed();
+	bool getKeyRightPressed();
 	int getShipSize();
 	int getShipOrientation();
 	int getAudioSamples();
@@ -73,7 +81,11 @@ public:
 	void setMouseY(float y);
 	void setMouse1Clicked(bool b);
 	void setMouse2Clicked(bool b);
-	void setSpacePressed(bool b);
+	void setKeySpacePressed(bool b);
+	void setKeyUpPressed(bool b);
+	void setKeyDownPressed(bool b);
+	void setKeyLeftPressed(bool b);
+	void setKeyRightPressed(bool b);
 	void setShipSize(int s);
 	void setShipOrientation(int o);
 	void setNumberOfOneMastedShips(int n);

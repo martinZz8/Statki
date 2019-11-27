@@ -31,12 +31,10 @@ public:
 	void setOffset(float x, float y);
 	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields
 	void setFieldOccupy(float mouse_x, float mouse_y, bool occupied); //metoda ustawiajaca flage okupowania pola przez dany statek
-	//DO POPRAWY (ROZSTAWIANIE BEDZIE POJEDYNCZE)
-	void makeShip(); //metoda tworzaca statek
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships
-	void paintShip(float mouse_x, float mouse_y); //metoda ryzsujaca statek, 
+	void paintStandardShip(float mouse_x, float mouse_y); //metoda ryzsujaca statek dla standardowych opcji statków
 	//DO DOKONCZENIA METODA NIZEJ
-	void deployShip(float mouse_x, float mouse_y, int size, int orientation); //metoda rozstawiajaca statek, size - rozmiar statku, orientation - orientacja statku
+	void deployStandardShip(float mouse_x, float mouse_y, int size, int orientation); //metoda rozstawiajaca statek, size - rozmiar statku, orientation - orientacja statku
 };
 
 

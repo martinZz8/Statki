@@ -78,79 +78,36 @@ int main()
 			u.setMouse1Clicked(false);
 		if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && event.mouse.button & 2)
 			u.setMouse2Clicked(false);
-		// GDY MAMY OKNO DEPLOYING
-		/*if (s->getWindowID() == WINDOW_DEPLOYING)
-		{
-			if (u.getMouse1Clicked() == true)
-			{
-				u.playSample(AUDIO_PLACED_SHIP);
-				
-			}
-		}*/
 
 		/***KLAWIATURA***/
 		ALLEGRO_KEYBOARD_STATE keyState;
 		al_get_keyboard_state(&keyState);
 
 		if (al_key_down(&keyState, ALLEGRO_KEY_SPACE))
-		{
-			u.setSpacePressed(true);
-		}
+			u.setKeySpacePressed(true);
 		else
-			u.setSpacePressed(false);
+			u.setKeySpacePressed(false);
+		if (al_key_down(&keyState, ALLEGRO_KEY_UP))
+			u.setKeyUpPressed(true);
+		else
+			u.setKeyUpPressed(false);
+		if (al_key_down(&keyState, ALLEGRO_KEY_DOWN))
+			u.setKeyDownPressed(true);
+		else
+			u.setKeyDownPressed(false);
+		if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
+			u.setKeyRightPressed(true);
+		else
+			u.setKeyRightPressed(false);
+		if (al_key_down(&keyState, ALLEGRO_KEY_LEFT))
+			u.setKeyLeftPressed(true);
+		else
+			u.setKeyLeftPressed(false);
 
-		// GDY MAMY OKNO DEPLOYING
-		//DODAC DO METODY RENDER W KLASIE DEPLOYING ZMIANE ROZMIAROW
-		if (s->getWindowID() == WINDOW_DEPLOYING)
-		{
-			if (event.type == ALLEGRO_EVENT_KEY_CHAR)
-			{
-				if (al_key_down(&keyState, ALLEGRO_KEY_UP))
-				{
-					u.setShipSize(u.getShipSize()+1);
-					if (u.getShipSize() > 4)
-						u.setShipSize(1);
-					cout << "Rozmiar: " << u.getShipSize() << endl;
-				}
-				else if (al_key_down(&keyState, ALLEGRO_KEY_DOWN))
-				{
-					u.setShipSize(u.getShipSize() - 1);
-					if (u.getShipSize() < 1)
-						u.setShipSize(4);
-					cout << "Rozmiar: " << u.getShipSize() << endl;
-				}
-				else if (al_key_down(&keyState, ALLEGRO_KEY_RIGHT))
-				{
-					u.setShipOrientation(u.getShipOrientation() + 1);
-					if (u.getShipOrientation() > 2)
-						u.setShipOrientation(1);
-					cout << "Orientacja: " << u.getShipOrientation() << endl;
-				}
-				else if (al_key_down(&keyState, ALLEGRO_KEY_LEFT))
-				{
-					u.setShipOrientation(u.getShipOrientation() - 1);
-					if (u.getShipOrientation() < 1)
-						u.setShipOrientation(2);
-					cout << "Orientacja: " << u.getShipOrientation() << endl;
-				}
-			}
-		}
 
 		/***GLOWNE WYWOLANIA METOD***/
 		if (event.type == ALLEGRO_EVENT_TIMER)
 		{
-
-			/*al_clear_to_color(u.getColorOfBackground());
-			A.setOffset(A.getXOffset(), A.getYOffset());
-			A.setFields();
-			A.paintBoard();
-			A.paintShip(mouse_x, mouse_y, ship_size, ship_orientation);
-
-
-			B.setOffset(B.getXOffset(), B.getYOffset());
-			B.setFields();
-			B.paintBoard();*/
-
 			al_clear_to_color(u.getColorOfBackground());
 			s->tick();
 			s->render();

@@ -9,7 +9,11 @@ Utils::Utils()
 	running = true;
 	mouse1_clicked = false;
 	mouse2_clicked = false;
-	space_pressed = false;
+	key_space_pressed = false;
+	key_up_pressed = false;
+	key_down_pressed = false;
+	key_left_pressed = false;
+	key_right_pressed = false;
 	ship_size = 1;
 	ship_orientation = 1;
 	audio_samples = 2; //do zmiany jezeli bedzie wiecej audio sampli
@@ -64,9 +68,29 @@ bool Utils::getMouse2Clicked()
 	return mouse2_clicked;
 }
 
-bool Utils::getSpacePressed()
+bool Utils::getKeySpacePressed()
 {
-	return space_pressed;
+	return key_space_pressed;
+}
+
+bool Utils::getKeyUpPressed()
+{
+	return key_up_pressed;
+}
+
+bool Utils::getKeyDownPressed()
+{
+	return key_down_pressed;
+}
+
+bool Utils::getKeyLeftPressed()
+{
+	return key_left_pressed;
+}
+
+bool Utils::getKeyRightPressed()
+{
+	return key_right_pressed;
 }
 
 int Utils::getShipSize()
@@ -159,9 +183,29 @@ void Utils::setMouse2Clicked(bool b)
 	mouse2_clicked = b;
 }
 
-void Utils::setSpacePressed(bool b)
+void Utils::setKeySpacePressed(bool b)
 {
-	space_pressed = b;
+	key_space_pressed = b;
+}
+
+void Utils::setKeyUpPressed(bool b)
+{
+	key_up_pressed = b;
+}
+
+void Utils::setKeyDownPressed(bool b)
+{
+	key_down_pressed = b;
+}
+
+void Utils::setKeyLeftPressed(bool b)
+{
+	key_left_pressed = b;
+}
+
+void Utils::setKeyRightPressed(bool b)
+{
+	key_right_pressed = b;
 }
 
 void Utils::setShipSize(int s)
