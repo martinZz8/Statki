@@ -1,6 +1,6 @@
 #include "Deploying.h"
 
-Deploying::Deploying(Utils& utils, Board& board1, Board& board2):windowID(WINDOW_DEPLOYING), u(utils), b1(board1), b2(board2)
+Deploying::Deploying(State **state,Utils& utils, Board& board1, Board& board2):windowID(WINDOW_DEPLOYING), s(state), u(utils), b1(board1), b2(board2)
 {
 	deploy_ship_guard = true;
 	resize_ship_guard = true;
@@ -28,7 +28,7 @@ void Deploying::render()
 	b1.paintBoard();
 	b2.paintBoard();
 	b1.paintStandardShip(u.getMouseX(), u.getMouseY());
-	StandardKeyboardSwitches();
+	DefaultKeyboardSwitches();
 	MouseSwitches();
 }
 
@@ -37,7 +37,7 @@ int Deploying::getWindowID()
 	return windowID;
 }
 
-void Deploying::StandardKeyboardSwitches()
+void Deploying::DefaultKeyboardSwitches()
 {
 	if (u.getKeyUpPressed() == true && resize_ship_guard == true)
 	{

@@ -190,7 +190,7 @@ void Board::paintStandardShip(float mouse_x, float mouse_y)
 	}
 }
 
-void Board::deployStandardShip(float mouse_x, float mouse_y, int size, int orientation)
+void Board::deployDefaultShip(float mouse_x, float mouse_y, int size, int orientation)
 {
 	//int indeks = whichField(mouse_x, mouse_y);
 	//if (size == 1)
