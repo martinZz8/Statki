@@ -6,6 +6,7 @@ float Utils::mouse_y = 0;
 Utils::Utils()
 {
 	audio_setted = false;
+	font_setted = false;
 	running = true;
 	mouse1_clicked = false;
 	mouse2_clicked = false;
@@ -17,6 +18,7 @@ Utils::Utils()
 	ship_size = 1;
 	ship_orientation = 1;
 	audio_samples = 2; //do zmiany jezeli bedzie wiecej audio sampli
+	font_samples = 3; //do zmiany jezeli bedzie wiecej font sampli
 	display_x = 1000;
 	display_y = 600;
 	timer = 1.0 / 60;
@@ -29,6 +31,7 @@ Utils::Utils()
 	number_of_three_masted_ships = 2;
 	number_of_four_masted_ships = 1;
 	loadAudio();
+	loadFonts();
 	
 }
 
@@ -36,6 +39,8 @@ Utils::~Utils()
 {
 	for (int i = 0; i < audio_samples; i++)
 		al_destroy_sample(samples[i]);
+	for (int i = 0; i < font_samples; i++)
+		al_destroy_font(fonts[i]);
 }
 
 ALLEGRO_COLOR Utils::color(float r, float g, float b)
@@ -248,9 +253,28 @@ void Utils::loadAudio()
 	}
 }
 
+void Utils::loadFonts()
+{
+	if (font_setted == false)
+	{
+		fonts.push_back(al_load_font("PiratesBay.ttf", 30, 0)); //0
+		fonts.push_back(al_load_font("PiratesBay.ttf", 60, 0)); //0
+		fonts.push_back(al_load_font("PiratesBay.ttf", 200, 0)); //0
+		font_setted = true;
+	}
+}
+
 void Utils::playSample(int ID)
 {
 	al_play_sample(samples[ID], 1.0, 0, 1, ALLEGRO_PLAYMODE_ONCE, NULL);
+}
+
+void Utils::drawText(const char* text,int size, float r,float g, float b, float x, float y)
+{
+	if(size == FONT_SIZE_SMALL)
+	al_draw_text(fonts[FONT_SIZE_SMALL], color(r, g, b), x, y, 0, text);
+	else
+	al_draw_text(fonts[FONT_SIZE_BIG], color(r, g, b), x, y, 0, text);
 }
 
 ALLEGRO_COLOR Utils::getColorOfBackground()

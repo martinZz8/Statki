@@ -7,7 +7,7 @@
 /*... trzeciej cwiartce - daj go na dol*/
 /*... czwartej cwiartce - daj go na ukos w lewo i na dol*/
 
-//2) WGRAC CZCIONKE I WYPISAC WARTOSCI DOTYCZACE ILOSCI POZOSTALYCH DO ROZSTAWIENIA STATKOW (OPCJONALNIE POTEM INNE RZECZY)
+//2)WYPISAC WARTOSCI DOTYCZACE ILOSCI POZOSTALYCH DO ROZSTAWIENIA STATKOW (OPCJONALNIE POTEM INNE RZECZY)
 
 //3) ZROBIC KLASE MENU I METODY PRZELACZEANIA POMIEDZY OKNAMI
 /*W MAINIE USTAWIAMY STATYCZNIE NA POCZATKU MENU*/
@@ -25,37 +25,42 @@
 /*ZROBIC PODSWIETLANIE PRZYCISKU PODOBNIE JAK WYZEJ W MAINIE*/
 
 
-
 #pragma once
 #include "Utils.h"
 #include "Deploying.h"
+#include "Menu.h"
 
 int main()
 {
 	al_init();
-
-	ALLEGRO_DISPLAY* display;
-	ALLEGRO_EVENT_QUEUE* queue;
-	ALLEGRO_TIMER* timer;
-	/*ALLEGRO_SAMPLE* audio_placed_ship = NULL;*/
 
 	al_install_keyboard();
 	al_install_mouse();
 	al_install_audio();
 	al_init_acodec_addon();
 	al_init_primitives_addon();
+	al_init_font_addon();
+	al_init_ttf_addon();
+
+	ALLEGRO_DISPLAY* display;
+	ALLEGRO_EVENT_QUEUE* queue;
+	ALLEGRO_TIMER* timer;
+	/*ALLEGRO_SAMPLE* audio_placed_ship = NULL;*/
 
 	Utils u;
 	Board b1(u, 80, 70);
 	Board b2(u, 500, 70);
 	State* s = NULL;
+	Menu m(&s, u, b1, b2);
 	Deploying d(&s, u, b1, b2);
-	//Menu menu(&s,u,b1,b2);
 	//Game game(&s,u,b1,b2);
 	//Player player1(&s,u,b1,b2);
 	//Player player2(&s,u,b1,b2);
 
-	//USTAWIENIE POCZATKOWEJ FAZY (ZMIANA)
+	//m.setStates(&d);
+	//d.setStates(&m);
+
+	//USTAWIENIE POCZATKOWEJ FAZY (MA BYC NA POCZATKU MENU)
 	s = &d;
 
 	display = al_create_display(u.getDisplayX(), u.getDisplayY());

@@ -5,26 +5,37 @@
 #include <allegro5\allegro_audio.h>
 #include <allegro5\allegro_image.h>
 #include <allegro5\allegro_color.h>
+#include <allegro5\allegro_ttf.h>
+#include <allegro5\allegro_font.h>
 #include <vector>
 #include <algorithm>
 #include <iostream>
 
 using namespace std;
 
-#define WINDOW_MENU 1
+/***WINDOW***/
+#define WINDOW_MENU 0
+#define WINDOW_OPTIONS 1
 #define WINDOW_GAME 2
 #define WINDOW_DEPLOYING 3
+/***AUDIO***/
 #define AUDIO_MENU_CLICK 0
 #define AUDIO_PLACED_SHIP 1
 #define AUDIO_MISSED_SHOT 2
 #define AUDIO_HITTED_SHIP 3
 #define AUDIO_DESTROYED_SHIP 4
+/***FONT***/
+#define FONT_SIZE_SMALL 0
+#define FONT_SIZE_BIG 1
+#define FONT_SIZE_HUGE 2
 
 
 class Utils
 {
 	bool audio_setted; //flaga czy zostala dodana muzyka
 	vector <ALLEGRO_SAMPLE*> samples; //vector wszystkich utworow
+	bool font_setted; // flaga czy zostal dodany font
+	vector <ALLEGRO_FONT*> fonts; //vector wszystkich czcionek (nawet tych samych ze zmienionym rozmiarem)
 	bool running; //true - program dziala, false - program jest wylaczany
 	static float mouse_x;
 	static float mouse_y;
@@ -38,6 +49,7 @@ class Utils
 	int ship_size; //rozmiar statku w danym momencie (ilosc fieldow)
 	int ship_orientation; //orientacja statku w danym momencie (1 - do dolu, 2 - na bok)
 	int audio_samples;
+	int font_samples;
 	float display_x;
 	float display_y;
 	double timer;
@@ -93,7 +105,9 @@ public:
 	void setNumberOfThreeMastedShips(int n);
 	void setNumberOfFourMastedShips(int n);
 	void loadAudio();
+	void loadFonts();
 	void playSample(int ID);
+	void drawText(const char* text,int size,float r,float g, float b,float x,float y);
 	ALLEGRO_COLOR getColorOfBackground();
 	ALLEGRO_COLOR getColorOfBoard();
 	ALLEGRO_COLOR getColorOfLine();

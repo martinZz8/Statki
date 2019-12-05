@@ -1,26 +1,19 @@
 #include "Deploying.h"
 
-Deploying::Deploying(State **state,Utils& utils, Board& board1, Board& board2):windowID(WINDOW_DEPLOYING), s(state), u(utils), b1(board1), b2(board2)
+Deploying::Deploying(State **state, Utils& utils, Board& board1, Board& board2):windowID(WINDOW_DEPLOYING), s(state), u(utils), b1(board1), b2(board2)
 {
+	//m = NULL;
 	deploy_ship_guard = true;
 	resize_ship_guard = true;
 	rotate_ship_guard = true;
-}
-
-//Deploying::Deploying():windowID(WINDOW_DEPLOYING)
-//{
-//	
-//}
-
-Deploying::~Deploying()
-{
-
 }
 
 void Deploying::tick()
 {
 	b1.setFields();
 	b2.setFields();
+	DefaultKeyboardSwitches();
+	MouseSwitches();
 }
 
 void Deploying::render()
@@ -28,8 +21,7 @@ void Deploying::render()
 	b1.paintBoard();
 	b2.paintBoard();
 	b1.paintStandardShip(u.getMouseX(), u.getMouseY());
-	DefaultKeyboardSwitches();
-	MouseSwitches();
+	//u.drawText("Taki test",FONT_SIZE_SMALL,152, 0, 0, 0, 0);
 }
 
 int Deploying::getWindowID()
