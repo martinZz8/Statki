@@ -11,7 +11,7 @@ class Board
 	float offset_y; //offset w osi y
 	float width; //szerokosc
 	float height; //wysokosc
-	bool setted_fields; //flaga do jednorazowego ustawienia koordynatow pol
+	//bool setted_fields; //flaga do jednorazowego ustawienia koordynatow pol
 	bool made_ships; //?
 	int number_of_one_masted_ships;
 	int number_of_two_masted_ships;
@@ -22,8 +22,6 @@ class Board
 
 public:
 	Board(Utils& utils, float offset_x, float offset_y);
-	/*Board();*/
-	~Board();
 	float getXOffset();
 	float getYOffset();
 	void paintBoard(); //metoda rysujaca plansze (wraz z kratkami)

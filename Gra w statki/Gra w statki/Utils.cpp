@@ -8,6 +8,7 @@ Utils::Utils()
 	audio_setted = false;
 	font_setted = false;
 	running = true;
+	actual_window = -1;
 	mouse1_clicked = false;
 	mouse2_clicked = false;
 	key_space_pressed = false;
@@ -51,6 +52,11 @@ ALLEGRO_COLOR Utils::color(float r, float g, float b)
 bool Utils::getRunning()
 {
 	return running;
+}
+
+int Utils::getActualWindow()
+{
+	return actual_window;
 }
 
 float Utils::getMouseX()
@@ -166,6 +172,11 @@ int Utils::getNumberOfFourMastedShips()
 void Utils::setRunning(bool b)
 {
 	running = b;
+}
+
+void Utils::setActualWindow(int w)
+{
+	actual_window = w;
 }
 
 void Utils::setMouseX(float x)

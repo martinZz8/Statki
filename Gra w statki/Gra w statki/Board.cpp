@@ -4,32 +4,14 @@ Board::Board(Utils& utils, float offset_x, float offset_y) :u(utils), offset_x(o
 {
 	width = u.getBoardSize();
 	height = u.getBoardSize();
-	setted_fields = false;
 	made_ships = false;
 	number_of_one_masted_ships = u.getNumberOfOneMastedShips();
 	number_of_two_masted_ships = u.getNumberOfTwoMastedShips();
 	number_of_three_masted_ships = u.getNumberOfThreeMastedShips();
 	number_of_four_masted_ships = u.getNumberOfFourMastedShips();
+	setFields();
 }
 
-//Board::Board()
-//{
-//	offset_x = 0;
-//	offset_y = 0;
-//	width = u.getBoardSize();
-//	height = u.getBoardSize();
-//	setted_fields = false;
-//	made_ships = false;
-//	number_of_one_masted_ships = u.getNumberOfOneMastedShips();
-//	number_of_two_masted_ships = u.getNumberOfTwoMastedShips();
-//	number_of_three_masted_ships = u.getNumberOfThreeMastedShips();
-//	number_of_four_masted_ships = u.getNumberOfFourMastedShips();
-//}
-
-Board::~Board()
-{
-
-}
 
 float Board::getXOffset()
 {
@@ -43,24 +25,21 @@ float Board::getYOffset()
 
 void Board::setFields()
 {
-	if (!setted_fields)
-	{
-		int iter = 0;
-		int number_of_fields = u.getNumberOfFields();
-		float field_size = u.getFieldSize();
-		for (float i = 0; i < number_of_fields; i++) //y
-			for (float j = 0; j < number_of_fields; j++) //x
-			{
-				float x1 = offset_x + (j * field_size);
-				float y1 = offset_y + (i * field_size);
-				Field field(u);
-				field.setCoords(x1, y1);
-				fields.push_back(field);
-				iter++;
-				cout << "Iter: " << iter << endl;
-			}
-		setted_fields = true;
-	}
+
+	int iter = 0;
+	int number_of_fields = u.getNumberOfFields();
+	float field_size = u.getFieldSize();
+	for (float i = 0; i < number_of_fields; i++) //y
+		for (float j = 0; j < number_of_fields; j++) //x
+		{
+			float x1 = offset_x + (j * field_size);
+			float y1 = offset_y + (i * field_size);
+			Field field(u);
+			field.setCoords(x1, y1);
+			fields.push_back(field);
+			iter++;
+			cout << "Iter: " << iter << endl;
+		}
 
 }
 

@@ -4,6 +4,9 @@
 class Buttons
 {
 	vector <Button> buttons;
-
+	
+public:
+	Buttons();
+	void setButtons();
 };
 

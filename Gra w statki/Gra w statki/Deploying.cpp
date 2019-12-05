@@ -10,8 +10,8 @@ Deploying::Deploying(State **state, Utils& utils, Board& board1, Board& board2):
 
 void Deploying::tick()
 {
-	b1.setFields();
-	b2.setFields();
+	//b1.setFields();
+	//b2.setFields();
 	DefaultKeyboardSwitches();
 	MouseSwitches();
 }

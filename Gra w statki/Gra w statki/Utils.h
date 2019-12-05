@@ -28,6 +28,17 @@ using namespace std;
 #define FONT_SIZE_SMALL 0
 #define FONT_SIZE_BIG 1
 #define FONT_SIZE_HUGE 2
+/***BUTTONS***/
+     /*MENU*/
+#define BUTTON_MENU_PLAY 0
+#define BUTTON_MENU_OPTION 1
+#define BUTTON_MENU_EXIT 2
+     /*OPTIONS*/
+#define BUTTON_OPTIONS_BACK 3
+     /*DEPLOYING*/
+#define BUTTON_DEPLOYING_PLAY 4
+#define BUTTON_DEPLOYING_BACK 5
+     /*GAME*/
 
 
 class Utils
@@ -37,6 +48,7 @@ class Utils
 	bool font_setted; // flaga czy zostal dodany font
 	vector <ALLEGRO_FONT*> fonts; //vector wszystkich czcionek (nawet tych samych ze zmienionym rozmiarem)
 	bool running; //true - program dziala, false - program jest wylaczany
+	int actual_window; //zmienna zawierajaca liczbe wskazujaca na aktualnie wyswietlane okno
 	static float mouse_x;
 	static float mouse_y;
 	bool mouse1_clicked;     /*                                     */
@@ -66,6 +78,7 @@ public:
 	~Utils();
 	ALLEGRO_COLOR color(float r, float g, float b);
 	bool getRunning();
+	int getActualWindow();
 	float getMouseX();
 	float getMouseY();
 	bool getMouse1Clicked();
@@ -89,6 +102,7 @@ public:
 	int getNumberOfThreeMastedShips();
 	int getNumberOfFourMastedShips();
 	void setRunning(bool b);
+	void setActualWindow(int w);
 	void setMouseX(float x);
 	void setMouseY(float y);
 	void setMouse1Clicked(bool b);
