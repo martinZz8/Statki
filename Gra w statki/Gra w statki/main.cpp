@@ -58,11 +58,11 @@ int main()
 	//Player player1(&s,u,b1,b2);
 	//Player player2(&s,u,b1,b2);
 
-	//m.setStates(&d);
-	//d.setStates(&m);
+	m.setStates(&d);
+	d.setStates(&m);
 
 	//USTAWIENIE POCZATKOWEJ FAZY (MA BYC NA POCZATKU MENU)
-	s = &d;
+	s = &m;
 	u.setActualWindow(WINDOW_DEPLOYING);
 
 	display = al_create_display(u.getDisplayX(), u.getDisplayY());

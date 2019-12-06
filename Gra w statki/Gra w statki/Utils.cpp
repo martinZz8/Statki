@@ -5,7 +5,7 @@ float Utils::mouse_y = 0;
 
 Utils::Utils()
 {
-	audio_setted = false;
+	
 	font_setted = false;
 	running = true;
 	actual_window = -1;
@@ -256,12 +256,10 @@ void Utils::setNumberOfFourMastedShips(int n)
 
 void Utils::loadAudio()
 {
-	if (audio_setted == false)
-	{
-		samples.push_back(al_load_sample("menu_click.wav")); //0
-		samples.push_back(al_load_sample("placed_ship.wav")); //1
-		audio_setted = true;
-	}
+	samples.push_back(al_load_sample("menu_click.wav")); //0
+	samples.push_back(al_load_sample("placed_ship.wav")); //1
+	
+	
 }
 
 void Utils::loadFonts()

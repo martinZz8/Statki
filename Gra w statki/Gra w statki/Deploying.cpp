@@ -8,6 +8,11 @@ Deploying::Deploying(State **state, Utils& utils, Board& board1, Board& board2):
 	rotate_ship_guard = true;
 }
 
+void Deploying::setStates(Menu* menu)
+{
+	m = menu;
+}
+
 void Deploying::tick()
 {
 	//b1.setFields();

@@ -43,7 +43,6 @@ using namespace std;
 
 class Utils
 {
-	bool audio_setted; //flaga czy zostala dodana muzyka
 	vector <ALLEGRO_SAMPLE*> samples; //vector wszystkich utworow
 	bool font_setted; // flaga czy zostal dodany font
 	vector <ALLEGRO_FONT*> fonts; //vector wszystkich czcionek (nawet tych samych ze zmienionym rozmiarem)
