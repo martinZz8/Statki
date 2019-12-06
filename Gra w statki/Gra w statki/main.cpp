@@ -25,7 +25,7 @@
 /*W MAINIE SPRAWDZAC CZY KLIKNIETO DANY PRZYCISK - JEZELI KURSOR MYSZY JEST NA PRZYCISKU I NACISNIETO LEWY PRZYCISK MYSZY - WTEDY WCISNIETO BUTTON*/
 /*ZROBIC PODSWIETLANIE PRZYCISKU PODOBNIE JAK WYZEJ W MAINIE*/
 
-
+/*ZGODNE Z GITHUBEM*/
 #pragma once
 #include "Utils.h"
 #include "Deploying.h"
@@ -34,7 +34,7 @@
 int main()
 {
 	al_init();
-
+	
 	al_install_keyboard();
 	al_install_mouse();
 	al_install_audio();
