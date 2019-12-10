@@ -3,10 +3,12 @@
 
 class Buttons
 {
+	Utils &u;
 	vector <Button> buttons;
 	
 public:
-	Buttons();
+	Buttons(Utils& u);
 	void setButtons();
+	bool isMouseOnButton(int indeks);
 };
 

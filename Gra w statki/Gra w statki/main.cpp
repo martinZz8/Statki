@@ -30,6 +30,7 @@
 #include "Utils.h"
 #include "Deploying.h"
 #include "Menu.h"
+#include "Buttons.h"
 
 int main()
 {
@@ -49,6 +50,7 @@ int main()
 	/*ALLEGRO_SAMPLE* audio_placed_ship = NULL;*/
 
 	Utils u;
+	Buttons buttons(u);
 	Board b1(u, 80, 70);
 	Board b2(u, 500, 70);
 	State* s = NULL;

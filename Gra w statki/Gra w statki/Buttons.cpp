@@ -1,6 +1,6 @@
 #include "Buttons.h"
 
-Buttons::Buttons()
+Buttons::Buttons(Utils& utils):u(utils)
 {
 	
 	setButtons();
@@ -21,4 +21,9 @@ void Buttons::setButtons()
 	b = Button(100, 100, 700, 510, BUTTON_DEPLOYING_BACK);
 	buttons.push_back(b); //5
 
+}
+
+bool Buttons::isMouseOnButton(int indeks)
+{
+	if(u.getMouseX()>=buttons[indeks].getX() && u.getMouseX() <= (buttons[indeks].getX()+ buttons[indeks].getWidth()) && )
 }
