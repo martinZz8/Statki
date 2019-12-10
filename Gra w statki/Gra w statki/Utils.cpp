@@ -5,8 +5,6 @@ float Utils::mouse_y = 0;
 
 Utils::Utils()
 {
-	
-	font_setted = false;
 	running = true;
 	actual_window = -1;
 	mouse1_clicked = false;
@@ -264,13 +262,11 @@ void Utils::loadAudio()
 
 void Utils::loadFonts()
 {
-	if (font_setted == false)
-	{
-		fonts.push_back(al_load_font("PiratesBay.ttf", 30, 0)); //0
-		fonts.push_back(al_load_font("PiratesBay.ttf", 60, 0)); //0
-		fonts.push_back(al_load_font("PiratesBay.ttf", 200, 0)); //0
-		font_setted = true;
-	}
+	
+	fonts.push_back(al_load_font("PiratesBay.ttf", 15, 0)); //0
+	fonts.push_back(al_load_font("PiratesBay.ttf", 35, 0)); //1
+	fonts.push_back(al_load_font("PiratesBay.ttf", 130, 0)); //2
+	
 }
 
 void Utils::playSample(int ID)
@@ -281,9 +277,11 @@ void Utils::playSample(int ID)
 void Utils::drawText(const char* text,int size, float r,float g, float b, float x, float y)
 {
 	if(size == FONT_SIZE_SMALL)
-	al_draw_text(fonts[FONT_SIZE_SMALL], color(r, g, b), x, y, 0, text);
-	else
-	al_draw_text(fonts[FONT_SIZE_BIG], color(r, g, b), x, y, 0, text);
+		al_draw_text(fonts[FONT_SIZE_SMALL], color(r, g, b), x, y, 0, text);
+	else if(size == FONT_SIZE_BIG)
+		al_draw_text(fonts[FONT_SIZE_BIG], color(r, g, b), x, y, 0, text);
+	else 
+		al_draw_text(fonts[FONT_SIZE_HUGE], color(r, g, b), x, y, 0, text);
 }
 
 ALLEGRO_COLOR Utils::getColorOfBackground()

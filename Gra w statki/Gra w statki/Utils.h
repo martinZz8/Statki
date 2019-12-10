@@ -31,7 +31,7 @@ using namespace std;
 /***BUTTONS***/
      /*MENU*/
 #define BUTTON_MENU_PLAY 0
-#define BUTTON_MENU_OPTION 1
+#define BUTTON_MENU_OPTIONS 1
 #define BUTTON_MENU_EXIT 2
      /*OPTIONS*/
 #define BUTTON_OPTIONS_BACK 3
@@ -44,19 +44,18 @@ using namespace std;
 class Utils
 {
 	vector <ALLEGRO_SAMPLE*> samples; //vector wszystkich utworow
-	bool font_setted; // flaga czy zostal dodany font
 	vector <ALLEGRO_FONT*> fonts; //vector wszystkich czcionek (nawet tych samych ze zmienionym rozmiarem)
 	bool running; //true - program dziala, false - program jest wylaczany
 	int actual_window; //zmienna zawierajaca liczbe wskazujaca na aktualnie wyswietlane okno
 	static float mouse_x;
 	static float mouse_y;
-	bool mouse1_clicked;     /*                                     */
-	bool mouse2_clicked;     /*                                     */
-	bool key_space_pressed;  /*                                     */
-	bool key_up_pressed;     /* true - klikniete, false - puszczone */
-	bool key_down_pressed;   /*                                     */
-	bool key_left_pressed;   /*                                     */
-	bool key_right_pressed;  /*                                     */
+	bool mouse1_clicked;                    /*                                     */
+	bool mouse2_clicked;                    /*                                     */
+	bool key_space_pressed;                 /*                                     */
+	bool key_up_pressed;                    /* true - klikniete, false - puszczone */
+	bool key_down_pressed;                  /*                                     */
+	bool key_left_pressed;                  /*                                     */
+	bool key_right_pressed;                 /*                                     */
 	int ship_size; //rozmiar statku w danym momencie (ilosc fieldow)
 	int ship_orientation; //orientacja statku w danym momencie (1 - do dolu, 2 - na bok)
 	int audio_samples;

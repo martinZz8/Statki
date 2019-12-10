@@ -1,8 +1,8 @@
 #include "Deploying.h"
 
-Deploying::Deploying(State **state, Utils& utils, Board& board1, Board& board2):windowID(WINDOW_DEPLOYING), s(state), u(utils), b1(board1), b2(board2)
+Deploying::Deploying(State **state, Utils& utils, Buttons& buttons, Board& board1, Board& board2):windowID(WINDOW_DEPLOYING), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
 {
-	//m = NULL;
+	m = NULL;
 	deploy_ship_guard = true;
 	resize_ship_guard = true;
 	rotate_ship_guard = true;

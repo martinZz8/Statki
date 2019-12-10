@@ -52,7 +52,7 @@ void Board::setOffset(float x, float y)
 void Board::paintBoard()
 {
 	for (Field f : fields)
-		f.render();
+		f.paintField();
 }
 
 int Board::whichField(float mouse_x, float mouse_y)
@@ -77,6 +77,12 @@ void Board::setFieldOccupy(float mouse_x, float mouse_y, bool occupied)
 {
 	int indeks = whichField(mouse_x, mouse_y);
 	fields[indeks].setOccupied(occupied);
+}
+
+void Board::setFieldHit(float mouse_x, float mouse_y, bool hit)
+{
+	int indeks = whichField(mouse_x, mouse_y);
+	fields[indeks].setHit(hit);
 }
 
 int Board::whichShip(float mouse_x, float mouse_y)
@@ -181,4 +187,16 @@ void Board::deployDefaultShip(float mouse_x, float mouse_y, int size, int orient
 	//	fields[indeks].setOccupied(1);
 	//}
 
+}
+
+bool Board::getFieldOccupied(float mouse_x, float mouse_y)
+{
+	int indeks = whichShip(mouse_x, mouse_y);
+	return fields[indeks].getOccupied();
+}
+
+bool Board::getFieldHit(float mouse_x, float mouse_y)
+{
+	int indeks = whichShip(mouse_x, mouse_y);
+	return fields[indeks].getHit();
 }

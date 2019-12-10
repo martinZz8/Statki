@@ -54,18 +54,18 @@ int main()
 	Board b1(u, 80, 70);
 	Board b2(u, 500, 70);
 	State* s = NULL;
-	Menu m(&s, u, b1, b2);
-	Deploying d(&s, u, b1, b2);
-	//Game game(&s,u,b1,b2);
-	//Player player1(&s,u,b1,b2);
-	//Player player2(&s,u,b1,b2);
+	Menu m(&s, u, buttons, b1, b2);
+	Deploying d(&s, u, buttons, b1, b2);
+	//Game game(&s,u, buttons,b1,b2);
+	//Player player1(&s, u, buttons, b1, b2);
+	//Player player2(&s, u, buttons, b1, b2);
 
 	m.setStates(&d);
 	d.setStates(&m);
 
 	//USTAWIENIE POCZATKOWEJ FAZY (MA BYC NA POCZATKU MENU)
 	s = &m;
-	u.setActualWindow(WINDOW_DEPLOYING);
+	u.setActualWindow(WINDOW_MENU);
 
 	display = al_create_display(u.getDisplayX(), u.getDisplayY());
 	queue = al_create_event_queue();
@@ -127,6 +127,95 @@ int main()
 		else
 			u.setKeyLeftPressed(false);
 
+		/***BUTTONY***/
+		/*MENU*/
+		if (s == &m)
+		{
+			/*RYSOWANIE BUTTONOW*/ //napisac w poszczegolnych klasach, w metodach render
+			//BUTTONY Z OPCJI DAC DO KLASY OPCJI
+
+			/*NAJECHANIE MYSZKA NA BUTTONA*/
+			if (buttons.isMouseOnButton(BUTTON_MENU_PLAY) == true)
+				buttons.setHighlighted(BUTTON_MENU_PLAY, true);
+			else
+				buttons.setHighlighted(BUTTON_MENU_PLAY, false);
+			if (buttons.isMouseOnButton(BUTTON_MENU_OPTIONS) == true)
+				buttons.setHighlighted(BUTTON_MENU_OPTIONS, true);
+			else
+				buttons.setHighlighted(BUTTON_MENU_OPTIONS, false);
+			if (buttons.isMouseOnButton(BUTTON_MENU_EXIT) == true)
+				buttons.setHighlighted(BUTTON_MENU_EXIT, true);
+			else
+				buttons.setHighlighted(BUTTON_MENU_EXIT, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_BACK) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_BACK, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_BACK, false);
+
+
+			/*KLIKNIECIE PRZYCISKIEM NA BUTTONA*/
+			if (u.getMouse1Clicked() == true)
+			{
+				
+				if (buttons.getHighlighted(BUTTON_MENU_PLAY) == true)
+					buttons.setPressed(BUTTON_MENU_PLAY, true);
+				else
+					buttons.setPressed(BUTTON_MENU_PLAY, false);
+				if (buttons.getHighlighted(BUTTON_MENU_OPTIONS) == true)
+					buttons.setPressed(BUTTON_MENU_OPTIONS, true);
+				else
+					buttons.setPressed(BUTTON_MENU_OPTIONS, false);
+				if (buttons.getHighlighted(BUTTON_MENU_EXIT) == true)
+					buttons.setPressed(BUTTON_MENU_EXIT, true);
+				else
+					buttons.setPressed(BUTTON_MENU_EXIT, false);
+				if (buttons.getHighlighted(BUTTON_OPTIONS_BACK) == true)
+					buttons.setPressed(BUTTON_OPTIONS_BACK, true);
+				else
+					buttons.setPressed(BUTTON_OPTIONS_BACK, false);
+
+			}
+			else
+			{
+				buttons.setPressed(BUTTON_MENU_PLAY, false);
+				buttons.setPressed(BUTTON_MENU_OPTIONS, false);
+				buttons.setPressed(BUTTON_MENU_EXIT, false);
+				buttons.setPressed(BUTTON_OPTIONS_BACK, false);
+			}
+		}/*DEPLOYING*/
+		else if (s == &d)
+		{
+			
+			/*NAJECHANIE MYSZKA NA BUTTONA*/
+			if (buttons.isMouseOnButton(BUTTON_DEPLOYING_PLAY) == true)
+				buttons.setHighlighted(BUTTON_DEPLOYING_PLAY, true);
+			else
+				buttons.setHighlighted(BUTTON_DEPLOYING_PLAY, false);
+			if (buttons.isMouseOnButton(BUTTON_DEPLOYING_BACK) == true)
+				buttons.setHighlighted(BUTTON_DEPLOYING_BACK, true);
+			else
+				buttons.setHighlighted(BUTTON_DEPLOYING_BACK, false);
+
+			/*KLIKNIECIE PRZYCISKIEM NA BUTTONA*/
+			if (u.getMouse1Clicked() == true)
+			{
+				if (buttons.isMouseOnButton(BUTTON_DEPLOYING_PLAY) == true)
+					buttons.setPressed(BUTTON_DEPLOYING_PLAY, true);
+				else
+					buttons.setPressed(BUTTON_DEPLOYING_PLAY, false);
+				if (buttons.isMouseOnButton(BUTTON_DEPLOYING_BACK) == true)
+					buttons.setPressed(BUTTON_DEPLOYING_BACK, true);
+				else
+					buttons.setPressed(BUTTON_DEPLOYING_BACK, false);
+			}
+			else
+			{
+				buttons.setPressed(BUTTON_DEPLOYING_PLAY, false);
+				buttons.setPressed(BUTTON_DEPLOYING_BACK, false);
+			}
+		}
+		
+			
 
 		/***GLOWNE WYWOLANIA METOD***/
 		if (event.type == ALLEGRO_EVENT_TIMER)
