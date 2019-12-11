@@ -12,17 +12,6 @@ Field::Field(Utils& utils):u(utils)
 	surrounded = false;
 }
 
-//Field::Field()
-//{
-//	c_x = 0;
-//	c_y = 0;
-//	x_board_pos = 0;
-//	y_board_pos = 0;
-//	width = u.getFieldSize();
-//	occupied = 0;
-//	hit = 0;
-//}
-
 Field::~Field()
 {
 

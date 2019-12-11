@@ -78,9 +78,9 @@ void Menu::paintButtons()
 	//Buttons highlights
 	if (buttons.getHighlighted(BUTTON_MENU_PLAY) == true)
 		buttons.paintButtonHighlight(BUTTON_MENU_PLAY, FONT_SIZE_BIG);
-	if (buttons.getHighlighted(BUTTON_MENU_OPTIONS) == true)
+	else if (buttons.getHighlighted(BUTTON_MENU_OPTIONS) == true)
 		buttons.paintButtonHighlight(BUTTON_MENU_OPTIONS, FONT_SIZE_BIG);
-	if (buttons.getHighlighted(BUTTON_MENU_EXIT) == true)
+	else if (buttons.getHighlighted(BUTTON_MENU_EXIT) == true)
 		buttons.paintButtonHighlight(BUTTON_MENU_EXIT, FONT_SIZE_BIG);
 	
 		

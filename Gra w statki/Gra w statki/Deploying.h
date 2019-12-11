@@ -14,7 +14,7 @@ class Deploying:public State
 	Menu* m; //wskaznik tylko do porowania adresu
 	State **s;
 	const int windowID;
-	bool deploy_ship_guard; //true - mozna grac, false - nie mozna grac
+	bool audio_play_guard; //true - mozna grac, false - nie mozna grac
 	bool resize_ship_guard; //true - mozna zmienic rozmiar, false - nie mozna zmienci rozmiaru
 	bool rotate_ship_guard; //true - mozna zmienic polozenie, false - nie mozna zmienic polozenia
 

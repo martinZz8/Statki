@@ -14,7 +14,6 @@ class Field
 
 public:
 	Field(Utils& utils);
-	//Field();
 	~Field();
 	void setCoords(float x, float y);
 	void setOccupied(bool o);

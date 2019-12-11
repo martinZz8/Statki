@@ -1,9 +1,10 @@
 #include "Deploying.h"
+#include "Menu.h"
 
 Deploying::Deploying(State **state, Utils& utils, Buttons& buttons, Board& board1, Board& board2):windowID(WINDOW_DEPLOYING), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
 {
 	m = NULL;
-	deploy_ship_guard = true;
+	audio_play_guard = true;
 	resize_ship_guard = true;
 	rotate_ship_guard = true;
 }
@@ -15,8 +16,6 @@ void Deploying::setStates(Menu* menu)
 
 void Deploying::tick()
 {
-	//b1.setFields();
-	//b2.setFields();
 	defaultKeyboardSwitches();
 	mouseSwitches();
 }
@@ -84,15 +83,23 @@ void Deploying::mouseSwitches()
 	}
 	else
 	{
-		if (u.getMouse1Clicked() == true && deploy_ship_guard == true)
+		if (buttons.getActivated(BUTTON_DEPLOYING_BACK) == true)
 		{
-			cout << "Klik w deploying" << endl;
-			u.playSample(AUDIO_PLACED_SHIP);
-			deploy_ship_guard = false;
+			*s = m;
+			u.setMouseClickedBeforeStateSwitch(true);
+			cout << "Przelaczenie z DEPLOYING do MENU" << endl;
 		}
-		else if (u.getMouse1Clicked() == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
-			deploy_ship_guard = true;
+
+		if ((buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true || buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true) && audio_play_guard == true)
+		{
+			u.playSample(AUDIO_MENU_CLICK);
+			audio_play_guard = false;
+		}
+		else if ((buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true || buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true) == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
+			audio_play_guard = true;
 	}
+
+	
 	
 
 }
@@ -104,7 +111,7 @@ void Deploying::paintButtons()
 	
 	if (buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true)
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_PLAY, FONT_SIZE_SMALL);
-	if (buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true)
+	else if (buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true)
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
 	
 }
