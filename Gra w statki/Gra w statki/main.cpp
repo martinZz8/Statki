@@ -65,7 +65,7 @@ int main()
 
 	//USTAWIENIE POCZATKOWEJ FAZY (MA BYC NA POCZATKU MENU)
 	s = &m;
-	u.setActualWindow(WINDOW_MENU);
+	
 
 	display = al_create_display(u.getDisplayX(), u.getDisplayY());
 	queue = al_create_event_queue();
@@ -93,14 +93,27 @@ int main()
 			u.setMouseY(event.mouse.y);
 			cout << "X: " << u.getMouseX() << "\t" << "Y: " << u.getMouseY() << endl;
 		}
-		if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && event.mouse.button & 1)
+		if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && event.mouse.button & 1 && u.getMouse1ClickGuard() == true)
+		{
 			u.setMouse1Clicked(true);
-		if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && event.mouse.button & 2)
+			u.setMouse1ClickGuard(false); //jezeli kliknieto przycisk myszy, nie mozna go kliknac drugi raz, do czasu, az puscimy przycisk - dlatego ustawiam ta flage na false
+		}
+		if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && event.mouse.button & 2 && u.getMouse2ClickGuard() == true)
+		{
 			u.setMouse2Clicked(true);
-		if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && event.mouse.button & 1)
+			u.setMouse2ClickGuard(false);
+		}
+		if(event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && event.mouse.button & 1) //jezeli lewy przycisk myszy jest puszczony
+		{
 			u.setMouse1Clicked(false);
+			u.setMouse1ClickGuard(true);
+
+		}
 		if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP && event.mouse.button & 2)
+		{
 			u.setMouse2Clicked(false);
+			u.setMouse2ClickGuard(true);
+		}
 
 		/***KLAWIATURA***/
 		ALLEGRO_KEYBOARD_STATE keyState;
@@ -153,34 +166,31 @@ int main()
 				buttons.setHighlighted(BUTTON_OPTIONS_BACK, false);
 
 
-			/*KLIKNIECIE PRZYCISKIEM NA BUTTONA*/
+			/*KLIKNIECIE I PUSZCZENIE PRZYCISKU NA BUTTONIE*/
 			if (u.getMouse1Clicked() == true)
 			{
-				
 				if (buttons.getHighlighted(BUTTON_MENU_PLAY) == true)
-					buttons.setPressed(BUTTON_MENU_PLAY, true);
+					buttons.setActivated(BUTTON_MENU_PLAY, true);
+				else if (buttons.getHighlighted(BUTTON_MENU_OPTIONS) == true)
+					buttons.setActivated(BUTTON_MENU_OPTIONS, true);
+				else if (buttons.getHighlighted(BUTTON_MENU_EXIT) == true)
+					buttons.setActivated(BUTTON_MENU_EXIT, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_BACK) == true)
+					buttons.setActivated(BUTTON_OPTIONS_BACK, true);
 				else
-					buttons.setPressed(BUTTON_MENU_PLAY, false);
-				if (buttons.getHighlighted(BUTTON_MENU_OPTIONS) == true)
-					buttons.setPressed(BUTTON_MENU_OPTIONS, true);
-				else
-					buttons.setPressed(BUTTON_MENU_OPTIONS, false);
-				if (buttons.getHighlighted(BUTTON_MENU_EXIT) == true)
-					buttons.setPressed(BUTTON_MENU_EXIT, true);
-				else
-					buttons.setPressed(BUTTON_MENU_EXIT, false);
-				if (buttons.getHighlighted(BUTTON_OPTIONS_BACK) == true)
-					buttons.setPressed(BUTTON_OPTIONS_BACK, true);
-				else
-					buttons.setPressed(BUTTON_OPTIONS_BACK, false);
-
+				{
+					buttons.setActivated(BUTTON_MENU_PLAY, false);
+					buttons.setActivated(BUTTON_MENU_OPTIONS, false);
+					buttons.setActivated(BUTTON_MENU_EXIT, false);
+					buttons.setActivated(BUTTON_OPTIONS_BACK, false);
+				}
 			}
 			else
 			{
-				buttons.setPressed(BUTTON_MENU_PLAY, false);
-				buttons.setPressed(BUTTON_MENU_OPTIONS, false);
-				buttons.setPressed(BUTTON_MENU_EXIT, false);
-				buttons.setPressed(BUTTON_OPTIONS_BACK, false);
+				buttons.setActivated(BUTTON_MENU_PLAY, false);
+				buttons.setActivated(BUTTON_MENU_OPTIONS, false);
+				buttons.setActivated(BUTTON_MENU_EXIT, false);
+				buttons.setActivated(BUTTON_OPTIONS_BACK, false);
 			}
 		}/*DEPLOYING*/
 		else if (s == &d)
@@ -196,26 +206,26 @@ int main()
 			else
 				buttons.setHighlighted(BUTTON_DEPLOYING_BACK, false);
 
-			/*KLIKNIECIE PRZYCISKIEM NA BUTTONA*/
+			/*KLIKNIECIE I PUSZCZENIE PRZYCISKU NA BUTTONIE*/
 			if (u.getMouse1Clicked() == true)
 			{
 				if (buttons.isMouseOnButton(BUTTON_DEPLOYING_PLAY) == true)
-					buttons.setPressed(BUTTON_DEPLOYING_PLAY, true);
+					buttons.setActivated(BUTTON_DEPLOYING_PLAY, true);
+				else if (buttons.isMouseOnButton(BUTTON_DEPLOYING_BACK) == true)
+					buttons.setActivated(BUTTON_DEPLOYING_BACK, true);
 				else
-					buttons.setPressed(BUTTON_DEPLOYING_PLAY, false);
-				if (buttons.isMouseOnButton(BUTTON_DEPLOYING_BACK) == true)
-					buttons.setPressed(BUTTON_DEPLOYING_BACK, true);
-				else
-					buttons.setPressed(BUTTON_DEPLOYING_BACK, false);
+				{
+					buttons.setActivated(BUTTON_DEPLOYING_PLAY, false);
+					buttons.setActivated(BUTTON_DEPLOYING_BACK, false);
+				}
 			}
 			else
 			{
-				buttons.setPressed(BUTTON_DEPLOYING_PLAY, false);
-				buttons.setPressed(BUTTON_DEPLOYING_BACK, false);
+				buttons.setActivated(BUTTON_DEPLOYING_PLAY, false);
+				buttons.setActivated(BUTTON_DEPLOYING_BACK, false);
 			}
 		}
 		
-			
 
 		/***GLOWNE WYWOLANIA METOD***/
 		if (event.type == ALLEGRO_EVENT_TIMER)

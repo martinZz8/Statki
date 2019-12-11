@@ -46,9 +46,11 @@ class Utils
 	vector <ALLEGRO_SAMPLE*> samples; //vector wszystkich utworow
 	vector <ALLEGRO_FONT*> fonts; //vector wszystkich czcionek (nawet tych samych ze zmienionym rozmiarem)
 	bool running; //true - program dziala, false - program jest wylaczany
-	int actual_window; //zmienna zawierajaca liczbe wskazujaca na aktualnie wyswietlane okno
+	bool mouse_clicked_before_state_switch; //zmienna wskazujaca na to, czy zostal klikniety przycisk przed zmiena okna, czy nie; true - tak, false - nie
 	static float mouse_x;
 	static float mouse_y;
+	bool mouse_1_click_guard; //true - mozna kliknac, false - nie mozna kliknac
+	bool mouse_2_click_guard; //true - mozna kliknac, false - nie mozna kliknac
 	bool mouse1_clicked;                    /*                                     */
 	bool mouse2_clicked;                    /*                                     */
 	bool key_space_pressed;                 /*                                     */
@@ -76,9 +78,11 @@ public:
 	~Utils();
 	ALLEGRO_COLOR color(float r, float g, float b);
 	bool getRunning();
-	int getActualWindow();
+	bool getMouseClickedBeforeStateSwitch();
 	float getMouseX();
 	float getMouseY();
+	bool getMouse1ClickGuard();
+	bool getMouse2ClickGuard();
 	bool getMouse1Clicked();
 	bool getMouse2Clicked();
 	bool getKeySpacePressed();
@@ -100,9 +104,11 @@ public:
 	int getNumberOfThreeMastedShips();
 	int getNumberOfFourMastedShips();
 	void setRunning(bool b);
-	void setActualWindow(int w);
+	void setMouseClickedBeforeStateSwitch(bool c);
 	void setMouseX(float x);
 	void setMouseY(float y);
+	void setMouse1ClickGuard(bool g);
+	void setMouse2ClickGuard(bool g);
 	void setMouse1Clicked(bool b);
 	void setMouse2Clicked(bool b);
 	void setKeySpacePressed(bool b);

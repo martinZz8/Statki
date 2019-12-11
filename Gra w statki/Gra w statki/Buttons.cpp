@@ -12,8 +12,8 @@ void Buttons::setButtons()
 	buttons.push_back(Button(u, 200, 80, 390, 300, BUTTON_MENU_OPTIONS)); //1
 	buttons.push_back(Button(u, 200, 80, 390, 410, BUTTON_MENU_EXIT)); //2
 	buttons.push_back(Button(u, 200, 80, 700, 400, BUTTON_OPTIONS_BACK)); //3
-	buttons.push_back(Button(u, 200, 80, 700, 400, BUTTON_DEPLOYING_PLAY)); //4
-	buttons.push_back(Button(u, 200, 80, 700, 510, BUTTON_DEPLOYING_BACK)); //5
+	buttons.push_back(Button(u, 120, 40, 740, 545, BUTTON_DEPLOYING_PLAY)); //4
+	buttons.push_back(Button(u, 120, 40, 870, 545, BUTTON_DEPLOYING_BACK)); //5
 
 }
 
@@ -22,9 +22,9 @@ void Buttons::setHighlighted(int indeks, bool h)
 	buttons[indeks].setHighlighted(h);
 }
 
-void Buttons::setPressed(int indeks, bool p)
+void Buttons::setActivated(int indeks, bool p)
 {
-	buttons[indeks].setPressed(p);
+	buttons[indeks].setActivated(p);
 }
 
 bool Buttons::getHighlighted(int indeks)
@@ -32,9 +32,9 @@ bool Buttons::getHighlighted(int indeks)
 	return buttons[indeks].getHighlighted();
 }
 
-bool Buttons::getPressed(int indeks)
+bool Buttons::getActivated(int indeks)
 {
-	return buttons[indeks].getPressed();
+	return buttons[indeks].getActivated();
 }
 
 bool Buttons::isMouseOnButton(int indeks)

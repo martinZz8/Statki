@@ -24,8 +24,9 @@ public:
 	void tick(); //metoda wykonujaca obliczenia
 	void render(); //metoda wykonujaca rysowanie
 	int getWindowID(); //metoda zwracajaca indeks okna;
-	void DefaultKeyboardSwitches();
-	void MouseSwitches();
-	
+	void defaultKeyboardSwitches();
+	void mouseSwitches();
+	void paintButtons();
+		
 };
 

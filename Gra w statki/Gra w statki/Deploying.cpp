@@ -17,14 +17,15 @@ void Deploying::tick()
 {
 	//b1.setFields();
 	//b2.setFields();
-	DefaultKeyboardSwitches();
-	MouseSwitches();
+	defaultKeyboardSwitches();
+	mouseSwitches();
 }
 
 void Deploying::render()
 {
 	b1.paintBoard();
 	b2.paintBoard();
+	paintButtons();
 	b1.paintStandardShip(u.getMouseX(), u.getMouseY());
 	//u.drawText("Taki test",FONT_SIZE_SMALL,152, 0, 0, 0, 0);
 }
@@ -34,7 +35,7 @@ int Deploying::getWindowID()
 	return windowID;
 }
 
-void Deploying::DefaultKeyboardSwitches()
+void Deploying::defaultKeyboardSwitches()
 {
 	if (u.getKeyUpPressed() == true && resize_ship_guard == true)
 	{
@@ -74,13 +75,36 @@ void Deploying::DefaultKeyboardSwitches()
 		rotate_ship_guard = true;
 }
 
-void Deploying::MouseSwitches()
+void Deploying::mouseSwitches()
 {
-	if (u.getMouse1Clicked() == true && deploy_ship_guard == true)
+	if (u.getMouseClickedBeforeStateSwitch() == true)
 	{
-		u.playSample(AUDIO_PLACED_SHIP);
-		deploy_ship_guard = false;
+		u.setMouse1Clicked(false); //sztuczne ustawienie kliknietego lewego przycisku myszy na false po zmianie okna
+		u.setMouseClickedBeforeStateSwitch(false);
 	}
-	else if (u.getMouse1Clicked() == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
-		deploy_ship_guard = true;
+	else
+	{
+		if (u.getMouse1Clicked() == true && deploy_ship_guard == true)
+		{
+			cout << "Klik w deploying" << endl;
+			u.playSample(AUDIO_PLACED_SHIP);
+			deploy_ship_guard = false;
+		}
+		else if (u.getMouse1Clicked() == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
+			deploy_ship_guard = true;
+	}
+	
+
+}
+
+void Deploying::paintButtons()
+{
+	buttons.paintButtonWithText(BUTTON_DEPLOYING_PLAY, "PLAY", FONT_SIZE_SMALL, 45, 12);
+	buttons.paintButtonWithText(BUTTON_DEPLOYING_BACK, "BACK TO MENU", FONT_SIZE_SMALL, 6, 12);
+	
+	if (buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true)
+		buttons.paintButtonHighlight(BUTTON_DEPLOYING_PLAY, FONT_SIZE_SMALL);
+	if (buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true)
+		buttons.paintButtonHighlight(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
+	
 }

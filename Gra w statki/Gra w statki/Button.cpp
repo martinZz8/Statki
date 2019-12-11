@@ -3,7 +3,7 @@
 Button::Button(Utils& utils, float width, float height, float x, float y, int button_ID):u(utils), width(width), height(height), x(x), y(y), button_ID(button_ID)
 {
 	highlighted = false;
-	pressed = false;
+	activated = false;
 }
 
 void Button::setWidth(float width)
@@ -30,9 +30,9 @@ void Button::setHighlighted(bool h)
 	highlighted = h;
 }
 
-void Button::setPressed(bool h)
+void Button::setActivated(bool h)
 {
-    pressed = h;
+    activated = h;
 }
 
 float Button::getX()
@@ -60,9 +60,9 @@ bool Button::getHighlighted()
 	return highlighted;
 }
 
-bool Button::getPressed()
+bool Button::getActivated()
 {
-	return pressed;
+	return activated;
 }
 
 int Button::getButtonID()

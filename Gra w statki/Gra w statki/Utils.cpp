@@ -5,8 +5,10 @@ float Utils::mouse_y = 0;
 
 Utils::Utils()
 {
+	mouse_clicked_before_state_switch = false;
+	mouse_1_click_guard = true;
+	mouse_2_click_guard = true;
 	running = true;
-	actual_window = -1;
 	mouse1_clicked = false;
 	mouse2_clicked = false;
 	key_space_pressed = false;
@@ -52,9 +54,9 @@ bool Utils::getRunning()
 	return running;
 }
 
-int Utils::getActualWindow()
+bool Utils::getMouseClickedBeforeStateSwitch()
 {
-	return actual_window;
+	return mouse_clicked_before_state_switch;
 }
 
 float Utils::getMouseX()
@@ -65,6 +67,16 @@ float Utils::getMouseX()
 float Utils::getMouseY()
 {
 	return mouse_y;
+}
+
+bool Utils::getMouse1ClickGuard()
+{
+	return mouse_1_click_guard;
+}
+
+bool Utils::getMouse2ClickGuard()
+{
+	return mouse_2_click_guard;
 }
 
 bool Utils::getMouse1Clicked()
@@ -172,9 +184,9 @@ void Utils::setRunning(bool b)
 	running = b;
 }
 
-void Utils::setActualWindow(int w)
+void Utils::setMouseClickedBeforeStateSwitch(bool c)
 {
-	actual_window = w;
+	mouse_clicked_before_state_switch = c;
 }
 
 void Utils::setMouseX(float x)
@@ -185,6 +197,16 @@ void Utils::setMouseX(float x)
 void Utils::setMouseY(float y)
 {
 	mouse_y = y;
+}
+
+void Utils::setMouse1ClickGuard(bool g)
+{
+	mouse_1_click_guard = g;
+}
+
+void Utils::setMouse2ClickGuard(bool g)
+{
+	mouse_2_click_guard = g;
 }
 
 void Utils::setMouse1Clicked(bool b)
