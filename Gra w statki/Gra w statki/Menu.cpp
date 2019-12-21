@@ -1,15 +1,25 @@
 #include "Menu.h"
+#include "Options.h"
 #include "Deploying.h"
 
 Menu::Menu(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2):windowID(WINDOW_MENU), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
 {
 	audio_play_guard = false;
 	d = NULL;
+	o = NULL;
 }
 
-void Menu::setStates(Deploying* deploying)
+Menu::~Menu()
 {
-	d = deploying;
+	delete[]s;
+	delete[]o;
+	delete[]d;
+}
+
+void Menu::setStates(Options* options, Deploying* deploying)
+{
+	o = options;
+	d = deploying;	
 }
 
 void Menu::tick()
@@ -44,14 +54,14 @@ void Menu::mouseSwitches()
 		{
 			*s = d;
 			u.setMouseClickedBeforeStateSwitch(true);
-			cout << "Przelaczenie z  MENU do DEPLOYING" << endl;
+			cout << "Przelaczenie z MENU do DEPLOYING" << endl;
 		}
-		/*else if (buttons.getActivated(BUTTON_MENU_OPTIONS) == true)
+		else if (buttons.getActivated(BUTTON_MENU_OPTIONS) == true)
 		{
 			*s = o;
-			u.setButtonCanBeActivated(false);
+			u.setMouseClickedBeforeStateSwitch(true);
 			cout << "Przelaczenie z  MENU do  OPTIONS" << endl;
-		}	*/
+		}
 		else if (buttons.getActivated(BUTTON_MENU_EXIT) == true)
 		{
 			u.setRunning(false);

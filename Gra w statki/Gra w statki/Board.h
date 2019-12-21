@@ -33,7 +33,7 @@ public:
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships
 	void paintStandardShip(float mouse_x, float mouse_y); //metoda ryzsujaca statek dla standardowych opcji statków
 	//DO DOKONCZENIA METODA NIZEJ
-	void deployDefaultShip(float mouse_x, float mouse_y, int size, int orientation); //metoda rozstawiajaca statek, size - rozmiar statku, orientation - orientacja statku
+	void deployClassicShip(float mouse_x, float mouse_y, int size, int orientation); //metoda rozstawiajaca statek, size - rozmiar statku, orientation - orientacja statku
 	bool getFieldOccupied(float mouse_x, float mouse_y);
 	bool getFieldHit(float mouse_x, float mouse_y);
 };

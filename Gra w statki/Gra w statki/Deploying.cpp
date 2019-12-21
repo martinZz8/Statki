@@ -9,6 +9,12 @@ Deploying::Deploying(State **state, Utils& utils, Buttons& buttons, Board& board
 	rotate_ship_guard = true;
 }
 
+Deploying::~Deploying()
+{
+	delete[]s;
+	delete[]m;
+}
+
 void Deploying::setStates(Menu* menu)
 {
 	m = menu;
@@ -16,7 +22,7 @@ void Deploying::setStates(Menu* menu)
 
 void Deploying::tick()
 {
-	defaultKeyboardSwitches();
+	classicKeyboardSwitches();
 	mouseSwitches();
 }
 
@@ -26,7 +32,7 @@ void Deploying::render()
 	b2.paintBoard();
 	paintButtons();
 	b1.paintStandardShip(u.getMouseX(), u.getMouseY());
-	//u.drawText("Taki test",FONT_SIZE_SMALL,152, 0, 0, 0, 0);
+	
 }
 
 int Deploying::getWindowID()
@@ -34,7 +40,7 @@ int Deploying::getWindowID()
 	return windowID;
 }
 
-void Deploying::defaultKeyboardSwitches()
+void Deploying::classicKeyboardSwitches()
 {
 	if (u.getKeyUpPressed() == true && resize_ship_guard == true)
 	{

@@ -25,11 +25,17 @@
 /*W MAINIE SPRAWDZAC CZY KLIKNIETO DANY PRZYCISK - JEZELI KURSOR MYSZY JEST NA PRZYCISKU I NACISNIETO LEWY PRZYCISK MYSZY - WTEDY WCISNIETO BUTTON*/
 /*ZROBIC PODSWIETLANIE PRZYCISKU PODOBNIE JAK WYZEJ W MAINIE*/
 
+//5) WPROWADZIC LOSOWANIE GRACZA ZACZYNAJACEGO ROZGRYWKE PRZEZ EMITACJE RZUCANIA KOSTKA SZESCIENNA
+
+//6) JAK ZOSTANIE CZAS, TO WPROAWDZIC OPCJE GRY W STATKI - SALVO(POCZYTAC W INTERNECIE O REGULACH TEJ GRY)
+
+
 /*ZGODNE Z GITHUBEM*/
 #pragma once
 #include "Utils.h"
-#include "Deploying.h"
 #include "Menu.h"
+#include "Options.h"
+#include "Deploying.h"
 #include "Buttons.h"
 
 int main()
@@ -55,13 +61,15 @@ int main()
 	Board b2(u, 500, 70);
 	State* s = NULL;
 	Menu m(&s, u, buttons, b1, b2);
+	Options o(&s, u, buttons);
 	Deploying d(&s, u, buttons, b1, b2);
 	//Game game(&s,u, buttons,b1,b2);
 	//Player player1(&s, u, buttons, b1, b2);
 	//Player player2(&s, u, buttons, b1, b2);
 
-	m.setStates(&d);
+	m.setStates(&o, &d);
 	d.setStates(&m);
+	o.setStates(&m);
 
 	//USTAWIENIE POCZATKOWEJ FAZY (MA BYC NA POCZATKU MENU)
 	s = &m;
@@ -166,7 +174,7 @@ int main()
 				buttons.setHighlighted(BUTTON_OPTIONS_BACK, false);
 
 
-			/*KLIKNIECIE I PUSZCZENIE PRZYCISKU NA BUTTONIE*/
+			/*KLIKNIECIE PRZYCISKU NA BUTTONIE*/
 			if (u.getMouse1Clicked() == true)
 			{
 				if (buttons.getHighlighted(BUTTON_MENU_PLAY) == true)
@@ -206,7 +214,7 @@ int main()
 			else
 				buttons.setHighlighted(BUTTON_DEPLOYING_BACK, false);
 
-			/*KLIKNIECIE I PUSZCZENIE PRZYCISKU NA BUTTONIE*/
+			/*KLIKNIECIE PRZYCISKU NA BUTTONIE*/
 			if (u.getMouse1Clicked() == true)
 			{
 				if (buttons.isMouseOnButton(BUTTON_DEPLOYING_PLAY) == true)

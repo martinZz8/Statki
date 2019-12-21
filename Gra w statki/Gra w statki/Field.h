@@ -4,13 +4,13 @@
 class Field
 {
 	Utils& u;
-	float c_x; //co-ordinates x
-	float c_y; //co-orginates y
+	float c_x; //koordynaty x
+	float c_y; //koordynaty y
 	int x_board_pos, y_board_pos;
 	float width; //szerokosc pola
-	bool occupied; //czy pole jest zajete przez statek (0 - nie, 1 - tak)
-	bool hit; //pole trafione przez przeciwnika (0 - nie trafione, 1 - trafione)
-	bool surrounded; //pole, na którym nie mo¿e zostaæ postawiony ¿aden statek (poniewa¿ ju¿ obok znajduje siê jakiœ statek) (0- nie ma obok statku, 1 - jest obok statek)
+	bool occupied; //czy pole jest zajete przez statek (false - nie, true - tak)
+	bool hit; //pole trafione przez przeciwnika (false - nie trafione, true - trafione)
+	bool surrounded; //pole, na którym nie mo¿e zostaæ postawiony ¿aden statek (poniewa¿ ju¿ obok znajduje siê jakiœ statek) (false - nie ma obok statku, true - jest obok statek)
 
 public:
 	Field(Utils& utils);

@@ -20,11 +20,12 @@ class Deploying:public State
 
 public:
 	Deploying(State **state, Utils &utils, Buttons& buttons, Board &board1, Board &board2);
+	~Deploying();
 	void setStates(Menu* menu);
 	void tick(); //metoda wykonujaca obliczenia
 	void render(); //metoda wykonujaca rysowanie
 	int getWindowID(); //metoda zwracajaca indeks okna;
-	void defaultKeyboardSwitches();
+	void classicKeyboardSwitches();
 	void mouseSwitches();
 	void paintButtons();
 		
