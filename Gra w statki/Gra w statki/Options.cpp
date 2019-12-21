@@ -6,12 +6,6 @@ Options::Options(State** state, Utils& utils, Buttons& buttons):widnowID(WINDOW_
 	m = NULL;
 }
 
-Options::~Options()
-{
-	delete[]s;
-	delete[]m;
-}
-
 void Options::setStates(Menu* menu)
 {
 	m = menu;
@@ -39,7 +33,7 @@ void Options::mouseSwitches()
 	}
 	else
 	{
-		if (buttons.getActivated(BUTTON_MENU_PLAY) == true)
+		if (buttons.getActivated(BUTTON_OPTIONS_BACK) == true)
 		{
 			*s = m;
 			u.setMouseClickedBeforeStateSwitch(true);

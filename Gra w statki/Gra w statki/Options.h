@@ -14,7 +14,6 @@ class Options:public State
 	const int widnowID;
 public:
 	Options(State** state, Utils& utils, Buttons& buttons);
-	~Options();
 	void setStates(Menu* menu);
 	void tick(); //metoda wykonujaca obliczenia
 	void render(); //metoda wykonujaca rysowanie

@@ -19,7 +19,6 @@ class Menu:public State
 	const int windowID;
 public:
 	Menu(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2);
-	~Menu();
 	void setStates(Options* options, Deploying* deploying);
 	void tick(); //metoda wykonujaca obliczenia
 	void render(); //metoda wykonujaca rysowanie

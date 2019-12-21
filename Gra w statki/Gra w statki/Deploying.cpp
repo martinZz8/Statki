@@ -9,12 +9,6 @@ Deploying::Deploying(State **state, Utils& utils, Buttons& buttons, Board& board
 	rotate_ship_guard = true;
 }
 
-Deploying::~Deploying()
-{
-	delete[]s;
-	delete[]m;
-}
-
 void Deploying::setStates(Menu* menu)
 {
 	m = menu;

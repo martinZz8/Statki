@@ -9,13 +9,6 @@ Menu::Menu(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& 
 	o = NULL;
 }
 
-Menu::~Menu()
-{
-	delete[]s;
-	delete[]o;
-	delete[]d;
-}
-
 void Menu::setStates(Options* options, Deploying* deploying)
 {
 	o = options;
