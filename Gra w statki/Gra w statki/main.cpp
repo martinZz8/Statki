@@ -53,8 +53,7 @@ int main()
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_EVENT_QUEUE* queue;
 	ALLEGRO_TIMER* timer;
-	/*ALLEGRO_SAMPLE* audio_placed_ship = NULL;*/
-
+	
 	Utils u;
 	Buttons buttons(u);
 	Board b1(u, 80, 70);
@@ -68,8 +67,8 @@ int main()
 	//Player player2(&s, u, buttons, b1, b2);
 
 	m.setStates(&o, &d);
-	d.setStates(&m);
 	o.setStates(&m);
+	d.setStates(&m);	
 
 	//USTAWIENIE POCZATKOWEJ FAZY (MA BYC NA POCZATKU MENU)
 	s = &m;
@@ -200,6 +199,142 @@ int main()
 				buttons.setActivated(BUTTON_MENU_EXIT, false);
 				buttons.setActivated(BUTTON_OPTIONS_BACK, false);
 			}
+		}/*OPTIONS*/
+		else if (s == &o)
+		{
+			/*NAJECHANIE MYSZKA NA BUTTONA*/
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_BACK) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_BACK, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_BACK, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_CLASSIC_GAME_MODE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_CLASSIC_GAME_MODE, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_CLASSIC_GAME_MODE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ADVANCED_GAME_MODE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_ADVANCED_GAME_MODE, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_ADVANCED_GAME_MODE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_PVC_GAME_MODE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_PVC_GAME_MODE, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_PVC_GAME_MODE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_PVP_GAME_MODE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_PVP_GAME_MODE, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_PVP_GAME_MODE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_VOLUME_ON) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_VOLUME_ON, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_VOLUME_ON, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_VOLUME_OFF) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_VOLUME_OFF, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_VOLUME_OFF, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_DOWN_ONE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_ONE, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_ONE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_UP_ONE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_ONE, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_ONE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_DOWN_TWO) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_TWO, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_TWO, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_UP_TWO) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_TWO, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_TWO, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_DOWN_THREE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_THREE, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_THREE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_UP_THREE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_THREE, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_THREE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_DOWN_FOUR) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_FOUR, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_FOUR, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_UP_FOUR) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_FOUR, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_FOUR, false);
+
+			/*KLIKNIECIE PRZYCISKU NA BUTTONIE*/
+			if (u.getMouse1Clicked() == true)
+			{
+				if (buttons.getHighlighted(BUTTON_OPTIONS_BACK) == true)
+					buttons.setActivated(BUTTON_OPTIONS_BACK, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_CLASSIC_GAME_MODE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_CLASSIC_GAME_MODE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_ADVANCED_GAME_MODE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_ADVANCED_GAME_MODE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_PVC_GAME_MODE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_PVC_GAME_MODE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_PVP_GAME_MODE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_PVP_GAME_MODE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_VOLUME_ON) == true)
+					buttons.setActivated(BUTTON_OPTIONS_VOLUME_ON, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_VOLUME_OFF) == true)
+					buttons.setActivated(BUTTON_OPTIONS_VOLUME_OFF, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_DOWN_ONE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_ONE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_UP_ONE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_ONE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_DOWN_TWO) == true)
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_TWO, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_UP_TWO) == true)
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_TWO, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_DOWN_THREE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_THREE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_UP_THREE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_THREE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_DOWN_FOUR) == true)
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_FOUR, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_UP_FOUR) == true)
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_FOUR, true);
+				else
+				{
+					buttons.setActivated(BUTTON_OPTIONS_BACK, false);
+					buttons.setActivated(BUTTON_OPTIONS_CLASSIC_GAME_MODE, false);
+					buttons.setActivated(BUTTON_OPTIONS_ADVANCED_GAME_MODE, false);
+					buttons.setActivated(BUTTON_OPTIONS_PVC_GAME_MODE, false);
+					buttons.setActivated(BUTTON_OPTIONS_PVP_GAME_MODE, false);
+					buttons.setActivated(BUTTON_OPTIONS_VOLUME_ON, false);
+					buttons.setActivated(BUTTON_OPTIONS_VOLUME_OFF, false);
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_ONE, false);
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_ONE, false);
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_TWO, false);
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_TWO, false);
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_THREE, false);
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_THREE, false);
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_FOUR, false);
+					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_FOUR, false);
+				}
+			}
+			else
+			{
+				buttons.setActivated(BUTTON_OPTIONS_BACK, false);
+				buttons.setActivated(BUTTON_OPTIONS_CLASSIC_GAME_MODE, false);
+				buttons.setActivated(BUTTON_OPTIONS_ADVANCED_GAME_MODE, false);
+				buttons.setActivated(BUTTON_OPTIONS_PVC_GAME_MODE, false);
+				buttons.setActivated(BUTTON_OPTIONS_PVP_GAME_MODE, false);
+				buttons.setActivated(BUTTON_OPTIONS_VOLUME_ON, false);
+				buttons.setActivated(BUTTON_OPTIONS_VOLUME_OFF, false);
+				buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_ONE, false);
+				buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_ONE, false);
+				buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_TWO, false);
+				buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_TWO, false);
+				buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_THREE, false);
+				buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_THREE, false);
+				buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_FOUR, false);
+				buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_FOUR, false);
+			}
+
 		}/*DEPLOYING*/
 		else if (s == &d)
 		{
@@ -251,10 +386,8 @@ int main()
 	al_destroy_event_queue(queue);
 	al_destroy_timer(timer);
 	al_uninstall_mouse();
-	al_uninstall_audio();
 	al_uninstall_keyboard();
+	//al_uninstall_audio(); jest w destruktorze klasy Utils zeby nie bylo odinstalowania audio kiedy nie sa usuniete wskazniki na audio
 
 	return 0;
 }
-
-	

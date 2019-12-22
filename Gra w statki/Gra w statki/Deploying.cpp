@@ -92,7 +92,7 @@ void Deploying::mouseSwitches()
 
 		if ((buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true || buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true) && audio_play_guard == true)
 		{
-			u.playSample(AUDIO_MENU_CLICK);
+			u.playSample(AUDIO_BUTTON_HIGHLIGHT);
 			audio_play_guard = false;
 		}
 		else if ((buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true || buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true) == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla

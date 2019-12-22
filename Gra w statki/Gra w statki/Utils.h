@@ -19,11 +19,12 @@ using namespace std;
 #define WINDOW_GAME 2
 #define WINDOW_DEPLOYING 3
 /***AUDIO***/
-#define AUDIO_MENU_CLICK 0
-#define AUDIO_PLACED_SHIP 1
-#define AUDIO_MISSED_SHOT 2
-#define AUDIO_HITTED_SHIP 3
-#define AUDIO_DESTROYED_SHIP 4
+#define AUDIO_BUTTON_HIGHLIGHT 0
+#define AUDIO_MOUSE_CLICK 1
+#define AUDIO_PLACED_SHIP 2
+#define AUDIO_MISSED_SHOT 3
+#define AUDIO_HITTED_SHIP 4
+
 /***FONT***/
 #define FONT_SIZE_SMALL 0
 #define FONT_SIZE_BIG 1
@@ -39,18 +40,19 @@ using namespace std;
 #define BUTTON_OPTIONS_ADVANCED_GAME_MODE 5
 #define BUTTON_OPTIONS_PVP_GAME_MODE 6
 #define BUTTON_OPTIONS_PVC_GAME_MODE 7
-#define BUTTON_OPTIONS_VOLUME_ON_OFF 8
-#define BUTTON_OPTIONS_ARROW_UP_FOUR 9
-#define BUTTON_OPTIONS_ARROW_DOWN_FOUR 10
-#define BUTTON_OPTIONS_ARROW_UP_THREE 11
-#define BUTTON_OPTIONS_ARROW_DOWN_THREE 12
-#define BUTTON_OPTIONS_ARROW_UP_TWO 13
-#define BUTTON_OPTIONS_ARROW_DOWN_TWO 14
-#define BUTTON_OPTIONS_ARROW_UP_ONE 15
-#define BUTTON_OPTIONS_ARROW_DOWN_ONE 16
+#define BUTTON_OPTIONS_VOLUME_ON 8
+#define BUTTON_OPTIONS_VOLUME_OFF 9
+#define BUTTON_OPTIONS_ARROW_UP_FOUR 10
+#define BUTTON_OPTIONS_ARROW_DOWN_FOUR 11
+#define BUTTON_OPTIONS_ARROW_UP_THREE 12
+#define BUTTON_OPTIONS_ARROW_DOWN_THREE 13
+#define BUTTON_OPTIONS_ARROW_UP_TWO 14
+#define BUTTON_OPTIONS_ARROW_DOWN_TWO 15
+#define BUTTON_OPTIONS_ARROW_UP_ONE 16
+#define BUTTON_OPTIONS_ARROW_DOWN_ONE 17
      /*DEPLOYING*/
-#define BUTTON_DEPLOYING_PLAY 17
-#define BUTTON_DEPLOYING_BACK 18
+#define BUTTON_DEPLOYING_PLAY 18
+#define BUTTON_DEPLOYING_BACK 19
      /*GAME*/
 
 class Utils
@@ -63,13 +65,19 @@ class Utils
 	static float mouse_y;
 	bool mouse_1_click_guard; //true - mozna kliknac, false - nie mozna kliknac
 	bool mouse_2_click_guard; //true - mozna kliknac, false - nie mozna kliknac
-	bool mouse1_clicked;                    /*                                     */
-	bool mouse2_clicked;                    /*                                     */
-	bool key_space_pressed;                 /*                                     */
-	bool key_up_pressed;                    /* true - klikniete, false - puszczone */
-	bool key_down_pressed;                  /*                                     */
-	bool key_left_pressed;                  /*                                     */
-	bool key_right_pressed;                 /*                                     */
+	bool mouse1_clicked;                    /*                                      */
+	bool mouse2_clicked;                    /*                                      */
+	bool key_space_pressed;                 /*                                      */
+	bool key_up_pressed;                    /*   true-klikniete, false-puszczone    */
+	bool key_down_pressed;                  /*                                      */
+	bool key_left_pressed;                  /*                                      */
+	bool key_right_pressed;                 /*                                      */
+	                                        /****************************************/
+	bool classic_game_mode;                 /*                                      */
+	bool advanced_game_mode;                /*                                      */
+	bool pvc_game_mode;                     /* true-aktywowane, false-dezaktywowane */
+	bool pvp_game_mode;                     /*                                      */
+	bool volume_on;                         /*                                      */
 	int ship_size; //rozmiar statku w danym momencie (ilosc fieldow)
 	int ship_orientation; //orientacja statku w danym momencie (1 - do dolu, 2 - na bok)
 	int audio_samples;
@@ -102,6 +110,11 @@ public:
 	bool getKeyDownPressed();
 	bool getKeyLeftPressed();
 	bool getKeyRightPressed();
+	bool getClassicGameMode();
+	bool getAdvancedGameMode();
+	bool getPvCGameMode();
+	bool getPvPGameMode();
+	bool getVolumeOn();
 	int getShipSize();
 	int getShipOrientation();
 	int getAudioSamples();
@@ -128,6 +141,11 @@ public:
 	void setKeyDownPressed(bool b);
 	void setKeyLeftPressed(bool b);
 	void setKeyRightPressed(bool b);
+	void setClassicGameMode(bool b);
+	void setAdvancedGameMode(bool b);
+	void setPvCGameMode(bool b);
+	void setPvPGameMode(bool b);
+	void setVolumeOn(bool b);
 	void setShipSize(int s);
 	void setShipOrientation(int o);
 	void setNumberOfOneMastedShips(int n);

@@ -12,7 +12,7 @@ class Button
 	bool activated; //zmienna, ktora wskazuje na to, czy przycisk zostal aktywowany; true - tak, false - nie
 	int button_ID; //id przycisku, ktore wskazuje na to, co dany przycisk robi
 public:
-	Button(Utils &utils, float width, float height, float x, float y, int button_ID);
+	Button(Utils &utils, float width, float height, float x, float y, bool activated, int button_ID);
 	void setWidth(float width);
 	void setHeight(float height);
 	void setX(float x);

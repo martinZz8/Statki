@@ -16,9 +16,14 @@ Utils::Utils()
 	key_down_pressed = false;
 	key_left_pressed = false;
 	key_right_pressed = false;
+	classic_game_mode = true;
+	advanced_game_mode = false;
+	pvc_game_mode = true;
+	pvp_game_mode = false;
+	volume_on = true;
 	ship_size = 1;
 	ship_orientation = 1;
-	audio_samples = 2; //do zmiany jezeli bedzie wiecej audio sampli
+	audio_samples = 5; //do zmiany jezeli bedzie wiecej audio sampli
 	font_samples = 3; //do zmiany jezeli bedzie wiecej font sampli
 	display_x = 1000;
 	display_y = 600;
@@ -42,6 +47,7 @@ Utils::~Utils()
 		al_destroy_sample(samples[i]);
 	for (int i = 0; i < font_samples; i++)
 		al_destroy_font(fonts[i]);
+	al_uninstall_audio();
 }
 
 ALLEGRO_COLOR Utils::color(float r, float g, float b)
@@ -112,6 +118,31 @@ bool Utils::getKeyLeftPressed()
 bool Utils::getKeyRightPressed()
 {
 	return key_right_pressed;
+}
+
+bool Utils::getClassicGameMode()
+{
+	return classic_game_mode;
+}
+
+bool Utils::getAdvancedGameMode()
+{
+	return advanced_game_mode;
+}
+
+bool Utils::getPvCGameMode()
+{
+	return pvc_game_mode;
+}
+
+bool Utils::getPvPGameMode()
+{
+	return pvp_game_mode;
+}
+
+bool Utils::getVolumeOn()
+{
+	return volume_on;
 }
 
 int Utils::getShipSize()
@@ -244,6 +275,31 @@ void Utils::setKeyRightPressed(bool b)
 	key_right_pressed = b;
 }
 
+void Utils::setClassicGameMode(bool b)
+{
+	classic_game_mode = b;
+}
+
+void Utils::setAdvancedGameMode(bool b)
+{
+	advanced_game_mode = b;
+}
+
+void Utils::setPvCGameMode(bool b)
+{
+	pvc_game_mode = b;
+}
+
+void Utils::setPvPGameMode(bool b)
+{
+	pvp_game_mode = b;
+}
+
+void Utils::setVolumeOn(bool b)
+{
+	volume_on = b;
+}
+
 void Utils::setShipSize(int s)
 {
 	ship_size = s;
@@ -276,9 +332,11 @@ void Utils::setNumberOfFourMastedShips(int n)
 
 void Utils::loadAudio()
 {
-	samples.push_back(al_load_sample("menu_click.wav")); //0
-	samples.push_back(al_load_sample("placed_ship.wav")); //1
-	
+	samples.push_back(al_load_sample("button_highlight.wav")); //0
+	samples.push_back(al_load_sample("mouse_click.wav")); //1
+	samples.push_back(al_load_sample("placed_ship.wav")); //2
+	samples.push_back(al_load_sample("missed_shot.wav")); //3
+	samples.push_back(al_load_sample("hitted_ship.wav")); //4
 	
 }
 

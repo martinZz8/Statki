@@ -19,6 +19,8 @@ public:
 	void render(); //metoda wykonujaca rysowanie
 	int getWindowID(); //metoda zwracajaca indeks okna;
 	void mouseSwitches();
+	void paintButtons();
+	void paintText();
 
 };
 

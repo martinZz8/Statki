@@ -43,12 +43,40 @@ void Options::mouseSwitches()
 		//DOKONCZYC
 		/*if ((buttons.getHighlighted(BUTTON_MENU_PLAY) == true || buttons.getHighlighted(BUTTON_MENU_OPTIONS) == true || buttons.getHighlighted(BUTTON_MENU_EXIT) == true) && audio_play_guard == true)
 		{
-			u.playSample(AUDIO_MENU_CLICK);
+			u.playSample(AUDIO_BUTTON_HIGHLIGHT);
 			audio_play_guard = false;
 		}
 		else if ((buttons.getHighlighted(BUTTON_MENU_PLAY) == true || buttons.getHighlighted(BUTTON_MENU_OPTIONS) == true || buttons.getHighlighted(BUTTON_MENU_EXIT) == true) == false)
 			audio_play_guard = true;*/
 
 	}
+
+}
+
+void Options::paintButtons()
+{
+	buttons.paintButtonWithText(BUTTON_OPTIONS_BACK, "BACK", FONT_SIZE_SMALL, 63, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_CLASSIC_GAME_MODE, "Classic", FONT_SIZE_SMALL, 59, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_ADVANCED_GAME_MODE, "Advanced", FONT_SIZE_SMALL, 30, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_PVC_GAME_MODE, "Computer", FONT_SIZE_SMALL, 63, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_PVP_GAME_MODE, "Player", FONT_SIZE_SMALL, 63, 15);	
+	buttons.paintButtonWithText(BUTTON_OPTIONS_VOLUME_ON, "ON", FONT_SIZE_SMALL, 63, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_VOLUME_OFF, "OFF", FONT_SIZE_SMALL, 63, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_ARROW_DOWN_ONE, "\\/", FONT_SIZE_SMALL, 63, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_ARROW_UP_ONE, "/\\", FONT_SIZE_SMALL, 63, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_ARROW_DOWN_TWO, "\\/", FONT_SIZE_SMALL, 63, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_ARROW_UP_TWO, "/\\", FONT_SIZE_SMALL, 63, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_ARROW_DOWN_THREE, "\\/", FONT_SIZE_SMALL, 63, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_ARROW_UP_THREE, "/\\", FONT_SIZE_SMALL, 63, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_ARROW_DOWN_FOUR, "\\/", FONT_SIZE_SMALL, 63, 15);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_ARROW_UP_FOUR, "/\\", FONT_SIZE_SMALL, 63, 15);
+
+	//Buttons highlights
+
+
+}
+
+void Options::paintText()
+{
 
 }

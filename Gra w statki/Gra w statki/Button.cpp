@@ -1,9 +1,8 @@
 #include "Button.h"
 
-Button::Button(Utils& utils, float width, float height, float x, float y, int button_ID):u(utils), width(width), height(height), x(x), y(y), button_ID(button_ID)
+Button::Button(Utils& utils, float width, float height, float x, float y, bool activated, int button_ID):u(utils), width(width), height(height), x(x), y(y), activated(activated), button_ID(button_ID)
 {
 	highlighted = false;
-	activated = false;
 }
 
 void Button::setWidth(float width)
@@ -72,7 +71,10 @@ int Button::getButtonID()
 
 void Button::paintButtonWithText(const char* tekst, int size, float x_offset,float y_offset)
 {
-	al_draw_filled_rectangle(x, y, x + width, y + height, u.color(39, 55, 106));
+	if(activated == false)
+		al_draw_filled_rectangle(x, y, x + width, y + height, u.color(39, 55, 106));
+	else
+		al_draw_filled_rectangle(x, y, x + width, y + height, u.color(30, 31, 41));
 	u.drawText(tekst, size, 183, 234, 243, x + x_offset, y + y_offset);
 }
 
