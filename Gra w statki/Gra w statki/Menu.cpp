@@ -60,12 +60,21 @@ void Menu::mouseSwitches()
 			u.setRunning(false);
 		}
 
-		if ((buttons.getHighlighted(BUTTON_MENU_PLAY) == true || buttons.getHighlighted(BUTTON_MENU_OPTIONS) == true || buttons.getHighlighted(BUTTON_MENU_EXIT) == true) && audio_play_guard == true)
+		bool highlighted = false;
+		for (int indeks = BUTTON_MENU_PLAY; indeks <= BUTTON_MENU_EXIT; indeks++)
+		{
+			if (buttons.getHighlighted(indeks) == true)
+			{
+				highlighted = true;
+				break;
+			}
+		}
+		if (highlighted == true && audio_play_guard == true)
 		{
 			u.playSample(AUDIO_BUTTON_HIGHLIGHT);
 			audio_play_guard = false;
 		}
-		else if ((buttons.getHighlighted(BUTTON_MENU_PLAY) == true || buttons.getHighlighted(BUTTON_MENU_OPTIONS) == true || buttons.getHighlighted(BUTTON_MENU_EXIT) == true) == false)
+		else if (highlighted == false)
 			audio_play_guard = true;
 
 	}
@@ -74,9 +83,9 @@ void Menu::mouseSwitches()
 
 void Menu::paintButtons()
 {
-	buttons.paintButtonWithText(BUTTON_MENU_PLAY, "PLAY", FONT_SIZE_BIG, 59, 15);
-	buttons.paintButtonWithText(BUTTON_MENU_OPTIONS, "OPTIONS", FONT_SIZE_BIG, 30, 15);
-	buttons.paintButtonWithText(BUTTON_MENU_EXIT, "EXIT", FONT_SIZE_BIG, 63, 15);
+	buttons.paintButtonWithText(BUTTON_MENU_PLAY, FONT_SIZE_BIG);
+	buttons.paintButtonWithText(BUTTON_MENU_OPTIONS, FONT_SIZE_BIG);
+	buttons.paintButtonWithText(BUTTON_MENU_EXIT, FONT_SIZE_BIG);
 
 	//Buttons highlights
 	if (buttons.getHighlighted(BUTTON_MENU_PLAY) == true)

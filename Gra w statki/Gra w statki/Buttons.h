@@ -7,6 +7,15 @@ class Buttons
 	vector <Button> buttons;
 	
 public:
+	/*
+Button:
+	Button(x,y,height, width, text, fontSize)
+	onClick(Callback)
+	paint(mouse)
+Buttons:
+	Buttons(vector<Button>)
+	paint(mouse)
+	*/
 	Buttons(Utils& u);
 	void setButtons();
 	void setHighlighted(int indeks, bool h);
@@ -14,7 +23,7 @@ public:
 	bool getHighlighted(int indeks);
 	bool getActivated(int indeks);
 	bool isMouseOnButton(int indeks); //metoda sprawdzajaca, czy myszka znajduje sie w obrebie pola przycisku
-	void paintButtonWithText(int indeks, const char* tekst, int size, float x_offset, float y_offset); //wywolanie metody rysujacej przycisk z napisem
+	void paintButtonWithText(int indeks, int size); //wywolanie metody rysujacej przycisk z napisem
 	void paintButtonHighlight(int indeks, int size); //wywolanie metody rysowania obwodki przycisku
 };
 

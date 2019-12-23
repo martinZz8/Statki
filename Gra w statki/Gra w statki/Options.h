@@ -11,6 +11,7 @@ class Options:public State
 	Buttons& buttons;
 	Menu* m; //wskaznik tylko do porowania adresu
 	State** s;
+	bool audio_play_guard; //zmienna zawierajaca informacje, czy mozna grac audio; true - tak, false - nie
 	const int widnowID;
 public:
 	Options(State** state, Utils& utils, Buttons& buttons);

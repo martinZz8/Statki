@@ -110,7 +110,7 @@ int Board::whichShip(float mouse_x, float mouse_y)
 	}
 }
 
-void Board::paintStandardShip(float mouse_x, float mouse_y)
+void Board::paintClassicShip(float mouse_x, float mouse_y)
 {
 	//RYSOWANIE GDY MAMY USTAWIONE STATKI KLASYCZNE
 	float field_size = u.getFieldSize();

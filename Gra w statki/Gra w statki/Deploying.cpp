@@ -25,7 +25,7 @@ void Deploying::render()
 	b1.paintBoard();
 	b2.paintBoard();
 	paintButtons();
-	b1.paintStandardShip(u.getMouseX(), u.getMouseY());
+	b1.paintClassicShip(u.getMouseX(), u.getMouseY());
 	
 }
 
@@ -90,12 +90,21 @@ void Deploying::mouseSwitches()
 			cout << "Przelaczenie z DEPLOYING do MENU" << endl;
 		}
 
-		if ((buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true || buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true) && audio_play_guard == true)
+		bool highlighted = false;
+		for (int indeks = BUTTON_DEPLOYING_PLAY; indeks <= BUTTON_DEPLOYING_BACK; indeks++)
+		{
+			if (buttons.getHighlighted(indeks) == true)
+			{
+				highlighted = true;
+				break;
+			}
+		}
+		if (highlighted == true && audio_play_guard == true)
 		{
 			u.playSample(AUDIO_BUTTON_HIGHLIGHT);
 			audio_play_guard = false;
 		}
-		else if ((buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true || buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true) == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
+		else if (highlighted == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
 			audio_play_guard = true;
 	}
 
@@ -106,8 +115,8 @@ void Deploying::mouseSwitches()
 
 void Deploying::paintButtons()
 {
-	buttons.paintButtonWithText(BUTTON_DEPLOYING_PLAY, "PLAY", FONT_SIZE_SMALL, 45, 12);
-	buttons.paintButtonWithText(BUTTON_DEPLOYING_BACK, "BACK TO MENU", FONT_SIZE_SMALL, 6, 12);
+	buttons.paintButtonWithText(BUTTON_DEPLOYING_PLAY, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
 	
 	if (buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true)
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_PLAY, FONT_SIZE_SMALL);

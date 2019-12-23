@@ -38,10 +38,8 @@
 #include "Deploying.h"
 #include "Buttons.h"
 
-int main()
+void install_addons()
 {
-	al_init();
-	
 	al_install_keyboard();
 	al_install_mouse();
 	al_install_audio();
@@ -49,6 +47,12 @@ int main()
 	al_init_primitives_addon();
 	al_init_font_addon();
 	al_init_ttf_addon();
+}
+
+int main()
+{
+	al_init();
+	install_addons();
 
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_EVENT_QUEUE* queue;
@@ -73,7 +77,6 @@ int main()
 	//USTAWIENIE POCZATKOWEJ FAZY (MA BYC NA POCZATKU MENU)
 	s = &m;
 	
-
 	display = al_create_display(u.getDisplayX(), u.getDisplayY());
 	queue = al_create_event_queue();
 	timer = al_create_timer(u.getTimer());
@@ -231,38 +234,38 @@ int main()
 				buttons.setHighlighted(BUTTON_OPTIONS_VOLUME_OFF, true);
 			else
 				buttons.setHighlighted(BUTTON_OPTIONS_VOLUME_OFF, false);
-			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_DOWN_ONE) == true)
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_ONE, true);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_MINUS_ONE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_MINUS_ONE, true);
 			else
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_ONE, false);
-			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_UP_ONE) == true)
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_ONE, true);
+				buttons.setHighlighted(BUTTON_OPTIONS_MINUS_ONE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_PLUS_ONE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_ONE, true);
 			else
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_ONE, false);
-			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_DOWN_TWO) == true)
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_TWO, true);
+				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_ONE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_MINUS_TWO) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_MINUS_TWO, true);
 			else
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_TWO, false);
-			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_UP_TWO) == true)
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_TWO, true);
+				buttons.setHighlighted(BUTTON_OPTIONS_MINUS_TWO, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_PLUS_TWO) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_TWO, true);
 			else
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_TWO, false);
-			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_DOWN_THREE) == true)
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_THREE, true);
+				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_TWO, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_MINUS_THREE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_MINUS_THREE, true);
 			else
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_THREE, false);
-			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_UP_THREE) == true)
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_THREE, true);
+				buttons.setHighlighted(BUTTON_OPTIONS_MINUS_THREE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_PLUS_THREE) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_THREE, true);
 			else
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_THREE, false);
-			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_DOWN_FOUR) == true)
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_FOUR, true);
+				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_THREE, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_MINUS_FOUR) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_MINUS_FOUR, true);
 			else
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_DOWN_FOUR, false);
-			if (buttons.isMouseOnButton(BUTTON_OPTIONS_ARROW_UP_FOUR) == true)
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_FOUR, true);
+				buttons.setHighlighted(BUTTON_OPTIONS_MINUS_FOUR, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_PLUS_FOUR) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_FOUR, true);
 			else
-				buttons.setHighlighted(BUTTON_OPTIONS_ARROW_UP_FOUR, false);
+				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_FOUR, false);
 
 			/*KLIKNIECIE PRZYCISKU NA BUTTONIE*/
 			if (u.getMouse1Clicked() == true)
@@ -281,22 +284,22 @@ int main()
 					buttons.setActivated(BUTTON_OPTIONS_VOLUME_ON, true);
 				else if (buttons.getHighlighted(BUTTON_OPTIONS_VOLUME_OFF) == true)
 					buttons.setActivated(BUTTON_OPTIONS_VOLUME_OFF, true);
-				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_DOWN_ONE) == true)
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_ONE, true);
-				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_UP_ONE) == true)
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_ONE, true);
-				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_DOWN_TWO) == true)
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_TWO, true);
-				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_UP_TWO) == true)
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_TWO, true);
-				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_DOWN_THREE) == true)
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_THREE, true);
-				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_UP_THREE) == true)
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_THREE, true);
-				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_DOWN_FOUR) == true)
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_FOUR, true);
-				else if (buttons.getHighlighted(BUTTON_OPTIONS_ARROW_UP_FOUR) == true)
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_FOUR, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_MINUS_ONE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_MINUS_ONE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_PLUS_ONE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_PLUS_ONE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_MINUS_TWO) == true)
+					buttons.setActivated(BUTTON_OPTIONS_MINUS_TWO, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_PLUS_TWO) == true)
+					buttons.setActivated(BUTTON_OPTIONS_PLUS_TWO, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_MINUS_THREE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_MINUS_THREE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_PLUS_THREE) == true)
+					buttons.setActivated(BUTTON_OPTIONS_PLUS_THREE, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_MINUS_FOUR) == true)
+					buttons.setActivated(BUTTON_OPTIONS_MINUS_FOUR, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_PLUS_FOUR) == true)
+					buttons.setActivated(BUTTON_OPTIONS_PLUS_FOUR, true);
 				else
 				{
 					buttons.setActivated(BUTTON_OPTIONS_BACK, false);
@@ -306,14 +309,14 @@ int main()
 					buttons.setActivated(BUTTON_OPTIONS_PVP_GAME_MODE, false);
 					buttons.setActivated(BUTTON_OPTIONS_VOLUME_ON, false);
 					buttons.setActivated(BUTTON_OPTIONS_VOLUME_OFF, false);
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_ONE, false);
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_ONE, false);
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_TWO, false);
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_TWO, false);
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_THREE, false);
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_THREE, false);
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_FOUR, false);
-					buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_FOUR, false);
+					buttons.setActivated(BUTTON_OPTIONS_MINUS_ONE, false);
+					buttons.setActivated(BUTTON_OPTIONS_PLUS_ONE, false);
+					buttons.setActivated(BUTTON_OPTIONS_MINUS_TWO, false);
+					buttons.setActivated(BUTTON_OPTIONS_PLUS_TWO, false);
+					buttons.setActivated(BUTTON_OPTIONS_MINUS_THREE, false);
+					buttons.setActivated(BUTTON_OPTIONS_PLUS_THREE, false);
+					buttons.setActivated(BUTTON_OPTIONS_MINUS_FOUR, false);
+					buttons.setActivated(BUTTON_OPTIONS_PLUS_FOUR, false);
 				}
 			}
 			else
@@ -325,14 +328,14 @@ int main()
 				buttons.setActivated(BUTTON_OPTIONS_PVP_GAME_MODE, false);
 				buttons.setActivated(BUTTON_OPTIONS_VOLUME_ON, false);
 				buttons.setActivated(BUTTON_OPTIONS_VOLUME_OFF, false);
-				buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_ONE, false);
-				buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_ONE, false);
-				buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_TWO, false);
-				buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_TWO, false);
-				buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_THREE, false);
-				buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_THREE, false);
-				buttons.setActivated(BUTTON_OPTIONS_ARROW_DOWN_FOUR, false);
-				buttons.setActivated(BUTTON_OPTIONS_ARROW_UP_FOUR, false);
+				buttons.setActivated(BUTTON_OPTIONS_MINUS_ONE, false);
+				buttons.setActivated(BUTTON_OPTIONS_PLUS_ONE, false);
+				buttons.setActivated(BUTTON_OPTIONS_MINUS_TWO, false);
+				buttons.setActivated(BUTTON_OPTIONS_PLUS_TWO, false);
+				buttons.setActivated(BUTTON_OPTIONS_MINUS_THREE, false);
+				buttons.setActivated(BUTTON_OPTIONS_PLUS_THREE, false);
+				buttons.setActivated(BUTTON_OPTIONS_MINUS_FOUR, false);
+				buttons.setActivated(BUTTON_OPTIONS_PLUS_FOUR, false);
 			}
 
 		}/*DEPLOYING*/

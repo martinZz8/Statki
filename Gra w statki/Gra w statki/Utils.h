@@ -42,14 +42,14 @@ using namespace std;
 #define BUTTON_OPTIONS_PVC_GAME_MODE 7
 #define BUTTON_OPTIONS_VOLUME_ON 8
 #define BUTTON_OPTIONS_VOLUME_OFF 9
-#define BUTTON_OPTIONS_ARROW_UP_FOUR 10
-#define BUTTON_OPTIONS_ARROW_DOWN_FOUR 11
-#define BUTTON_OPTIONS_ARROW_UP_THREE 12
-#define BUTTON_OPTIONS_ARROW_DOWN_THREE 13
-#define BUTTON_OPTIONS_ARROW_UP_TWO 14
-#define BUTTON_OPTIONS_ARROW_DOWN_TWO 15
-#define BUTTON_OPTIONS_ARROW_UP_ONE 16
-#define BUTTON_OPTIONS_ARROW_DOWN_ONE 17
+#define BUTTON_OPTIONS_PLUS_FOUR 10
+#define BUTTON_OPTIONS_MINUS_FOUR 11
+#define BUTTON_OPTIONS_PLUS_THREE 12
+#define BUTTON_OPTIONS_MINUS_THREE 13
+#define BUTTON_OPTIONS_PLUS_TWO 14
+#define BUTTON_OPTIONS_MINUS_TWO 15
+#define BUTTON_OPTIONS_PLUS_ONE 16
+#define BUTTON_OPTIONS_MINUS_ONE 17
      /*DEPLOYING*/
 #define BUTTON_DEPLOYING_PLAY 18
 #define BUTTON_DEPLOYING_BACK 19
@@ -78,6 +78,7 @@ class Utils
 	bool pvc_game_mode;                     /* true-aktywowane, false-dezaktywowane */
 	bool pvp_game_mode;                     /*                                      */
 	bool volume_on;                         /*                                      */
+	bool volume_off;                        /*                                      */
 	int ship_size; //rozmiar statku w danym momencie (ilosc fieldow)
 	int ship_orientation; //orientacja statku w danym momencie (1 - do dolu, 2 - na bok)
 	int audio_samples;
@@ -115,6 +116,7 @@ public:
 	bool getPvCGameMode();
 	bool getPvPGameMode();
 	bool getVolumeOn();
+	bool getVolumeOff();
 	int getShipSize();
 	int getShipOrientation();
 	int getAudioSamples();
@@ -146,6 +148,7 @@ public:
 	void setPvCGameMode(bool b);
 	void setPvPGameMode(bool b);
 	void setVolumeOn(bool b);
+	void setVolumeOff(bool b);
 	void setShipSize(int s);
 	void setShipOrientation(int o);
 	void setNumberOfOneMastedShips(int n);
