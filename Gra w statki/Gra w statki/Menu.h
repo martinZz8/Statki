@@ -25,5 +25,6 @@ public:
 	int getWindowID(); //metoda zwracajaca indeks okna;
 	void mouseSwitches();
 	void paintButtons();
+	void paintText();
 };
 

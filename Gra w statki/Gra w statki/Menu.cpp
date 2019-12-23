@@ -24,8 +24,8 @@ void Menu::tick()
 
 void Menu::render()
 {
-	u.drawText("Statki", FONT_SIZE_HUGE, 183, 234, 243, 350, 40);
 	paintButtons();
+	paintText();
 
 }
 
@@ -96,6 +96,12 @@ void Menu::paintButtons()
 		buttons.paintButtonHighlight(BUTTON_MENU_EXIT, FONT_SIZE_BIG);
 	
 		
+}
+
+void Menu::paintText()
+{
+	u.drawText("Statki", FONT_SIZE_HUGE, 183, 234, 243, 350, 40);
+	u.drawText("Made by Maciej Harbuz", FONT_SIZE_SMALL, 183, 234, 243, 850, 580);
 }
 
 

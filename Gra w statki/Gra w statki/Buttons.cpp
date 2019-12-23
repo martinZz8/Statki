@@ -21,14 +21,14 @@ void Buttons::setButtons()
 	buttons.push_back(Button(u, "PvC", 87, 50, 410, 260, 16, 4, u.getPvCGameMode(), BUTTON_OPTIONS_PVC_GAME_MODE)); //7
 	buttons.push_back(Button(u, "ON", 87, 50, 410, 400, 18, 4, u.getVolumeOn(), BUTTON_OPTIONS_VOLUME_ON)); //8
 	buttons.push_back(Button(u, "OFF", 87, 50, 510, 400, 16, 4, u.getVolumeOff(), BUTTON_OPTIONS_VOLUME_OFF)); //9
-	buttons.push_back(Button(u, "+", 30, 30, 200, 100, 3, 3, false, BUTTON_OPTIONS_PLUS_FOUR)); //10
-	buttons.push_back(Button(u, "-", 30, 30, 200, 140, 3, 3, false, BUTTON_OPTIONS_MINUS_FOUR)); //11
-	buttons.push_back(Button(u, "+", 30, 30, 200, 200, 3, 3, false, BUTTON_OPTIONS_PLUS_THREE)); //12
-	buttons.push_back(Button(u, "-", 30, 30, 200, 240, 3, 3, false, BUTTON_OPTIONS_MINUS_THREE)); //13
-	buttons.push_back(Button(u, "+", 30, 30, 200, 300, 3, 3, false, BUTTON_OPTIONS_PLUS_TWO)); //14
-	buttons.push_back(Button(u, "-", 30, 30, 200, 340, 3, 3, false, BUTTON_OPTIONS_MINUS_TWO)); //15
-	buttons.push_back(Button(u, "+", 30, 30, 200, 400, 3, 3, false, BUTTON_OPTIONS_PLUS_ONE)); //16
-	buttons.push_back(Button(u, "-", 30, 30, 200, 440, 3, 3, false, BUTTON_OPTIONS_MINUS_ONE)); //17
+	buttons.push_back(Button(u, "ADD", 40, 30, 200, 100, 4, 4, false, BUTTON_OPTIONS_PLUS_FOUR)); //10
+	buttons.push_back(Button(u, "RMV", 40, 30, 200, 140, 4, 4, false, BUTTON_OPTIONS_MINUS_FOUR)); //11
+	buttons.push_back(Button(u, "ADD", 40, 30, 200, 200, 4, 4, false, BUTTON_OPTIONS_PLUS_THREE)); //12
+	buttons.push_back(Button(u, "RMV", 40, 30, 200, 240, 4, 4, false, BUTTON_OPTIONS_MINUS_THREE)); //13
+	buttons.push_back(Button(u, "ADD", 40, 30, 200, 300, 4, 4, false, BUTTON_OPTIONS_PLUS_TWO)); //14
+	buttons.push_back(Button(u, "RMV", 40, 30, 200, 340, 4, 4, false, BUTTON_OPTIONS_MINUS_TWO)); //15
+	buttons.push_back(Button(u, "ADD", 40, 30, 200, 400, 4, 4, false, BUTTON_OPTIONS_PLUS_ONE)); //16
+	buttons.push_back(Button(u, "RMV", 40, 30, 200, 440, 4, 4, false, BUTTON_OPTIONS_MINUS_ONE)); //17
 	/*DEPLOYING*/
 	buttons.push_back(Button(u, "PLAY", 120, 40, 740, 545, 45, 12, false, BUTTON_DEPLOYING_PLAY)); //18
 	buttons.push_back(Button(u, "BACK TO MENU", 120, 40, 870, 545, 6, 12, false, BUTTON_DEPLOYING_BACK)); //19

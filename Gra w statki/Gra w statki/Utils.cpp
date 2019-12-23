@@ -355,10 +355,10 @@ void Utils::loadAudio()
 
 void Utils::loadFonts()
 {
-	
-	fonts.push_back(al_load_font("PiratesBay.ttf", 15, 0)); //0
-	fonts.push_back(al_load_font("PiratesBay.ttf", 35, 0)); //1
-	fonts.push_back(al_load_font("PiratesBay.ttf", 130, 0)); //2
+	//Wczesniej bylo: al_load_font
+	fonts.push_back(al_load_ttf_font("PiratesBay.ttf", 15, 0)); //0
+	fonts.push_back(al_load_ttf_font("PiratesBay.ttf", 35, 0)); //1
+	fonts.push_back(al_load_ttf_font("PiratesBay.ttf", 130, 0)); //2
 	
 }
 

@@ -77,14 +77,14 @@ void Options::paintButtons()
 	buttons.paintButtonWithText(BUTTON_OPTIONS_PVC_GAME_MODE, FONT_SIZE_BIG);	
 	buttons.paintButtonWithText(BUTTON_OPTIONS_VOLUME_ON, FONT_SIZE_BIG);
 	buttons.paintButtonWithText(BUTTON_OPTIONS_VOLUME_OFF, FONT_SIZE_BIG);
-	buttons.paintButtonWithText(BUTTON_OPTIONS_MINUS_ONE, FONT_SIZE_BIG);
-	buttons.paintButtonWithText(BUTTON_OPTIONS_PLUS_ONE, FONT_SIZE_BIG);
-	buttons.paintButtonWithText(BUTTON_OPTIONS_MINUS_TWO, FONT_SIZE_BIG);
-	buttons.paintButtonWithText(BUTTON_OPTIONS_PLUS_TWO, FONT_SIZE_BIG);
-	buttons.paintButtonWithText(BUTTON_OPTIONS_MINUS_THREE, FONT_SIZE_BIG);
-	buttons.paintButtonWithText(BUTTON_OPTIONS_PLUS_THREE, FONT_SIZE_BIG);
-	buttons.paintButtonWithText(BUTTON_OPTIONS_MINUS_FOUR, FONT_SIZE_BIG);
-	buttons.paintButtonWithText(BUTTON_OPTIONS_PLUS_FOUR, FONT_SIZE_BIG);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_MINUS_ONE, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_PLUS_ONE, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_MINUS_TWO, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_PLUS_TWO, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_MINUS_THREE, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_PLUS_THREE, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_MINUS_FOUR, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_PLUS_FOUR, FONT_SIZE_SMALL);
 
 	//Buttons highlights
 	if (buttons.getHighlighted(BUTTON_OPTIONS_BACK) == true)
@@ -125,5 +125,6 @@ void Options::paintText()
 	u.drawText("STATKOW", FONT_SIZE_BIG, 183, 234, 243, 422, 80);
 	u.drawText("TRYB GRY", FONT_SIZE_BIG, 183, 234, 243, 424, 220);
 	u.drawText("MUZYKA", FONT_SIZE_BIG, 183, 234, 243, 433, 360);
+		
 
 }
