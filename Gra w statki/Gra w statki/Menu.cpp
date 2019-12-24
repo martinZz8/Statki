@@ -4,7 +4,7 @@
 
 Menu::Menu(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2):windowID(WINDOW_MENU), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
 {
-	audio_play_guard = false;
+	audio_play_guard = true;
 	d = NULL;
 	o = NULL;
 }
@@ -60,25 +60,27 @@ void Menu::mouseSwitches()
 			u.setRunning(false);
 		}
 
-		bool highlighted = false;
-		for (int indeks = BUTTON_MENU_PLAY; indeks <= BUTTON_MENU_EXIT; indeks++)
+		/*Audio dotyczace highlightow*/
+		if (u.getVolumeOn() == true)
 		{
-			if (buttons.getHighlighted(indeks) == true)
+			bool highlighted = false;
+			for (int indeks = BUTTON_MENU_PLAY; indeks <= BUTTON_MENU_EXIT; indeks++)
 			{
-				highlighted = true;
-				break;
+				if (buttons.getHighlighted(indeks) == true)
+				{
+					highlighted = true;
+					break;
+				}
 			}
+			if (highlighted == true && audio_play_guard == true)
+			{
+				u.playSample(AUDIO_BUTTON_HIGHLIGHT);
+				audio_play_guard = false;
+			}
+			else if (highlighted == false)
+				audio_play_guard = true;
 		}
-		if (highlighted == true && audio_play_guard == true)
-		{
-			u.playSample(AUDIO_BUTTON_HIGHLIGHT);
-			audio_play_guard = false;
-		}
-		else if (highlighted == false)
-			audio_play_guard = true;
-
 	}
-
 }
 
 void Menu::paintButtons()

@@ -13,6 +13,7 @@ class Options:public State
 	State** s;
 	bool audio_play_guard; //zmienna zawierajaca informacje, czy mozna grac audio; true - tak, false - nie
 	bool mouse_click_guard; //true - mozna kliknac, false - nie mozna kliknac
+	bool back_to_menu_guard; //zmienna zawierajaca informacje, czy mozna wrocic do menu; true - tak, false - nie
 	const int widnowID;
 public:
 	Options(State** state, Utils& utils, Buttons& buttons);
