@@ -12,6 +12,7 @@ class Options:public State
 	Menu* m; //wskaznik tylko do porowania adresu
 	State** s;
 	bool audio_play_guard; //zmienna zawierajaca informacje, czy mozna grac audio; true - tak, false - nie
+	bool mouse_click_guard; //true - mozna kliknac, false - nie mozna kliknac
 	const int widnowID;
 public:
 	Options(State** state, Utils& utils, Buttons& buttons);
@@ -22,6 +23,7 @@ public:
 	void mouseSwitches();
 	void paintButtons();
 	void paintText();
+	void paintBorders();
 
 };
 

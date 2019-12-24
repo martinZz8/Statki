@@ -14,7 +14,6 @@ void Buttons::setButtons()
 	buttons.push_back(Button(u, "EXIT", 200, 80, 390, 410, 63, 15, false, BUTTON_MENU_EXIT)); //2
 	/*OPTIONS*/
 	buttons.push_back(Button(u, "BACK TO MENU", 120, 40, 870, 545, 6, 12, false, BUTTON_OPTIONS_BACK)); //3
-	//ZMIENIC ARGUMENTY PONIZSZYCH METOD
 	buttons.push_back(Button(u, "CLASSIC", 87, 50, 410, 120, 18, 14, u.getClassicGameMode(), BUTTON_OPTIONS_CLASSIC_GAME_MODE)); //4
 	buttons.push_back(Button(u, "ADVANCED", 87, 50, 510, 120, 4, 14, u.getAdvancedGameMode(), BUTTON_OPTIONS_ADVANCED_GAME_MODE)); //5
 	buttons.push_back(Button(u, "PvP", 87, 50, 510, 260, 18, 4, u.getPvPGameMode(), BUTTON_OPTIONS_PVP_GAME_MODE)); //6
@@ -29,9 +28,10 @@ void Buttons::setButtons()
 	buttons.push_back(Button(u, "RMV", 40, 30, 200, 340, 4, 4, false, BUTTON_OPTIONS_MINUS_TWO)); //15
 	buttons.push_back(Button(u, "ADD", 40, 30, 200, 400, 4, 4, false, BUTTON_OPTIONS_PLUS_ONE)); //16
 	buttons.push_back(Button(u, "RMV", 40, 30, 200, 440, 4, 4, false, BUTTON_OPTIONS_MINUS_ONE)); //17
+	buttons.push_back(Button(u, "RESET", 120, 40, 10, 545, 40, 9, false, BUTTON_OPTIONS_RESET)); //18
 	/*DEPLOYING*/
-	buttons.push_back(Button(u, "PLAY", 120, 40, 740, 545, 45, 12, false, BUTTON_DEPLOYING_PLAY)); //18
-	buttons.push_back(Button(u, "BACK TO MENU", 120, 40, 870, 545, 6, 12, false, BUTTON_DEPLOYING_BACK)); //19
+	buttons.push_back(Button(u, "PLAY", 120, 40, 740, 545, 45, 12, false, BUTTON_DEPLOYING_PLAY)); //19
+	buttons.push_back(Button(u, "BACK TO MENU", 120, 40, 870, 545, 6, 12, false, BUTTON_DEPLOYING_BACK)); //20
 
 }
 
@@ -45,6 +45,11 @@ void Buttons::setActivated(int indeks, bool p)
 	buttons[indeks].setActivated(p);
 }
 
+void Buttons::setChoosed(int indeks, bool p)
+{
+	buttons[indeks].setChoosed(p);
+}
+
 bool Buttons::getHighlighted(int indeks)
 {
 	return buttons[indeks].getHighlighted();
@@ -53,6 +58,11 @@ bool Buttons::getHighlighted(int indeks)
 bool Buttons::getActivated(int indeks)
 {
 	return buttons[indeks].getActivated();
+}
+
+bool Buttons::getChoosed(int indeks)
+{
+	return buttons[indeks].getChoosed();
 }
 
 bool Buttons::isMouseOnButton(int indeks)

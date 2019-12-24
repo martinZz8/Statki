@@ -7,6 +7,7 @@ Deploying::Deploying(State **state, Utils& utils, Buttons& buttons, Board& board
 	audio_play_guard = true;
 	resize_ship_guard = true;
 	rotate_ship_guard = true;
+	mouse_click_guard = true;
 }
 
 void Deploying::setStates(Menu* menu)
@@ -107,7 +108,7 @@ void Deploying::mouseSwitches()
 		else if (highlighted == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
 			audio_play_guard = true;
 	}
-
+	
 	
 	
 

@@ -26,7 +26,7 @@ Utils::Utils()
 	/*koniec wybranych trybow gry*/
 	ship_size = 1;
 	ship_orientation = 1;
-	audio_samples = 5; //do zmiany jezeli bedzie wiecej audio sampli
+	audio_samples = 6; //do zmiany jezeli bedzie wiecej audio sampli
 	font_samples = 3; //do zmiany jezeli bedzie wiecej font sampli
 	display_x = 1000;
 	display_y = 600;
@@ -350,6 +350,7 @@ void Utils::loadAudio()
 	samples.push_back(al_load_sample("placed_ship.wav")); //2
 	samples.push_back(al_load_sample("missed_shot.wav")); //3
 	samples.push_back(al_load_sample("hitted_ship.wav")); //4
+	samples.push_back(al_load_sample("error.wav")); //5
 	
 }
 
@@ -375,6 +376,26 @@ void Utils::drawText(const char* text,int size, float r,float g, float b, float 
 		al_draw_text(fonts[FONT_SIZE_BIG], color(r, g, b), x, y, 0, text);
 	else 
 		al_draw_text(fonts[FONT_SIZE_HUGE], color(r, g, b), x, y, 0, text);
+}
+
+void Utils::drawBorders(float x, float y, float width, float height, float thickness, float r, float g, float b)
+{
+	al_draw_rectangle(x, y, x + width, y + height, color(r, g, b), thickness);
+}
+
+void Utils::restoreDefaults()
+{
+	classic_game_mode = true;
+	advanced_game_mode = false;
+	pvc_game_mode = true;
+	pvp_game_mode = false;
+	volume_on = true;
+	volume_off = false;
+	number_of_one_masted_ships = 4;
+	number_of_two_masted_ships = 3;
+	number_of_three_masted_ships = 2;
+	number_of_four_masted_ships = 1;
+
 }
 
 ALLEGRO_COLOR Utils::getColorOfBackground()

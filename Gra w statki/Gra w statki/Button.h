@@ -1,6 +1,5 @@
 #pragma once
 #include "Utils.h"
-#include <string.h>
 
 class Button
 {

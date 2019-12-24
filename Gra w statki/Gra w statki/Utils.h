@@ -10,6 +10,8 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+//#include <string.h>
+#include <string>
 
 using namespace std;
 
@@ -24,6 +26,7 @@ using namespace std;
 #define AUDIO_PLACED_SHIP 2
 #define AUDIO_MISSED_SHOT 3
 #define AUDIO_HITTED_SHIP 4
+#define AUDIO_ERROR 5
 
 /***FONT***/
 #define FONT_SIZE_SMALL 0
@@ -50,9 +53,10 @@ using namespace std;
 #define BUTTON_OPTIONS_MINUS_TWO 15
 #define BUTTON_OPTIONS_PLUS_ONE 16
 #define BUTTON_OPTIONS_MINUS_ONE 17
+#define BUTTON_OPTIONS_RESET 18
      /*DEPLOYING*/
-#define BUTTON_DEPLOYING_PLAY 18
-#define BUTTON_DEPLOYING_BACK 19
+#define BUTTON_DEPLOYING_PLAY 19
+#define BUTTON_DEPLOYING_BACK 20
      /*GAME*/
 
 class Utils
@@ -159,6 +163,8 @@ public:
 	void loadFonts();
 	void playSample(int ID);
 	void drawText(const char* text,int size,float r,float g, float b,float x,float y);
+	void drawBorders(float x, float y, float width, float height, float thickness, float r, float g, float b);
+	void restoreDefaults();
 	ALLEGRO_COLOR getColorOfBackground();
 	ALLEGRO_COLOR getColorOfBoard();
 	ALLEGRO_COLOR getColorOfLine();

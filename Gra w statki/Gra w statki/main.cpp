@@ -266,6 +266,10 @@ int main()
 				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_FOUR, true);
 			else
 				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_FOUR, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_RESET) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_RESET, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_RESET, false);
 
 			/*KLIKNIECIE PRZYCISKU NA BUTTONIE*/
 			if (u.getMouse1Clicked() == true)
@@ -300,6 +304,8 @@ int main()
 					buttons.setActivated(BUTTON_OPTIONS_MINUS_FOUR, true);
 				else if (buttons.getHighlighted(BUTTON_OPTIONS_PLUS_FOUR) == true)
 					buttons.setActivated(BUTTON_OPTIONS_PLUS_FOUR, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_RESET) == true)
+					buttons.setActivated(BUTTON_OPTIONS_RESET, true);
 				else
 				{
 					buttons.setActivated(BUTTON_OPTIONS_BACK, false);
@@ -317,6 +323,7 @@ int main()
 					buttons.setActivated(BUTTON_OPTIONS_PLUS_THREE, false);
 					buttons.setActivated(BUTTON_OPTIONS_MINUS_FOUR, false);
 					buttons.setActivated(BUTTON_OPTIONS_PLUS_FOUR, false);
+					buttons.setActivated(BUTTON_OPTIONS_RESET, false);
 				}
 			}
 			else
@@ -336,6 +343,7 @@ int main()
 				buttons.setActivated(BUTTON_OPTIONS_PLUS_THREE, false);
 				buttons.setActivated(BUTTON_OPTIONS_MINUS_FOUR, false);
 				buttons.setActivated(BUTTON_OPTIONS_PLUS_FOUR, false);
+				buttons.setActivated(BUTTON_OPTIONS_RESET, false);
 			}
 
 		}/*DEPLOYING*/

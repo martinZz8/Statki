@@ -17,6 +17,7 @@ class Deploying:public State
 	bool audio_play_guard; //true - mozna grac, false - nie mozna grac
 	bool resize_ship_guard; //true - mozna zmienic rozmiar, false - nie mozna zmienci rozmiaru
 	bool rotate_ship_guard; //true - mozna zmienic polozenie, false - nie mozna zmienic polozenia
+	bool mouse_click_guard; //true - mozna kliknac, false - nie mozna kliknac
 
 public:
 	Deploying(State **state, Utils &utils, Buttons& buttons, Board &board1, Board &board2);
