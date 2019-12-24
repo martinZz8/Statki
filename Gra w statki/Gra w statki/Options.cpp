@@ -166,7 +166,6 @@ void Options::mouseSwitches()
 				u.setNumberOfOneMastedShips(number_of_ships - 1);
 			else
 				u.playSample(AUDIO_ERROR);
-			cout << "mouse_click_guard = " << mouse_click_guard << endl;
 			mouse_click_guard = false;
 		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_RESET) == true && mouse_click_guard == true)
