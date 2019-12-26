@@ -17,13 +17,13 @@ void Menu::setStates(Options* options, Deploying* deploying)
 
 void Menu::tick()
 {
-	
 	mouseSwitches();
 		
 }
 
 void Menu::render()
 {
+	playAudio();
 	paintButtons();
 	paintText();
 
@@ -60,26 +60,7 @@ void Menu::mouseSwitches()
 			u.setRunning(false);
 		}
 
-		/*Audio dotyczace highlightow*/
-		if (u.getVolumeOn() == true)
-		{
-			bool highlighted = false;
-			for (int indeks = BUTTON_MENU_PLAY; indeks <= BUTTON_MENU_EXIT; indeks++)
-			{
-				if (buttons.getHighlighted(indeks) == true)
-				{
-					highlighted = true;
-					break;
-				}
-			}
-			if (highlighted == true && audio_play_guard == true)
-			{
-				u.playSample(AUDIO_BUTTON_HIGHLIGHT);
-				audio_play_guard = false;
-			}
-			else if (highlighted == false)
-				audio_play_guard = true;
-		}
+		
 	}
 }
 
@@ -104,6 +85,33 @@ void Menu::paintText()
 {
 	u.drawText("Statki", FONT_SIZE_HUGE, 183, 234, 243, 350, 40);
 	u.drawText("Made by Maciej Harbuz", FONT_SIZE_SMALL, 183, 234, 243, 850, 580);
+}
+
+void Menu::playAudio()
+{
+	
+	if (u.getVolumeOn() == true)
+	{
+		/*Audio dotyczace highlightow*/
+		bool highlighted = false;
+		for (int indeks = BUTTON_MENU_PLAY; indeks <= BUTTON_MENU_EXIT; indeks++)
+		{
+			if (buttons.getHighlighted(indeks) == true)
+			{
+				highlighted = true;
+				break;
+			}
+		}
+		if (highlighted == true && audio_play_guard == true)
+		{
+			u.playSample(AUDIO_BUTTON_HIGHLIGHT);
+			audio_play_guard = false;
+		}
+		else if (highlighted == false)
+			audio_play_guard = true;
+	}
+
+
 }
 
 

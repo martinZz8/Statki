@@ -19,7 +19,7 @@ void Buttons::setButtons()
 	buttons.push_back(Button(u, "PvP", 87, 50, 510, 260, 18, 4, u.getPvPGameMode(), BUTTON_OPTIONS_PVP_GAME_MODE)); //6
 	buttons.push_back(Button(u, "PvC", 87, 50, 410, 260, 16, 4, u.getPvCGameMode(), BUTTON_OPTIONS_PVC_GAME_MODE)); //7
 	buttons.push_back(Button(u, "ON", 87, 50, 410, 400, 18, 4, u.getVolumeOn(), BUTTON_OPTIONS_VOLUME_ON)); //8
-	buttons.push_back(Button(u, "OFF", 87, 50, 510, 400, 16, 4, u.getVolumeOff(), BUTTON_OPTIONS_VOLUME_OFF)); //9
+	buttons.push_back(Button(u, "OFF", 87, 50, 510, 400, 16, 4, !(u.getVolumeOn()), BUTTON_OPTIONS_VOLUME_OFF)); //9
 	buttons.push_back(Button(u, "ADD", 40, 30, 200, 100, 4, 4, false, BUTTON_OPTIONS_PLUS_FOUR)); //10
 	buttons.push_back(Button(u, "RMV", 40, 30, 200, 140, 4, 4, false, BUTTON_OPTIONS_MINUS_FOUR)); //11
 	buttons.push_back(Button(u, "ADD", 40, 30, 200, 200, 4, 4, false, BUTTON_OPTIONS_PLUS_THREE)); //12

@@ -19,10 +19,12 @@ void Deploying::tick()
 {
 	classicKeyboardSwitches();
 	mouseSwitches();
+
 }
 
 void Deploying::render()
 {
+	playAudio();
 	b1.paintBoard();
 	b2.paintBoard();
 	paintButtons();
@@ -91,26 +93,7 @@ void Deploying::mouseSwitches()
 			cout << "Przelaczenie z DEPLOYING do MENU" << endl;
 		}
 
-        /*Audio dotyczace highlightow*/
-		if (u.getVolumeOn() == true)
-		{
-			bool highlighted = false;
-			for (int indeks = BUTTON_DEPLOYING_PLAY; indeks <= BUTTON_DEPLOYING_BACK; indeks++)
-			{
-				if (buttons.getHighlighted(indeks) == true)
-				{
-					highlighted = true;
-					break;
-				}
-			}
-			if (highlighted == true && audio_play_guard == true)
-			{
-				u.playSample(AUDIO_BUTTON_HIGHLIGHT);
-				audio_play_guard = false;
-			}
-			else if (highlighted == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
-				audio_play_guard = true;
-		}
+        
 	}
 }
 
@@ -123,4 +106,30 @@ void Deploying::paintButtons()
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_PLAY, FONT_SIZE_SMALL);
 	else if (buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true)
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
+}
+
+void Deploying::playAudio()
+{
+	
+	if (u.getVolumeOn() == true)
+	{
+		/*Audio dotyczace highlightow*/
+		bool highlighted = false;
+		for (int indeks = BUTTON_DEPLOYING_PLAY; indeks <= BUTTON_DEPLOYING_BACK; indeks++)
+		{
+			if (buttons.getHighlighted(indeks) == true)
+			{
+				highlighted = true;
+				break;
+			}
+		}
+		if (highlighted == true && audio_play_guard == true)
+		{
+			u.playSample(AUDIO_BUTTON_HIGHLIGHT);
+			audio_play_guard = false;
+		}
+		else if (highlighted == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
+			audio_play_guard = true;
+
+	}
 }

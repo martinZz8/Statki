@@ -28,6 +28,7 @@ public:
 	void classicKeyboardSwitches();
 	void mouseSwitches();
 	void paintButtons();
+	void playAudio();
 		
 };
 

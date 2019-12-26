@@ -26,5 +26,6 @@ public:
 	void mouseSwitches();
 	void paintButtons();
 	void paintText();
+	void playAudio();
 };
 

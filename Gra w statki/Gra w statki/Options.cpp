@@ -4,8 +4,14 @@
 Options::Options(State** state, Utils& utils, Buttons& buttons):widnowID(WINDOW_OPTIONS),s(state),u(utils),buttons(buttons)
 {
 	audio_play_guard = true;
+	warning_sample_play_flag = false;
 	mouse_click_guard = true;
 	back_to_menu_guard = true;
+	warning_ship_remove_flag = false;
+	warning_ship_remove_timer = 0;
+	warning_ship_add_flag = false;
+	warning_ship_add_timer = 0;
+	number_of_left_fields = 0;
 	m = NULL;
 }
 
@@ -16,12 +22,18 @@ void Options::setStates(Menu* menu)
 
 void Options::tick()
 {
+	warning_ship_remove_flag = false;
+	warning_ship_add_flag = false;
+	warning_sample_play_flag = false;
 	mouseSwitches();
+	setBackToMenuGuard();
+	calculateNumberOfLeftFields();
+
 }
 
 void Options::render()
 {
-	
+	playAudio();
 	paintButtons();
 	paintBorders();
 	paintText();
@@ -31,6 +43,14 @@ void Options::render()
 int Options::getWindowID()
 {
 	return widnowID;
+}
+
+void Options::setBackToMenuGuard()
+{
+	if (u.getNumberOfFourMastedShips() == 0 && u.getNumberOfThreeMastedShips() == 0 && u.getNumberOfTwoMastedShips() == 0 && u.getNumberOfOneMastedShips() == 0)
+		back_to_menu_guard = false;
+	else if (back_to_menu_guard == false)
+		back_to_menu_guard = true;
 }
 
 void Options::mouseSwitches()
@@ -50,8 +70,8 @@ void Options::mouseSwitches()
 				u.setMouseClickedBeforeStateSwitch(true);
 				cout << "Przelaczenie z OPTIONS do MENU" << endl;
 			}
-			else if(u.getVolumeOn() == true)
-				u.playSample(AUDIO_ERROR);
+			else
+				warning_sample_play_flag = true;
 			mouse_click_guard = false;
 	
 		}
@@ -91,13 +111,11 @@ void Options::mouseSwitches()
 		{
 			u.setVolumeOn(true);
 			buttons.setChoosed(BUTTON_OPTIONS_VOLUME_ON, true);
-			u.setVolumeOff(false);
 			buttons.setChoosed(BUTTON_OPTIONS_VOLUME_OFF, false);
 			mouse_click_guard = false;
 		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_VOLUME_OFF) == true && mouse_click_guard == true)
 		{
-			u.setVolumeOff(true);
 			buttons.setChoosed(BUTTON_OPTIONS_VOLUME_OFF, true);
 			u.setVolumeOn(false);
 			buttons.setChoosed(BUTTON_OPTIONS_VOLUME_ON, false);
@@ -105,11 +123,13 @@ void Options::mouseSwitches()
 		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_PLUS_FOUR) == true && mouse_click_guard == true)
 		{
-			int number_of_ships = u.getNumberOfFourMastedShips();
-			if (number_of_ships < 1)
-				u.setNumberOfFourMastedShips(number_of_ships + 1);
-			else if(u.getVolumeOn() == true)
-				u.playSample(AUDIO_ERROR);
+			if (number_of_left_fields >= 4)
+				u.setNumberOfFourMastedShips(u.getNumberOfFourMastedShips() + 1);
+			else
+			{
+				warning_sample_play_flag = true;
+				warning_ship_add_flag = true;
+			}
 			mouse_click_guard = false;
 		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_MINUS_FOUR) == true && mouse_click_guard == true)
@@ -117,17 +137,22 @@ void Options::mouseSwitches()
 			int number_of_ships = u.getNumberOfFourMastedShips();
 			if (number_of_ships > 0)
 				u.setNumberOfFourMastedShips(number_of_ships -1);
-			else if (u.getVolumeOn() == true)
-				u.playSample(AUDIO_ERROR);
+			else
+			{
+				warning_sample_play_flag = true;
+				warning_ship_remove_flag = true;
+			}
 			mouse_click_guard = false;
 		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_PLUS_THREE) == true && mouse_click_guard == true)
 		{
-			int number_of_ships = u.getNumberOfThreeMastedShips();
-			if (number_of_ships < 2)
-				u.setNumberOfThreeMastedShips(number_of_ships + 1);
-			else if (u.getVolumeOn() == true)
-				u.playSample(AUDIO_ERROR);
+			if (number_of_left_fields >= 3)
+				u.setNumberOfThreeMastedShips(u.getNumberOfThreeMastedShips() + 1);
+			else
+			{
+				warning_sample_play_flag = true;
+				warning_ship_add_flag = true;
+			}
 			mouse_click_guard = false;
 		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_MINUS_THREE) == true && mouse_click_guard == true)
@@ -135,17 +160,22 @@ void Options::mouseSwitches()
 			int number_of_ships = u.getNumberOfThreeMastedShips();
 			if (number_of_ships > 0)
 				u.setNumberOfThreeMastedShips(number_of_ships - 1);
-			else if (u.getVolumeOn() == true)
-				u.playSample(AUDIO_ERROR);
+			else
+			{
+				warning_sample_play_flag = true;
+				warning_ship_remove_flag = true;
+			}
 			mouse_click_guard = false;
 		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_PLUS_TWO) == true && mouse_click_guard == true)
 		{
-			int number_of_ships = u.getNumberOfTwoMastedShips();
-			if (number_of_ships < 3)
-				u.setNumberOfTwoMastedShips(number_of_ships + 1);
-			else if (u.getVolumeOn() == true)
-				u.playSample(AUDIO_ERROR);
+			if (number_of_left_fields >= 2)
+				u.setNumberOfTwoMastedShips(u.getNumberOfTwoMastedShips() + 1);
+			else
+			{
+				warning_sample_play_flag = true;
+				warning_ship_add_flag = true;
+			}
 			mouse_click_guard = false;
 		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_MINUS_TWO) == true && mouse_click_guard == true)
@@ -153,17 +183,23 @@ void Options::mouseSwitches()
 			int number_of_ships = u.getNumberOfTwoMastedShips();
 			if (number_of_ships > 0)
 				u.setNumberOfTwoMastedShips(number_of_ships - 1);
-			else if (u.getVolumeOn() == true)
-				u.playSample(AUDIO_ERROR);
+			else
+			{
+				warning_sample_play_flag = true;
+				warning_ship_remove_flag = true;
+			}
 			mouse_click_guard = false;
 		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_PLUS_ONE) == true && mouse_click_guard == true)
 		{
 			int number_of_ships = u.getNumberOfOneMastedShips();
-			if (number_of_ships < 4)
+			if (number_of_left_fields >= 1 && number_of_ships < 8)
 				u.setNumberOfOneMastedShips(number_of_ships + 1);
-			else if (u.getVolumeOn() == true)
-				u.playSample(AUDIO_ERROR);
+			else
+			{
+				warning_sample_play_flag = true;
+				warning_ship_add_flag = true;
+			}
 			mouse_click_guard = false;
 		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_MINUS_ONE) == true && mouse_click_guard == true)
@@ -171,8 +207,11 @@ void Options::mouseSwitches()
 			int number_of_ships = u.getNumberOfOneMastedShips();
 			if (number_of_ships > 0)
 				u.setNumberOfOneMastedShips(number_of_ships - 1);
-			else if (u.getVolumeOn() == true)
-				u.playSample(AUDIO_ERROR);
+			else
+			{
+				warning_sample_play_flag = true;
+				warning_ship_remove_flag = true;
+			}
 			mouse_click_guard = false;
 		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_RESET) == true && mouse_click_guard == true)
@@ -189,33 +228,6 @@ void Options::mouseSwitches()
 		else if (u.getMouse1ClickGuard() == true && mouse_click_guard == false)
 			mouse_click_guard = true;
 		
-		/*Ustawienie back_to_menu_guard*/
-		if (u.getNumberOfFourMastedShips() == 0 && u.getNumberOfThreeMastedShips() == 0 && u.getNumberOfTwoMastedShips() == 0 && u.getNumberOfOneMastedShips() == 0)
-			back_to_menu_guard = false;
-		else if(back_to_menu_guard == false)
-			back_to_menu_guard = true;
-
-		/*Audio dotyczace highlightow*/
-		if (u.getVolumeOn() == true)
-		{
-			bool highlighted = false;
-			for (int indeks = BUTTON_OPTIONS_BACK; indeks <= BUTTON_OPTIONS_RESET; indeks++)
-			{
-				if (buttons.getHighlighted(indeks) == true)
-				{
-					highlighted = true;
-					break;
-				}
-
-			}
-			if (highlighted == true && audio_play_guard == true)
-			{
-				u.playSample(AUDIO_BUTTON_HIGHLIGHT);
-				audio_play_guard = false;
-			}
-			else if (highlighted == false)
-				audio_play_guard = true;
-		}
 	}
 }
 
@@ -275,6 +287,7 @@ void Options::paintButtons()
 
 void Options::paintText()
 {
+	u.drawText("POZOSTALE POLA", FONT_SIZE_SMALL, 183, 234, 243, 90, 8);
 	u.drawText("TRYB STAWIANIA", FONT_SIZE_BIG, 183, 234, 240, 372, 43);
 	u.drawText("STATKOW", FONT_SIZE_BIG, 183, 234, 243, 422, 80);
 	u.drawText("TRYB GRY", FONT_SIZE_BIG, 183, 234, 243, 424, 220);
@@ -287,17 +300,42 @@ void Options::paintText()
 	/*Wypisanie liczb na ekranie*/
 	string number;
 	number = to_string(u.getNumberOfFourMastedShips());
-	u.drawText(number.c_str(), FONT_SIZE_BIG, 183, 234, 240, 138, 111);
+	u.drawText(number.c_str(), FONT_SIZE_BIG, 183, 234, 243, 138, 111);
 	number = to_string(u.getNumberOfThreeMastedShips());
-	u.drawText(number.c_str(), FONT_SIZE_BIG, 183, 234, 240, 138, 213);
+	u.drawText(number.c_str(), FONT_SIZE_BIG, 183, 234, 243, 138, 213);
 	number = to_string(u.getNumberOfTwoMastedShips());
-	u.drawText(number.c_str(), FONT_SIZE_BIG, 183, 234, 240, 138, 313);
+	u.drawText(number.c_str(), FONT_SIZE_BIG, 183, 234, 243, 138, 313);
 	number = to_string(u.getNumberOfOneMastedShips());
-	u.drawText(number.c_str(), FONT_SIZE_BIG, 183, 234, 240, 138, 413);
+	u.drawText(number.c_str(), FONT_SIZE_BIG, 183, 234, 243, 138, 413);
+	number = to_string(number_of_left_fields);
+	u.drawText(number.c_str(), FONT_SIZE_BIG, 183, 234, 243, 140, 23);
 
-	/*Wypisanie warninga*/
+	/*Wypisanie warningow*/
+	paintWarnings();
+}
+
+void Options::paintWarnings()
+{
 	if (back_to_menu_guard == false)
-		u.drawText("UWAGA Musi byc wybrany co najmniej jeden statek do gry", FONT_SIZE_BIG, 168, 0, 0, 2, 1);
+		u.drawText("UWAGA Musi byc wybrany co najmniej jeden statek do gry", FONT_SIZE_BIG, 168, 0, 0, 2, 497);
+	else if (u.getNumberOfOneMastedShips() >= 8)
+		u.drawText("UWAGA Osiagnieta maksymalna ilosc jednomasztowcow", FONT_SIZE_BIG, 168, 0, 0, 2, 497);
+	
+	if (warning_ship_remove_flag == true || warning_ship_remove_timer > 0)
+	{
+		if (warning_ship_remove_flag == true)
+			warning_ship_remove_timer = 200;
+		warning_ship_remove_timer -= 1;
+		u.drawText("UWAGA Nie mozna usunac statku", FONT_SIZE_SMALL, 168, 0, 0, 218, 488);
+	}
+	if (warning_ship_add_flag == true || warning_ship_add_timer > 0)
+	{
+		if (warning_ship_add_flag == true)
+			warning_ship_add_timer = 200;
+		warning_ship_add_timer -= 1;
+		u.drawText("UWAGA Nie mozna dodac statku", FONT_SIZE_SMALL, 168, 0, 0, 2, 488);
+	}
+		
 }
 
 void Options::paintBorders()
@@ -309,5 +347,43 @@ void Options::paintBorders()
 	u.drawBorders(363, 42, 300, 140, 4, 81, 75, 201);
 	u.drawBorders(390, 220, 230, 100, 4, 81, 75, 201);
 	u.drawBorders(390, 360, 230, 100, 4, 81, 75, 201);
+
+}
+
+void Options::calculateNumberOfLeftFields()
+{
+	number_of_left_fields = 20 - (4 * u.getNumberOfFourMastedShips()) - (3 * u.getNumberOfThreeMastedShips()) - (2 * u.getNumberOfTwoMastedShips()) - u.getNumberOfOneMastedShips();
+}
+
+void Options::playAudio()
+{
+	
+	if (u.getVolumeOn() == true)
+	{
+		/*Audio dotyczace highlightow*/
+		bool highlighted = false;
+		for (int indeks = BUTTON_OPTIONS_BACK; indeks <= BUTTON_OPTIONS_RESET; indeks++)
+		{
+			if (buttons.getHighlighted(indeks) == true)
+			{
+				highlighted = true;
+				break;
+			}
+
+		}
+		if (highlighted == true && audio_play_guard == true)
+		{
+			u.playSample(AUDIO_BUTTON_HIGHLIGHT);
+			audio_play_guard = false;
+		}
+		else if (highlighted == false)
+			audio_play_guard = true;
+
+		/*Audio dotyczace warningow*/
+		if (warning_sample_play_flag == true)
+			u.playSample(AUDIO_ERROR);
+	}
+
+	
 
 }

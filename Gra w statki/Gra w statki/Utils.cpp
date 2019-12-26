@@ -22,7 +22,6 @@ Utils::Utils()
 	pvc_game_mode = true;
 	pvp_game_mode = false;
 	volume_on = true;
-	volume_off = false;
 	/*koniec wybranych trybow gry*/
 	ship_size = 1;
 	ship_orientation = 1;
@@ -146,11 +145,6 @@ bool Utils::getPvPGameMode()
 bool Utils::getVolumeOn()
 {
 	return volume_on;
-}
-
-bool Utils::getVolumeOff()
-{
-	return volume_off;
 }
 
 int Utils::getShipSize()
@@ -308,11 +302,6 @@ void Utils::setVolumeOn(bool b)
 	volume_on = b;
 }
 
-void Utils::setVolumeOff(bool b)
-{
-	volume_off = b;
-}
-
 void Utils::setShipSize(int s)
 {
 	ship_size = s;
@@ -390,7 +379,6 @@ void Utils::restoreDefaults()
 	pvc_game_mode = true;
 	pvp_game_mode = false;
 	volume_on = true;
-	volume_off = false;
 	number_of_one_masted_ships = 4;
 	number_of_two_masted_ships = 3;
 	number_of_three_masted_ships = 2;

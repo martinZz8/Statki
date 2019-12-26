@@ -59,7 +59,7 @@ void Board::paintBoard()
 int Board::whichField(float mouse_x, float mouse_y)
 {
 	float field_size = u.getFieldSize();
-	for (size_t i = 0; i < fields.size(); i++)
+	for (int i = 0; i < fields.size(); i++)
 	{
 		float l_x = fields[i].getCoordX(); //lewe x
 		float r_x = fields[i].getCoordX() + field_size; //prawe x
@@ -90,12 +90,12 @@ int Board::whichShip(float mouse_x, float mouse_y)
 {
 	//sprawdzam czy isnieje statek o zadanych parametrach x i y - w tym celu przeszukuje caly vector shipow
 
-	for (size_t i = 0; i < ships.size(); i++)
+	for (int i = 0; i < ships.size(); i++)
 	{
 		//przeszukuje kazde pole z vectora pol w danym statku
 		int indeks = 0;
 		int number_of_fields = ships[i].getNumberOfFields();
-		for (size_t j = 0; j < number_of_fields; j++)
+		for (int j = 0; j < number_of_fields; j++)
 		{
 			float l_x = ships[j].getCoordX(indeks); //lewe x
 			float r_x = l_x + u.getFieldSize(); //prawe x
@@ -108,6 +108,7 @@ int Board::whichShip(float mouse_x, float mouse_y)
 			indeks++;
 		}
 	}
+	return -1;
 }
 
 void Board::paintClassicShip(float mouse_x, float mouse_y)
