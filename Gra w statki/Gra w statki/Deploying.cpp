@@ -5,6 +5,7 @@ Deploying::Deploying(State **state, Utils& utils, Buttons& buttons, Board& board
 {
 	m = NULL;
 	audio_play_guard = true;
+	warning_sample_play_flag = false;
 	resize_ship_guard = true;
 	rotate_ship_guard = true;
 	mouse_click_guard = true;
@@ -17,7 +18,11 @@ void Deploying::setStates(Menu* menu)
 
 void Deploying::tick()
 {
-	classicKeyboardSwitches();
+	if (u.getClassicGameMode() == true)
+		classicKeyboardSwitches();
+	
+
+
 	mouseSwitches();
 
 }
@@ -77,6 +82,21 @@ void Deploying::classicKeyboardSwitches()
 		rotate_ship_guard = true;
 }
 
+void Deploying::classicPlayerDeploy()
+{
+
+}
+
+void Deploying::classicComputerDeploy()
+{
+
+}
+
+void Deploying::classicBoardCopy()
+{
+
+}
+
 void Deploying::mouseSwitches()
 {
 	if (u.getMouseClickedBeforeStateSwitch() == true)
@@ -131,5 +151,8 @@ void Deploying::playAudio()
 		else if (highlighted == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
 			audio_play_guard = true;
 
+		/*Audio dotyczace warningow*/
+		if (warning_sample_play_flag == true)
+			u.playSample(AUDIO_ERROR);
 	}
 }

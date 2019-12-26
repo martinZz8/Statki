@@ -4,7 +4,9 @@ Board::Board(Utils& utils, float offset_x, float offset_y) :u(utils), offset_x(o
 {
 	width = u.getBoardSize();
 	height = u.getBoardSize();
+	field_size = u.getFieldSize();
 	made_ships = false;
+	number_of_placed_ships = 0;
 	number_of_one_masted_ships = u.getNumberOfOneMastedShips();
 	number_of_two_masted_ships = u.getNumberOfTwoMastedShips();
 	number_of_three_masted_ships = u.getNumberOfThreeMastedShips();
@@ -35,8 +37,7 @@ void Board::setFields()
 		{
 			x1 = offset_x + (j * field_size);
 			y1 = offset_y + (i * field_size);
-			Field field(u);
-			field.setCoords(x1, y1);
+			Field field(u, x1, y1);
 			fields.push_back(field);
 			iter++;
 			cout << "Iter: " << iter << endl;
@@ -54,6 +55,18 @@ void Board::paintBoard()
 {
 	for (Field f : fields)
 		f.paintField();
+}
+
+void Board::setFieldOccupy(float mouse_x, float mouse_y, bool occupied)
+{
+	int indeks = whichField(mouse_x, mouse_y);
+	fields[indeks].setOccupied(occupied);
+}
+
+void Board::setFieldHit(float mouse_x, float mouse_y, bool hit)
+{
+	int indeks = whichField(mouse_x, mouse_y);
+	fields[indeks].setHit(hit);
 }
 
 int Board::whichField(float mouse_x, float mouse_y)
@@ -74,18 +87,6 @@ int Board::whichField(float mouse_x, float mouse_y)
 	return -1;
 }
 
-void Board::setFieldOccupy(float mouse_x, float mouse_y, bool occupied)
-{
-	int indeks = whichField(mouse_x, mouse_y);
-	fields[indeks].setOccupied(occupied);
-}
-
-void Board::setFieldHit(float mouse_x, float mouse_y, bool hit)
-{
-	int indeks = whichField(mouse_x, mouse_y);
-	fields[indeks].setHit(hit);
-}
-
 int Board::whichShip(float mouse_x, float mouse_y)
 {
 	//sprawdzam czy isnieje statek o zadanych parametrach x i y - w tym celu przeszukuje caly vector shipow
@@ -94,13 +95,14 @@ int Board::whichShip(float mouse_x, float mouse_y)
 	{
 		//przeszukuje kazde pole z vectora pol w danym statku
 		int indeks = 0;
+		float field_size = u.getFieldSize();
 		int number_of_fields = ships[i].getNumberOfFields();
 		for (int j = 0; j < number_of_fields; j++)
 		{
 			float l_x = ships[j].getCoordX(indeks); //lewe x
-			float r_x = l_x + u.getFieldSize(); //prawe x
+			float r_x = l_x + field_size; //prawe x
 			float u_y = ships[j].getCoordY(indeks); //gorne y
-			float d_y = u_y + u.getFieldSize(); //dolne y
+			float d_y = u_y + field_size; //dolne y
 			if (mouse_x >= l_x && mouse_x < r_x && mouse_y >= u_y && mouse_y < d_y)
 			{
 				return i;
@@ -108,6 +110,7 @@ int Board::whichShip(float mouse_x, float mouse_y)
 			indeks++;
 		}
 	}
+	//zwrocenie -1 oznacza, ze pod danymi koordynatami nie ma statku
 	return -1;
 }
 
@@ -181,18 +184,69 @@ void Board::paintClassicShip(float mouse_x, float mouse_y)
 	}
 }
 
-void Board::deployClassicShip(float mouse_x, float mouse_y, int size, int orientation)
+//TODO
+int Board::deployClassicShip(float mouse_x, float mouse_y, int size, int orientation)
 {
-	//int indeks = whichField(mouse_x, mouse_y);
-	//if (size == 1)
-	//{		
-	//	fields[indeks].setOccupied(1);
-	//}
-	//else if (size == 2)
-	//{
-	//	fields[indeks].setOccupied(1);
-	//}
+	//tego ifa sprawdzac nizej i dla kazdego ze statku dac inny warunek (zalezny od jego wielkosci, sprawdzajacy, czy dany statek miesci sie w planszy)
+	if (mouse_x >= offset_x && mouse_x <= (offset_x + width) && mouse_y >= offset_y && mouse_y <= (offset_y + height))
+	{
+		int indeks = whichField(mouse_x, mouse_y);
+		float center_of_field_x = fields[indeks].getCoordX() + (0.5 * field_size);
+		float center_of_field_y = fields[indeks].getCoordY() + (0.5 * field_size);
+		int ship_orientation = u.getShipOrientation();
+		int ship_size = u.getShipSize();
+		int quarter_of_field = whichQuarterOfField(mouse_x, mouse_y, center_of_field_x, center_of_field_y);
+				
 
+		if (ship_orientation == 1) //pionowo
+		{
+			if (ship_size == 1)
+			{
+				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true) //nie mozna wtedy rozstawic statku
+					return -1;
+				else
+				{
+					if (quarter_of_field == 1)
+					{
+
+					}
+					else if (quarter_of_field == 2)
+					{
+						number_of_placed_ships++;
+						fields[indeks].setOccupied(true);
+						vector <Field> f{ fields[indeks] };
+						ships.push_back(Ship(u, f));
+					}
+
+				}
+			}
+		}
+		else //poziomo
+		{
+
+		}
+	}
+	else
+		return -1;
+
+}
+
+int Board::whichQuarterOfField(float mouse_x, float mouse_y, float center_of_field_x, float center_of_field_y)
+{
+	if (mouse_x <= center_of_field_x)
+	{
+		if (mouse_y <= center_of_field_y)
+			return 2;
+		else
+			return 3;
+	}
+	else
+	{
+		if (mouse_y <= center_of_field_y)
+			return 1;
+		else
+			return 4;
+	}
 }
 
 bool Board::getFieldOccupied(float mouse_x, float mouse_y)

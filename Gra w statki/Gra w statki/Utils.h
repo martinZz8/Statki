@@ -83,7 +83,7 @@ class Utils
 	bool pvp_game_mode;                     /*                                      */
 	bool volume_on;                         /*                                      */
 	int ship_size; //rozmiar statku w danym momencie (ilosc fieldow)
-	int ship_orientation; //orientacja statku w danym momencie (1 - do dolu, 2 - na bok)
+	int ship_orientation; //orientacja statku w danym momencie (1 - pionowo wzgledem osi x, 2 - poziomo wzgledem osi y)
 	int audio_samples;
 	int font_samples;
 	float display_x;

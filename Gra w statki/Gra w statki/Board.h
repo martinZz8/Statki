@@ -11,8 +11,10 @@ class Board
 	float offset_y; //offset w osi y
 	float width; //szerokosc
 	float height; //wysokosc
+	float field_size; //rozmiar pola
 	//bool setted_fields; //flaga do jednorazowego ustawienia koordynatow pol
 	bool made_ships; //?
+	int number_of_placed_ships;
 	int number_of_one_masted_ships;
 	int number_of_two_masted_ships;
 	int number_of_three_masted_ships;
@@ -27,13 +29,14 @@ public:
 	void paintBoard(); //metoda rysujaca plansze (wraz z kratkami)
 	void setFields(); //metoda ustawiajaca koordynaty kazdego pola znajdujacego sie w vectorze pol
 	void setOffset(float x, float y);
-	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields
 	void setFieldOccupy(float mouse_x, float mouse_y, bool occupied); //metoda ustawiajaca flage okupowania pola przez dany statek
 	void setFieldHit(float mouse_x, float mouse_y, bool hit);
+	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships
 	void paintClassicShip(float mouse_x, float mouse_y); //metoda ryzsujaca statek dla standardowych opcji statków
-	//DO DOKONCZENIA METODA NIZEJ
-	void deployClassicShip(float mouse_x, float mouse_y, int size, int orientation); //metoda rozstawiajaca statek, size - rozmiar statku, orientation - orientacja statku
+	//TODO - DO DOKONCZENIA METODA NIZEJ
+	int deployClassicShip(float mouse_x, float mouse_y, int size, int orientation); //metoda rozstawiajaca statek, size - rozmiar statku, orientation - orientacja statku
+	int whichQuarterOfField(float mouse_x, float mouse_y, float center_of_field_x, float center_of_field_y); //metoda zwraca, ktora cwiartka pola zostala kliknieta; 1 - prawa gorna, 2 - lewa gorna, 3 - lewa dolna, 4 - prawa dolna
 	bool getFieldOccupied(float mouse_x, float mouse_y);
 	bool getFieldHit(float mouse_x, float mouse_y);
 };

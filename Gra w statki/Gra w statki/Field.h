@@ -8,14 +8,15 @@ class Field
 	float c_y; //koordynaty y
 	int x_board_pos, y_board_pos;
 	float width; //szerokosc pola
-	bool occupied; //czy pole jest zajete przez statek (false - nie, true - tak)
-	bool hit; //pole trafione przez przeciwnika (false - nie trafione, true - trafione)
-	bool surrounded; //pole, na którym nie mo¿e zostaæ postawiony ¿aden statek (poniewa¿ ju¿ obok znajduje siê jakiœ statek) (false - nie ma obok statku, true - jest obok statek)
+	bool occupied_flag; //czy pole jest zajete przez statek (false - nie, true - tak)
+	bool hitted_flag; //pole trafione przez przeciwnika (false - nie trafione, true - trafione)
+	bool surrounded_flag; //pole, na którym nie mo¿e zostaæ postawiony ¿aden statek (poniewa¿ ju¿ obok znajduje siê jakiœ statek) (false - nie ma obok statku, true - jest obok statek)
 
 public:
-	Field(Utils& utils);
+	Field(Utils& utils, float c_x, float c_y);
 	~Field();
-	void setCoords(float x, float y);
+	void setCoordX(float c_x);
+	void setCoordY(float c_y);
 	void setOccupied(bool o);
 	void setHit(bool h);
 	void setSurrounded(bool s);

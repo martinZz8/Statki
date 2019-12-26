@@ -1,20 +1,10 @@
 #include "Ship.h"
 
-Ship::Ship(Utils& utils) :u(utils)
+Ship::Ship(Utils& utils, vector<Field> f):u(utils),fields(f)
 {
 	remaining_parts = 0;
 	number_of_fields = 0;
-}
-
-//Ship::Ship()
-//{
-//	remaining_parts = 0;
-//	number_of_fields = 0;
-//}
-
-Ship::~Ship()
-{
-
+	ship_destroyed_flag = false;
 }
 
 void Ship::setFields(Field f)

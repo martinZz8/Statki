@@ -6,13 +6,12 @@ class Ship
 {
 	Utils& u;
 	vector <Field> fields;
-	//STWORZYC VECTOR INTOW SHIPOW
 	int remaining_parts; //pozostale nie trafione pola statku
 	int number_of_fields; //liczba pol statku
+	bool ship_destroyed_flag; //flaga wskazujaca na to, czy statek zostal znisczony czy nie; true - tak, false - nie
+	
 public:
-	Ship(Utils& utils);
-	//Ship();
-	~Ship();
+	Ship(Utils& utils, vector<Field> f);
 	void setFields(Field f);
 	void setNumberOfFields(int n);
 	//void setHitField(float x_mouse, float y_mouse);
