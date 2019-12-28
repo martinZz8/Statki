@@ -5,7 +5,7 @@ Board::Board(Utils& utils, float offset_x, float offset_y) :u(utils), offset_x(o
 	width = u.getBoardSize();
 	height = u.getBoardSize();
 	field_size = u.getFieldSize();
-	deployed_ships_flag = false;
+	deploy_ships_flag = true;
 	setFields();
 
 }
@@ -21,9 +21,9 @@ float Board::getYOffset()
 	return offset_y;
 }
 
-bool Board::getDeployedShipsFlag()
+bool Board::getDeployShipsFlag()
 {
-	return deployed_ships_flag;
+	return deploy_ships_flag;
 }
 
 void Board::setFields()
@@ -52,9 +52,17 @@ void Board::setOffset(float x, float y)
 	offset_y = y;
 }
 
-void Board::setDeployedShipsFlag()
+void Board::setDeployShipsFlag()
 {
-
+	for (int n : numbers_of_not_deployed_ships)
+	{
+		if (n > 0)
+		{
+			deploy_ships_flag = true;
+			return;
+		}	
+	}
+	deploy_ships_flag = false;
 }
 
 void Board::paintBoard()
@@ -137,6 +145,19 @@ void Board::setFieldsSurrounded(int indeks, bool surrounded)
 		else if (offset == 1)
 			offset = 8;
 	}
+}
+
+void Board::setNumbersOfNotDeployedShips()
+{
+	if (numbers_of_not_deployed_ships.empty() == false)
+	{
+		numbers_of_not_deployed_ships.clear();
+		numbers_of_not_deployed_ships.clear();
+	}
+	numbers_of_not_deployed_ships.push_back(u.getNumberOfOneMastedShips()); //indeks 0
+	numbers_of_not_deployed_ships.push_back(u.getNumberOfTwoMastedShips()); //indeks 1
+	numbers_of_not_deployed_ships.push_back(u.getNumberOfThreeMastedShips()); //indeks 2
+	numbers_of_not_deployed_ships.push_back(u.getNumberOfFourMastedShips()); //indeks 3
 }
 
 int Board::whichField(float mouse_x, float mouse_y)
@@ -254,7 +275,7 @@ void Board::paintClassicShip(float mouse_x, float mouse_y)
 }
 
 //TODO
-int Board::deployClassicShip(float mouse_x, float mouse_y, vector <int>& numbers_of_not_deployed_ships)
+int Board::deployClassicShip(float mouse_x, float mouse_y)
 {
 	int ship_orientation = u.getShipOrientation();
 	int ship_size = u.getShipSize();
@@ -843,7 +864,6 @@ void Board::clearVectors()
 	ships.clear();
 	fields.clear();
 	numbers_of_not_deployed_ships.clear();
-
 	setFields();
 	
 }

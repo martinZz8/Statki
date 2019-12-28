@@ -233,11 +233,7 @@ void Options::mouseSwitches()
 			warning_ship_remove_flag = false;
 			mouse_click_guard = true;
 		}
-			
-			
-		
-			
-		
+
 	}
 }
 

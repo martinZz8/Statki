@@ -1,22 +1,12 @@
 #include "Deploying.h"
 #include "Menu.h"
 
-bool Deploying::checkIfShipCanBeChanged(vector <int> numbers_of_not_deployed_ships)
-{
-	for (int i = 0; i < numbers_of_not_deployed_ships.size(); i++)
-	{
-		if (numbers_of_not_deployed_ships[i] > 0)
-			return true;	
-	}
-	return false;
-}
-
 void Deploying::fixShipSize()
 {
-	int size_of_vector = numbers_of_not_deployed_ships1.size();
+	int size_of_vector = b1.numbers_of_not_deployed_ships.size();
 	for (int i = 0; i < size_of_vector; i++)
 	{
-		if (numbers_of_not_deployed_ships1[i] != 0)
+		if (b1.numbers_of_not_deployed_ships[i] > 0)
 		{
 			u.setShipSize(i + 1);
 			break;
@@ -26,9 +16,6 @@ void Deploying::fixShipSize()
 
 void Deploying::restoreDefaults()
 {
-	player1_deploy_flag = true;
-	player2_deploy_flag = true;
-	computer_deploy_flag = true;
 	b1.clearVectors();
 	b2.clearVectors();
 	setNUmbersOfNotDeployedShips();
@@ -44,9 +31,6 @@ Deploying::Deploying(State **state, Utils& utils, Buttons& buttons, Board& board
 	resize_ship_guard = true;
 	rotate_ship_guard = true;
 	mouse_click_guard = true;
-	player1_deploy_flag = true;
-	player2_deploy_flag = true;
-	computer_deploy_flag = true;
 
 }
 
@@ -57,21 +41,15 @@ void Deploying::setStates(Menu* menu)
 
 void Deploying::setNUmbersOfNotDeployedShips()
 {
-	if (numbers_of_not_deployed_ships1.empty() == false)
-	{
-		numbers_of_not_deployed_ships1.clear();
-		numbers_of_not_deployed_ships2.clear();
-	}
-	numbers_of_not_deployed_ships1.push_back(u.getNumberOfOneMastedShips()); //indeks 0
-	numbers_of_not_deployed_ships1.push_back(u.getNumberOfTwoMastedShips()); //indeks 1
-	numbers_of_not_deployed_ships1.push_back(u.getNumberOfThreeMastedShips()); //indeks 2
-	numbers_of_not_deployed_ships1.push_back(u.getNumberOfFourMastedShips()); //indeks 3
-	numbers_of_not_deployed_ships2 = numbers_of_not_deployed_ships1;
+	b1.setNumbersOfNotDeployedShips();
+	b2.setNumbersOfNotDeployedShips();
 	fixShipSize();
 }
 
 void Deploying::tick()
 {
+	b1.setDeployShipsFlag();
+	b2.setDeployShipsFlag();
 	if (u.getClassicGameMode() == true)
 	{
 		classicKeyboardSwitches();
@@ -100,8 +78,8 @@ int Deploying::getWindowID()
 
 void Deploying::classicKeyboardSwitches()
 {
-	//Sprawdzenie, czy mozna zmienic statek
-	bool ship_can_be_changed_flag = checkIfShipCanBeChanged(numbers_of_not_deployed_ships1);
+	
+	bool ship_can_be_changed_flag = b1.getDeployShipsFlag(); //zmienna wskazujaca na to, czy mozna zmienic statek
 	
 	if (ship_can_be_changed_flag == true)
 	{
@@ -110,7 +88,7 @@ void Deploying::classicKeyboardSwitches()
 			int actual_ship_size = u.getShipSize();
 			int i = actual_ship_size - 1;
 			i++; //pierwsze zwiekszenie indeksu petli
-			int size_of_vector = numbers_of_not_deployed_ships1.size();
+			int size_of_vector = b1.numbers_of_not_deployed_ships.size();
 			bool running = true;
 
 			while (running)
@@ -120,7 +98,7 @@ void Deploying::classicKeyboardSwitches()
 					i = 0;
 					continue;
 				}
-				if (numbers_of_not_deployed_ships1[i] == 0)
+				if (b1.numbers_of_not_deployed_ships[i] == 0)
 				{
 					i++;
 					continue;
@@ -137,7 +115,7 @@ void Deploying::classicKeyboardSwitches()
 			int actual_ship_size = u.getShipSize();
 			int i = actual_ship_size - 1;
 			i--; //pierwsze zmniejszenie indeksu petli
-			int size_of_vector = numbers_of_not_deployed_ships1.size();
+			int size_of_vector = b1.numbers_of_not_deployed_ships.size();
 			bool running = true;
 
 			while (running)
@@ -147,7 +125,7 @@ void Deploying::classicKeyboardSwitches()
 					i = size_of_vector - 1;
 					continue;
 				}
-				if (numbers_of_not_deployed_ships1[i] == 0)
+				if (b1.numbers_of_not_deployed_ships[i] == 0)
 				{
 					i--;
 					continue;
@@ -209,11 +187,10 @@ void Deploying::mouseSwitches()
 			{
 				if (u.getPvCGameMode() == true)
 				{
-					setPlayer1DeployFlag();
-					if (player1_deploy_flag == true) //plaer1 moze rozstawiac statki
+					if (b1.getDeployShipsFlag() == true) //plaer1 moze rozstawiac statki
 					{
 						cout << "Klikam myszka w classicu" << endl;
-						int x = b1.deployClassicShip(u.getMouseX(), u.getMouseY(), numbers_of_not_deployed_ships1);
+						int x = b1.deployClassicShip(u.getMouseX(), u.getMouseY());
 						if (x == 0)
 						{
 							place_ship_sample_flag = true;
@@ -227,7 +204,7 @@ void Deploying::mouseSwitches()
 						}
 							
 					}
-					//TODO DOKONCZYC ROZSTAWIANIE STATKOW
+					//TODO DOKONCZYC ROZSTAWIANIE STATKOW DLA KOLEJNEJ PLANSZY B2
 				}
 				else //PvP_game_mode == true
 				{
@@ -328,37 +305,6 @@ void Deploying::playAudio()
 	}
 }
 
-void Deploying::setPlayer1DeployFlag()
-{
-	int vector_size = numbers_of_not_deployed_ships1.size();
-	for (int i = 0; i < vector_size; i++)
-	{
-		if (numbers_of_not_deployed_ships1[i] != 0)
-		{
-			player1_deploy_flag = true;
-			return;
-		}
-	}
-	player1_deploy_flag = false;
-}
 
-void Deploying::setPlayer2DeployFlag()
-{
-	int vector_size = numbers_of_not_deployed_ships2.size();
-	for (int i = 0; i < vector_size; i++)
-	{
-		if (numbers_of_not_deployed_ships2[i] != 0)
-		{
-			player2_deploy_flag = true;
-			return;
-		}
-	}
-	player2_deploy_flag = false;
-}
-
-void Deploying::setComputerDeployFlag()
-{
-
-}
 
 
