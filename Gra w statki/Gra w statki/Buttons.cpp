@@ -32,6 +32,7 @@ void Buttons::setButtons()
 	/*DEPLOYING*/
 	buttons.push_back(Button(u, "PLAY", 120, 40, 740, 545, 45, 12, false, BUTTON_DEPLOYING_PLAY)); //19
 	buttons.push_back(Button(u, "BACK TO MENU", 120, 40, 870, 545, 6, 12, false, BUTTON_DEPLOYING_BACK)); //20
+	buttons.push_back(Button(u, "RESET", 120, 40, 10, 545, 40, 9, false, BUTTON_DEPLOYING_RESET)); //21
 
 }
 

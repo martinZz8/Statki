@@ -27,11 +27,15 @@ using namespace std;
 #define AUDIO_MISSED_SHOT 3
 #define AUDIO_HITTED_SHIP 4
 #define AUDIO_ERROR 5
-
 /***FONT***/
 #define FONT_SIZE_SMALL 0
 #define FONT_SIZE_BIG 1
 #define FONT_SIZE_HUGE 2
+/***FIELD SCHEME***/
+#define SCHEME_OF_FIELD 0
+#define SCHEME_OF_SHIP 1
+#define SCHEME_OF_HIT 2
+#define SCHEME_OF_SURROUNDED 3
 /***BUTTONS***/
      /*MENU*/
 #define BUTTON_MENU_PLAY 0
@@ -57,6 +61,7 @@ using namespace std;
      /*DEPLOYING*/
 #define BUTTON_DEPLOYING_PLAY 19
 #define BUTTON_DEPLOYING_BACK 20
+#define BUTTON_DEPLOYING_RESET 21
      /*GAME*/
 
 class Utils
@@ -163,9 +168,11 @@ public:
 	void drawBorders(float x, float y, float width, float height, float thickness, float r, float g, float b);
 	void restoreDefaults();
 	ALLEGRO_COLOR getColorOfBackground();
-	ALLEGRO_COLOR getColorOfBoard();
+	ALLEGRO_COLOR getColorOfField();
 	ALLEGRO_COLOR getColorOfLine();
 	ALLEGRO_COLOR getColorOfShip();
+	ALLEGRO_COLOR getColorOfHit();
+	ALLEGRO_COLOR getColorOfSurrounded();
 	
 };
 

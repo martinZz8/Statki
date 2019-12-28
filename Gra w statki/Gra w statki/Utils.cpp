@@ -391,7 +391,7 @@ ALLEGRO_COLOR Utils::getColorOfBackground()
 	return color(0, 0, 0);
 }
 
-ALLEGRO_COLOR Utils::getColorOfBoard()
+ALLEGRO_COLOR Utils::getColorOfField()
 {
 	return color(0, 211, 253);
 }
@@ -404,4 +404,14 @@ ALLEGRO_COLOR Utils::getColorOfLine()
 ALLEGRO_COLOR Utils::getColorOfShip()
 {
 	return color(51, 29, 23);
+}
+
+ALLEGRO_COLOR Utils::getColorOfHit()
+{
+	return color(255, 0, 0);
+}
+
+ALLEGRO_COLOR Utils::getColorOfSurrounded()
+{
+	return color(0, 89, 253);
 }

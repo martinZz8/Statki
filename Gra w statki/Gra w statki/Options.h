@@ -12,6 +12,7 @@ class Options:public State
 	Menu* m; //wskaznik tylko do porowania adresu
 	State** s;
 	bool audio_play_guard; //zmienna zawierajaca informacje, czy mozna grac audio; true - tak, false - nie
+	bool audio_error_play_guard; //zmienna zawierajaca informacje, czy mozna grac audio errora; true - tak, false - nie
 	bool warning_sample_play_flag; //zmienna zawierajaca informacje, czy grac audio warninga; true - tak, false - nie
 	bool mouse_click_guard; //true - mozna kliknac, false - nie mozna kliknac
 	bool back_to_menu_guard; //zmienna zawierajaca informacje, czy mozna wrocic do menu; true - tak, false - nies

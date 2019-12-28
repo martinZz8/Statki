@@ -26,6 +26,6 @@ public:
 	bool getHit();
 	bool getSurrounded();
 	void calculate_board_position(int x_board_offset, int y_board_offset, int c_x, int c_y, float mouse_x, float mouse_y); //metoda obliczajaca x_board_pos
-	void paintField(); //metoda renderujaca pole
+	void paintField(int scheme); //metoda renderujaca pole o zadanym schemacie
 };
 

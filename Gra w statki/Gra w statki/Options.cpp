@@ -4,6 +4,7 @@
 Options::Options(State** state, Utils& utils, Buttons& buttons):widnowID(WINDOW_OPTIONS),s(state),u(utils),buttons(buttons)
 {
 	audio_play_guard = true;
+	audio_error_play_guard = true;
 	warning_sample_play_flag = false;
 	mouse_click_guard = true;
 	back_to_menu_guard = true;
@@ -22,9 +23,9 @@ void Options::setStates(Menu* menu)
 
 void Options::tick()
 {
-	warning_ship_remove_flag = false;
+	/*warning_ship_remove_flag = false;
 	warning_ship_add_flag = false;
-	warning_sample_play_flag = false;
+	warning_sample_play_flag = false;*/
 	mouseSwitches();
 	setBackToMenuGuard();
 	calculateNumberOfLeftFields();
@@ -225,8 +226,17 @@ void Options::mouseSwitches()
 			buttons.setChoosed(BUTTON_OPTIONS_VOLUME_OFF, false);
 			mouse_click_guard = false;
 		}
-		else if (u.getMouse1ClickGuard() == true && mouse_click_guard == false)
+		else if (u.getMouse1Clicked() == false)
+		{
+			warning_sample_play_flag = false;
+			warning_ship_add_flag = false;
+			warning_ship_remove_flag = false;
 			mouse_click_guard = true;
+		}
+			
+			
+		
+			
 		
 	}
 }
@@ -376,12 +386,19 @@ void Options::playAudio()
 			u.playSample(AUDIO_BUTTON_HIGHLIGHT);
 			audio_play_guard = false;
 		}
-		else if (highlighted == false)
-			audio_play_guard = true;
-
+		
 		/*Audio dotyczace warningow*/
-		if (warning_sample_play_flag == true)
+		if (warning_sample_play_flag == true && audio_error_play_guard == true)
+		{
 			u.playSample(AUDIO_ERROR);
+			audio_error_play_guard = false;
+		}
+		else if (warning_sample_play_flag == false && audio_error_play_guard == false)
+			audio_error_play_guard = true;
+
+		if (highlighted == false && audio_play_guard == false)
+			audio_play_guard = true;
+			
 	}
 
 	

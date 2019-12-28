@@ -18,6 +18,7 @@ public:
 	float getCoordX(int indeks_vfields); //zwraca koordynat x pola o danym indeksie z vectora pol
 	float getCoordY(int indeks_vfields);//zwraca koordynat y pola o danym indeksie z vectora pol
 	int getNumberOfFields(); //zwraca ilosc fieldow przyporzadkowanych do tego statku
+	void paintShip(); //metoda malujaca statek
 
 
 };

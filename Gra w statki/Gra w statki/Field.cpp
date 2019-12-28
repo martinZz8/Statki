@@ -71,8 +71,19 @@ void Field::calculate_board_position(int x_board_offset, int y_board_offset, int
 	y_board_pos = (c_y - y_board_offset) / width;
 }
 
-void Field::paintField()
+void Field::paintField(int scheme)
 {
-	al_draw_filled_rectangle(c_x, c_y, c_x + width, c_y + width, u.getColorOfBoard());
+	if (scheme == SCHEME_OF_FIELD)
+		al_draw_filled_rectangle(c_x, c_y, c_x + width, c_y + width, u.getColorOfField());
+	else if (scheme == SCHEME_OF_SHIP)
+		al_draw_filled_rectangle(c_x, c_y, c_x + width, c_y + width, u.getColorOfShip());
+	else if (scheme == SCHEME_OF_HIT)
+	{
+		al_draw_line(c_x, c_y, c_x + width, c_y + width, u.getColorOfHit(), 2);
+		al_draw_line(c_x + width, c_y, c_x, c_y + width, u.getColorOfHit(), 2);
+	}
+	else if (scheme == SCHEME_OF_SURROUNDED)
+		al_draw_filled_rectangle(c_x, c_y, c_x + width, c_y + width, u.getColorOfSurrounded());
 	al_draw_rectangle(c_x, c_y, c_x + width, c_y + width, u.getColorOfLine(), 3);
+	
 }

@@ -6,12 +6,8 @@ Board::Board(Utils& utils, float offset_x, float offset_y) :u(utils), offset_x(o
 	height = u.getBoardSize();
 	field_size = u.getFieldSize();
 	made_ships = false;
-	number_of_placed_ships = 0;
-	number_of_one_masted_ships = u.getNumberOfOneMastedShips();
-	number_of_two_masted_ships = u.getNumberOfTwoMastedShips();
-	number_of_three_masted_ships = u.getNumberOfThreeMastedShips();
-	number_of_four_masted_ships = u.getNumberOfFourMastedShips();
 	setFields();
+
 }
 
 
@@ -54,25 +50,89 @@ void Board::setOffset(float x, float y)
 void Board::paintBoard()
 {
 	for (Field f : fields)
-		f.paintField();
+	{
+		f.paintField(SCHEME_OF_FIELD);
+		if (f.getSurrounded() == true)
+		{
+			f.paintField(SCHEME_OF_SURROUNDED);
+		}
+	}
+	for (Ship s : ships)
+		s.paintShip();
+
 }
 
-void Board::setFieldOccupy(float mouse_x, float mouse_y, bool occupied)
+void Board::setFieldsSurrounded(float mouse_x, float mouse_y, bool surrounded)
 {
 	int indeks = whichField(mouse_x, mouse_y);
-	fields[indeks].setOccupied(occupied);
+	int offset = -11;
+	for (int i = 1; i <= 8; i++,offset++)
+	{
+		int new_indeks = indeks + offset;
+		if(new_indeks >=0 && new_indeks <= 99)
+			if (fields[new_indeks].getHit() == false && fields[new_indeks].getSurrounded() == false)
+			{
+				fields[new_indeks].setSurrounded(surrounded);
+				cout << "Dodalem surrounded na true" << endl;
+			}
+		if (offset == -9)
+			offset = -2;
+		else if (offset == -1)
+			offset = 0;
+		else if (offset == 1)
+			offset = 8;
+	}
 }
 
-void Board::setFieldHit(float mouse_x, float mouse_y, bool hit)
+void Board::setFieldsSurrounded(int indeks, bool surrounded)
 {
-	int indeks = whichField(mouse_x, mouse_y);
-	fields[indeks].setHit(hit);
+	int offset = -11;
+	vector <int> prohibited_offsets;
+	if ((indeks % 10) == 0) //jezeli field jest przy lewej krawedzi boardu
+	{
+		prohibited_offsets.push_back(-11);
+		prohibited_offsets.push_back(-1);
+		prohibited_offsets.push_back(9);
+	}
+	else if (((indeks + 1) % 10) == 0) //jezeli field jest przy prawej krawedzi boardu
+	{
+		prohibited_offsets.push_back(-9);
+		prohibited_offsets.push_back(1);
+		prohibited_offsets.push_back(11);
+	}
+
+	int vector_size = prohibited_offsets.size();
+	for (int i = 1; i <= 8; i++, offset++)
+	{
+		int new_indeks = indeks + offset;
+		bool flag = true; //flaga wskazujaca, czy potencjalnie mozna zaznaczyc danego fielda za sasiadujacego ze statkiem
+		for (int j = 0; j < vector_size; j++)
+		{
+			if (offset == prohibited_offsets[j])
+			{
+				flag = false;
+				break;
+			}
+		}
+		if (new_indeks >= 0 && new_indeks <= 99 && flag == true)
+			if (fields[new_indeks].getHit() == false && fields[new_indeks].getSurrounded() == false)
+			{
+				fields[new_indeks].setSurrounded(surrounded);
+				cout << "Dodalem surrounded na " << surrounded << endl;
+			}
+		if (offset == -9)
+			offset = -2;
+		else if (offset == -1)
+			offset = 0;
+		else if (offset == 1)
+			offset = 8;
+	}
 }
 
 int Board::whichField(float mouse_x, float mouse_y)
 {
-	float field_size = u.getFieldSize();
-	for (int i = 0; i < fields.size(); i++)
+	int fields_size = fields.size();
+	for (int i = 0; i < fields_size; i++)
 	{
 		float l_x = fields[i].getCoordX(); //lewe x
 		float r_x = fields[i].getCoordX() + field_size; //prawe x
@@ -80,22 +140,21 @@ int Board::whichField(float mouse_x, float mouse_y)
 		float d_y = fields[i].getCoordY() + field_size; //dolne y
 		if (mouse_x >= l_x && mouse_x < r_x && mouse_y >= u_y && mouse_y < d_y)
 		{
-			cout << i << endl;
 			return i;
 		}
 	}
+	//zwrocenie -1 oznacza, ¿e pod danymi koordynatami mouse_x i mouse_y nie ma fielda
 	return -1;
 }
 
 int Board::whichShip(float mouse_x, float mouse_y)
 {
 	//sprawdzam czy isnieje statek o zadanych parametrach x i y - w tym celu przeszukuje caly vector shipow
-
-	for (int i = 0; i < ships.size(); i++)
+	int ships_size = ships.size();
+	for (int i = 0; i < ships_size; i++)
 	{
 		//przeszukuje kazde pole z vectora pol w danym statku
 		int indeks = 0;
-		float field_size = u.getFieldSize();
 		int number_of_fields = ships[i].getNumberOfFields();
 		for (int j = 0; j < number_of_fields; j++)
 		{
@@ -110,7 +169,7 @@ int Board::whichShip(float mouse_x, float mouse_y)
 			indeks++;
 		}
 	}
-	//zwrocenie -1 oznacza, ze pod danymi koordynatami nie ma statku
+	//zwrocenie -1 oznacza, ze pod danymi koordynatami mouse_x i mouse_y nie ma statku
 	return -1;
 }
 
@@ -185,78 +244,594 @@ void Board::paintClassicShip(float mouse_x, float mouse_y)
 }
 
 //TODO
-int Board::deployClassicShip(float mouse_x, float mouse_y, int size, int orientation)
+int Board::deployClassicShip(float mouse_x, float mouse_y, vector <int>& numbers_of_not_deployed_ships)
 {
-	//tego ifa sprawdzac nizej i dla kazdego ze statku dac inny warunek (zalezny od jego wielkosci, sprawdzajacy, czy dany statek miesci sie w planszy)
-	if (mouse_x >= offset_x && mouse_x <= (offset_x + width) && mouse_y >= offset_y && mouse_y <= (offset_y + height))
+	int ship_orientation = u.getShipOrientation();
+	int ship_size = u.getShipSize();
+	
+	if (ship_size == 1)
 	{
-		int indeks = whichField(mouse_x, mouse_y);
-		float center_of_field_x = fields[indeks].getCoordX() + (0.5 * field_size);
-		float center_of_field_y = fields[indeks].getCoordY() + (0.5 * field_size);
-		int ship_orientation = u.getShipOrientation();
-		int ship_size = u.getShipSize();
-		int quarter_of_field = whichQuarterOfField(mouse_x, mouse_y, center_of_field_x, center_of_field_y);
-				
-
-		if (ship_orientation == 1) //pionowo
+		float l_x = mouse_x - (0.5 * field_size); /*koordynaty lewego gornego rogu statku*/
+		float u_y = mouse_y - (0.5 * field_size); /*                                     */
+		float r_x = mouse_x + (0.5 * field_size); /*koordynaty prawego dolnego rogu statku*/
+		float d_y = mouse_y + (0.5 * field_size); /*                                      */
+		int indeks = whichField(l_x, u_y); //indeks_l_u
+		int indeks_r_u = whichField(r_x, u_y);
+		int indeks_r_d = whichField(r_x, d_y);
+		int indeks_l_d = whichField(l_x, d_y);
+		//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+		if (indeks == -1)
+			return -1;
+		float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
+		float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
+		int quarter_of_field = whichQuarterOfField(l_x, u_y, center_of_field_l_x, center_of_field_u_y);
+		if (quarter_of_field == 1) //postawienie na prawo
 		{
-			if (ship_size == 1)
-			{
-				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true) //nie mozna wtedy rozstawic statku
-					return -1;
-				else
-				{
-					if (quarter_of_field == 1)
-					{
-
-					}
-					else if (quarter_of_field == 2)
-					{
-						number_of_placed_ships++;
-						fields[indeks].setOccupied(true);
-						vector <Field> f{ fields[indeks] };
-						ships.push_back(Ship(u, f));
-					}
-
-				}
-			}
+			//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
+			if (indeks_r_u == -1)
+				return -1;
+			if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true)
+				return -1;
+			numbers_of_not_deployed_ships[ship_size - 1]--;
+			fields[indeks + 1].setOccupied(true);
+			setFieldsSurrounded(indeks + 1, true);
+			vector <Field> f{ fields[indeks + 1] };
+			ships.push_back(Ship(u, f));
 		}
-		else //poziomo
+		else if (quarter_of_field == 2) //postawienie w fieldzie o indeksie "indeks"
 		{
-
+			if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true)
+				return -1;
+			numbers_of_not_deployed_ships[ship_size - 1]--;
+			fields[indeks].setOccupied(true);
+			setFieldsSurrounded(indeks, true);
+			vector <Field> f{ fields[indeks] };
+			ships.push_back(Ship(u, f));
+		}
+		else if (quarter_of_field == 3)
+		{
+			//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
+			if (indeks_l_d == -1)
+				return -1;
+			if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true)
+				return -1;
+			numbers_of_not_deployed_ships[ship_size - 1]--;
+			fields[indeks + 10].setOccupied(true);
+			setFieldsSurrounded(indeks + 10, true);
+			vector <Field> f{ fields[indeks + 10] };
+			ships.push_back(Ship(u, f));
+		}
+		else //quarter_of_field == 4
+		{
+			//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
+			if (indeks_r_d == -1)
+				return -1;
+			if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true)
+				return -1;
+			numbers_of_not_deployed_ships[ship_size - 1]--;
+			fields[indeks + 11].setOccupied(true);
+			setFieldsSurrounded(indeks + 11, true);
+			vector <Field> f{ fields[indeks + 11] };
+			ships.push_back(Ship(u, f));
 		}
 	}
-	else
-		return -1;
+	else if (ship_orientation == 1) //pionowo
+	{
+		float l_x = mouse_x - (0.5 * field_size);
+		float r_x = mouse_x + (0.5 * field_size);
+		
+		if (ship_size == 2)
+		{
+			float u_y = mouse_y - field_size;
+			float d_y = mouse_y + field_size;
+			int indeks = whichField(l_x, u_y); //indeks_l_u
+			int indeks_r_u = whichField(r_x, u_y);
+			int indeks_r_d = whichField(r_x, d_y);
+			int indeks_l_d = whichField(l_x, d_y);
+			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1)
+				return -1;
+			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
+			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
+			int quarter_of_field = whichQuarterOfField(l_x, u_y, center_of_field_l_x, center_of_field_u_y);
+			if (quarter_of_field == 1)
+			{
+				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_r_u == -1)
+					return -1;
+				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 1].setOccupied(true);
+				fields[indeks + 11].setOccupied(true);
+				setFieldsSurrounded(indeks + 1, true);
+				setFieldsSurrounded(indeks + 11, true);
+				vector <Field> f{ fields[indeks + 1], fields[indeks + 11] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 2)
+			{
+				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks+10].getOccupied() == true || fields[indeks+10].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks].setOccupied(true);
+				fields[indeks+10].setOccupied(true);
+				setFieldsSurrounded(indeks, true);
+				setFieldsSurrounded(indeks + 10, true);
+				vector <Field> f{ fields[indeks], fields[indeks + 10] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 3)
+			{
+				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_l_d == -1)
+					return -1;
+				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 20].getOccupied() == true || fields[indeks + 20].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 10].setOccupied(true);
+				fields[indeks + 20].setOccupied(true);
+				setFieldsSurrounded(indeks + 10, true);
+				setFieldsSurrounded(indeks + 20, true);
+				vector <Field> f{ fields[indeks + 10], fields[indeks + 20] };
+				ships.push_back(Ship(u, f));
+			}
+			else //quarter_of_field == 4
+			{
+				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
+				if (indeks_r_d == -1)
+					return -1;
+				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 21].getOccupied() == true || fields[indeks + 21].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 11].setOccupied(true);
+				fields[indeks + 21].setOccupied(true);
+				setFieldsSurrounded(indeks + 11, true);
+				setFieldsSurrounded(indeks + 21, true);
+				vector <Field> f{ fields[indeks + 11], fields[indeks + 21] };
+				ships.push_back(Ship(u, f));
+			}
+		}
+		else if (ship_size == 3)
+		{
+			float u_y = mouse_y - (1.5 * field_size);
+			float d_y = mouse_y + (1.5 * field_size);
+			int indeks = whichField(l_x, u_y); //indeks_l_u
+			int indeks_r_u = whichField(r_x, u_y);
+			int indeks_r_d = whichField(r_x, d_y);
+			int indeks_l_d = whichField(l_x, d_y);
+			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1)
+				return -1;
+			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
+			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
+			int quarter_of_field = whichQuarterOfField(l_x, u_y, center_of_field_l_x, center_of_field_u_y);
+			if (quarter_of_field == 1)
+			{
+				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_r_u == -1)
+					return -1;
+				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 21].getOccupied() == true || fields[indeks + 21].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 1].setOccupied(true);
+				fields[indeks + 11].setOccupied(true);
+				fields[indeks + 21].setOccupied(true);
+				setFieldsSurrounded(indeks + 1, true);
+				setFieldsSurrounded(indeks + 11, true);
+				setFieldsSurrounded(indeks + 21, true);
+				vector <Field> f{ fields[indeks + 1], fields[indeks + 11], fields[indeks + 21] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 2)
+			{
+				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 20].getOccupied() == true || fields[indeks + 20].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks].setOccupied(true);
+				fields[indeks + 10].setOccupied(true);
+				fields[indeks + 20].setOccupied(true);
+				setFieldsSurrounded(indeks, true);
+				setFieldsSurrounded(indeks + 10, true);
+				setFieldsSurrounded(indeks + 20, true);
+				vector <Field> f{ fields[indeks], fields[indeks + 10], fields[indeks + 20] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 3)
+			{
+				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_l_d == -1)
+					return -1;
+				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 20].getOccupied() == true || fields[indeks + 20].getSurrounded() == true || fields[indeks + 30].getOccupied() == true || fields[indeks + 30].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 10].setOccupied(true);
+				fields[indeks + 20].setOccupied(true);
+				fields[indeks + 30].setOccupied(true);
+				setFieldsSurrounded(indeks + 10, true);
+				setFieldsSurrounded(indeks + 20, true);
+				setFieldsSurrounded(indeks + 30, true);
+				vector <Field> f{ fields[indeks + 10], fields[indeks + 20], fields[indeks + 30] };
+				ships.push_back(Ship(u, f));
+			}
+			else //quarter_of_field == 4
+			{
+				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
+				if (indeks_r_d == -1)
+					return -1;
+				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 21].getOccupied() == true || fields[indeks + 21].getSurrounded() == true || fields[indeks + 31].getOccupied() == true || fields[indeks + 31].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 11].setOccupied(true);
+				fields[indeks + 21].setOccupied(true);
+				fields[indeks + 31].setOccupied(true);
+				setFieldsSurrounded(indeks + 11, true);
+				setFieldsSurrounded(indeks + 21, true);
+				setFieldsSurrounded(indeks + 31, true);
+				vector <Field> f{ fields[indeks + 11], fields[indeks + 21], fields[indeks + 31] };
+				ships.push_back(Ship(u, f));
+			}
+		}
+		else //ship_size == 4
+		{
+			float u_y = mouse_y - (2 * field_size);
+			float d_y = mouse_y + (2 * field_size);
+			int indeks = whichField(l_x, u_y); //indeks_l_u
+			int indeks_r_u = whichField(r_x, u_y);
+			int indeks_r_d = whichField(r_x, d_y);
+			int indeks_l_d = whichField(l_x, d_y);
+			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1)
+				return -1;
+			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
+			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
+			int quarter_of_field = whichQuarterOfField(l_x, u_y, center_of_field_l_x, center_of_field_u_y);
+			if (quarter_of_field == 1)
+			{
+				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_r_u == -1)
+					return -1;
+				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 21].getOccupied() == true || fields[indeks + 21].getSurrounded() == true || fields[indeks + 31].getOccupied() == true || fields[indeks + 31].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 1].setOccupied(true);
+				fields[indeks + 11].setOccupied(true);
+				fields[indeks + 21].setOccupied(true);
+				fields[indeks + 31].setOccupied(true);
+				setFieldsSurrounded(indeks + 1, true);
+				setFieldsSurrounded(indeks + 11, true);
+				setFieldsSurrounded(indeks + 21, true);
+				setFieldsSurrounded(indeks + 31, true);
+				vector <Field> f{ fields[indeks + 1], fields[indeks + 11], fields[indeks + 21], fields[indeks + 31] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 2)
+			{
+				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 20].getOccupied() == true || fields[indeks + 20].getSurrounded() == true || fields[indeks + 30].getOccupied() == true || fields[indeks + 30].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks].setOccupied(true);
+				fields[indeks + 10].setOccupied(true);
+				fields[indeks + 20].setOccupied(true);
+				fields[indeks + 30].setOccupied(true);
+				setFieldsSurrounded(indeks, true);
+				setFieldsSurrounded(indeks + 10, true);
+				setFieldsSurrounded(indeks + 20, true);
+				setFieldsSurrounded(indeks + 30, true);
+				vector <Field> f{ fields[indeks], fields[indeks + 10], fields[indeks + 20], fields[indeks + 30] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 3)
+			{
+				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_l_d == -1)
+					return -1;
+				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 20].getOccupied() == true || fields[indeks + 20].getSurrounded() == true || fields[indeks + 30].getOccupied() == true || fields[indeks + 30].getSurrounded() == true || fields[indeks + 40].getOccupied() == true || fields[indeks + 40].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 10].setOccupied(true);
+				fields[indeks + 20].setOccupied(true);
+				fields[indeks + 30].setOccupied(true);
+				fields[indeks + 40].setOccupied(true);
+				setFieldsSurrounded(indeks + 10, true);
+				setFieldsSurrounded(indeks + 20, true);
+				setFieldsSurrounded(indeks + 30, true);
+				setFieldsSurrounded(indeks + 40, true);
+				vector <Field> f{ fields[indeks + 10], fields[indeks + 20], fields[indeks + 30], fields[indeks + 40] };
+				ships.push_back(Ship(u, f));
+			}
+			else //quarter_of_field == 4
+			{
+				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
+				if (indeks_r_d == -1)
+					return -1;
+				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 21].getOccupied() == true || fields[indeks + 21].getSurrounded() == true || fields[indeks + 31].getOccupied() == true || fields[indeks + 31].getSurrounded() == true || fields[indeks + 41].getOccupied() == true || fields[indeks + 41].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 11].setOccupied(true);
+				fields[indeks + 21].setOccupied(true);
+				fields[indeks + 31].setOccupied(true);
+				fields[indeks + 41].setOccupied(true);
+				setFieldsSurrounded(indeks + 11, true);
+				setFieldsSurrounded(indeks + 21, true);
+				setFieldsSurrounded(indeks + 31, true);
+				setFieldsSurrounded(indeks + 41, true);
+				vector <Field> f{ fields[indeks + 11], fields[indeks + 21], fields[indeks + 31], fields[indeks + 41] };
+				ships.push_back(Ship(u, f));
+			}
+		}
+	}
+	else //ship_orientation == 2  - poziomo
+	{
+		float u_y = mouse_y - (0.5 * field_size);
+		float d_y = mouse_y + (0.5 * field_size);
 
+		if (ship_size == 2)
+		{
+			float l_x = mouse_x - field_size;
+			float r_x = mouse_x + field_size;
+			int indeks = whichField(l_x, u_y); //indeks_l_u
+			int indeks_r_u = whichField(r_x, u_y);
+			int indeks_r_d = whichField(r_x, d_y);
+			int indeks_l_d = whichField(l_x, d_y);
+			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1)
+				return -1;
+			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
+			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
+			int quarter_of_field = whichQuarterOfField(l_x, u_y, center_of_field_l_x, center_of_field_u_y);
+			if (quarter_of_field == 1)
+			{
+				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_r_u == -1)
+					return -1;
+				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 2].getOccupied() == true || fields[indeks + 2].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 1].setOccupied(true);
+				fields[indeks + 2].setOccupied(true);
+				setFieldsSurrounded(indeks + 1, true);
+				setFieldsSurrounded(indeks + 2, true);
+				vector <Field> f{ fields[indeks + 1], fields[indeks + 2] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 2)
+			{
+				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks].setOccupied(true);
+				fields[indeks + 1].setOccupied(true);
+				setFieldsSurrounded(indeks, true);
+				setFieldsSurrounded(indeks + 1, true);
+				vector <Field> f{ fields[indeks], fields[indeks + 1] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 3)
+			{
+				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_l_d == -1)
+					return -1;
+				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 10].setOccupied(true);
+				fields[indeks + 11].setOccupied(true);
+				setFieldsSurrounded(indeks + 10, true);
+				setFieldsSurrounded(indeks + 11, true);
+				vector <Field> f{ fields[indeks + 10], fields[indeks + 11] };
+				ships.push_back(Ship(u, f));
+			}
+			else //quarter_of_field == 4
+			{
+				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
+				if (indeks_r_d == -1)
+					return -1;
+				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 12].getOccupied() == true || fields[indeks + 12].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 11].setOccupied(true);
+				fields[indeks + 12].setOccupied(true);
+				setFieldsSurrounded(indeks + 11, true);
+				setFieldsSurrounded(indeks + 12, true);
+				vector <Field> f{ fields[indeks + 11], fields[indeks + 12] };
+				ships.push_back(Ship(u, f));
+			}
+		}
+		else if (ship_size == 3)
+		{
+			float l_x = mouse_x - (1.5 * field_size);
+			float r_x = mouse_x + (1.5 * field_size);
+			int indeks = whichField(l_x, u_y); //indeks_l_u
+			int indeks_r_u = whichField(r_x, u_y);
+			int indeks_r_d = whichField(r_x, d_y);
+			int indeks_l_d = whichField(l_x, d_y);
+			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1)
+				return -1;
+			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
+			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
+			int quarter_of_field = whichQuarterOfField(l_x, u_y, center_of_field_l_x, center_of_field_u_y);
+			if (quarter_of_field == 1)
+			{
+				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_r_u == -1)
+					return -1;
+				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 2].getOccupied() == true || fields[indeks + 2].getSurrounded() == true || fields[indeks + 3].getOccupied() == true || fields[indeks + 3].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 1].setOccupied(true);
+				fields[indeks + 2].setOccupied(true);
+				fields[indeks + 3].setOccupied(true);
+				setFieldsSurrounded(indeks + 1, true);
+				setFieldsSurrounded(indeks + 2, true);
+				setFieldsSurrounded(indeks + 3, true);
+				vector <Field> f{ fields[indeks + 1], fields[indeks + 2], fields[indeks + 3] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 2)
+			{
+				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 2].getOccupied() == true || fields[indeks + 2].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks].setOccupied(true);
+				fields[indeks + 1].setOccupied(true);
+				fields[indeks + 2].setOccupied(true);
+				setFieldsSurrounded(indeks, true);
+				setFieldsSurrounded(indeks + 1, true);
+				setFieldsSurrounded(indeks + 2, true);
+				vector <Field> f{ fields[indeks], fields[indeks + 1], fields[indeks + 2] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 3)
+			{
+				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_l_d == -1)
+					return -1;
+				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 12].getOccupied() == true || fields[indeks + 12].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 10].setOccupied(true);
+				fields[indeks + 11].setOccupied(true);
+				fields[indeks + 12].setOccupied(true);
+				setFieldsSurrounded(indeks + 10, true);
+				setFieldsSurrounded(indeks + 11, true);
+				setFieldsSurrounded(indeks + 12, true);
+				vector <Field> f{ fields[indeks + 10], fields[indeks + 11], fields[indeks + 12] };
+				ships.push_back(Ship(u, f));
+			}
+			else //quarter_of_field == 4
+			{
+				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
+				if (indeks_r_d == -1)
+					return -1;
+				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 12].getOccupied() == true || fields[indeks + 12].getSurrounded() == true || fields[indeks + 13].getOccupied() == true || fields[indeks + 13].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 11].setOccupied(true);
+				fields[indeks + 12].setOccupied(true);
+				fields[indeks + 13].setOccupied(true);
+				setFieldsSurrounded(indeks + 11, true);
+				setFieldsSurrounded(indeks + 12, true);
+				setFieldsSurrounded(indeks + 13, true);
+				vector <Field> f{ fields[indeks + 11], fields[indeks + 12], fields[indeks + 13] };
+				ships.push_back(Ship(u, f));
+			}
+		}
+		else //ship_size == 4
+		{
+			float l_x = mouse_x - (2 * field_size);
+			float r_x = mouse_x + (2 * field_size);
+			int indeks = whichField(l_x, u_y); //indeks_l_u
+			int indeks_r_u = whichField(r_x, u_y);
+			int indeks_r_d = whichField(r_x, d_y);
+			int indeks_l_d = whichField(l_x, d_y);
+			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1)
+				return -1;
+			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
+			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
+			int quarter_of_field = whichQuarterOfField(l_x, u_y, center_of_field_l_x, center_of_field_u_y);
+			if (quarter_of_field == 1)
+			{
+				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_r_u == -1)
+					return -1;
+				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 2].getOccupied() == true || fields[indeks + 2].getSurrounded() == true || fields[indeks + 3].getOccupied() == true || fields[indeks + 3].getSurrounded() == true || fields[indeks + 4].getOccupied() == true || fields[indeks + 4].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 1].setOccupied(true);
+				fields[indeks + 2].setOccupied(true);
+				fields[indeks + 3].setOccupied(true);
+				fields[indeks + 4].setOccupied(true);
+				setFieldsSurrounded(indeks + 1, true);
+				setFieldsSurrounded(indeks + 2, true);
+				setFieldsSurrounded(indeks + 3, true);
+				setFieldsSurrounded(indeks + 4, true);
+				vector <Field> f{ fields[indeks + 1], fields[indeks + 2], fields[indeks + 3], fields[indeks + 4] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 2)
+			{
+				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 2].getOccupied() == true || fields[indeks + 2].getSurrounded() == true || fields[indeks + 3].getOccupied() == true || fields[indeks + 3].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks].setOccupied(true);
+				fields[indeks + 1].setOccupied(true);
+				fields[indeks + 2].setOccupied(true);
+				fields[indeks + 3].setOccupied(true);
+				setFieldsSurrounded(indeks, true);
+				setFieldsSurrounded(indeks + 1, true);
+				setFieldsSurrounded(indeks + 2, true);
+				setFieldsSurrounded(indeks + 3, true);
+				vector <Field> f{ fields[indeks], fields[indeks + 1], fields[indeks + 2], fields[indeks + 3] };
+				ships.push_back(Ship(u, f));
+			}
+			else if (quarter_of_field == 3)
+			{
+				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
+				if (indeks_l_d == -1)
+					return -1;
+				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 12].getOccupied() == true || fields[indeks + 12].getSurrounded() == true || fields[indeks + 13].getOccupied() == true || fields[indeks + 13].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 10].setOccupied(true);
+				fields[indeks + 11].setOccupied(true);
+				fields[indeks + 12].setOccupied(true);
+				fields[indeks + 13].setOccupied(true);
+				setFieldsSurrounded(indeks + 10, true);
+				setFieldsSurrounded(indeks + 11, true);
+				setFieldsSurrounded(indeks + 12, true);
+				setFieldsSurrounded(indeks + 13, true);
+				vector <Field> f{ fields[indeks + 10], fields[indeks + 11], fields[indeks + 12], fields[indeks + 13] };
+				ships.push_back(Ship(u, f));
+			}
+			else //quarter_of_field == 4
+			{
+				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
+				if (indeks_r_d == -1)
+					return -1;
+				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 12].getOccupied() == true || fields[indeks + 12].getSurrounded() == true || fields[indeks + 13].getOccupied() == true || fields[indeks + 13].getSurrounded() == true || fields[indeks + 14].getOccupied() == true || fields[indeks + 14].getSurrounded() == true)
+					return -1;
+				numbers_of_not_deployed_ships[ship_size - 1]--;
+				fields[indeks + 11].setOccupied(true);
+				fields[indeks + 12].setOccupied(true);
+				fields[indeks + 13].setOccupied(true);
+				fields[indeks + 14].setOccupied(true);
+				setFieldsSurrounded(indeks + 11, true);
+				setFieldsSurrounded(indeks + 12, true);
+				setFieldsSurrounded(indeks + 13, true);
+				setFieldsSurrounded(indeks + 14, true);
+				vector <Field> f{ fields[indeks + 11], fields[indeks + 12], fields[indeks + 13], fields[indeks + 14] };
+				ships.push_back(Ship(u, f));
+			}
+		}
+	}
+	return 0;
 }
 
-int Board::whichQuarterOfField(float mouse_x, float mouse_y, float center_of_field_x, float center_of_field_y)
+int Board::whichQuarterOfField(float c_x, float c_y, float center_of_field_x, float center_of_field_y)
 {
-	if (mouse_x <= center_of_field_x)
+	if (c_x <= center_of_field_x)
 	{
-		if (mouse_y <= center_of_field_y)
+		if (c_y <= center_of_field_y)
 			return 2;
 		else
 			return 3;
 	}
 	else
 	{
-		if (mouse_y <= center_of_field_y)
+		if (c_y <= center_of_field_y)
 			return 1;
 		else
 			return 4;
 	}
 }
 
-bool Board::getFieldOccupied(float mouse_x, float mouse_y)
+void Board::clearVectors()
 {
-	int indeks = whichShip(mouse_x, mouse_y);
-	return fields[indeks].getOccupied();
-}
-
-bool Board::getFieldHit(float mouse_x, float mouse_y)
-{
-	int indeks = whichShip(mouse_x, mouse_y);
-	return fields[indeks].getHit();
+	ships.clear();
+	fields.clear();
+	setFields();
+	
 }

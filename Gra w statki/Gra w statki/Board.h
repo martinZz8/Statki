@@ -14,31 +14,26 @@ class Board
 	float field_size; //rozmiar pola
 	//bool setted_fields; //flaga do jednorazowego ustawienia koordynatow pol
 	bool made_ships; //?
-	int number_of_placed_ships;
-	int number_of_one_masted_ships;
-	int number_of_two_masted_ships;
-	int number_of_three_masted_ships;
-	int number_of_four_masted_ships;
 	vector <Field> fields; //vector pol
-	vector <Ship> ships; //vector statkow	
+	vector <Ship> ships; //vector statkow
 
 public:
 	Board(Utils& utils, float offset_x, float offset_y);
 	float getXOffset();
 	float getYOffset();
-	void paintBoard(); //metoda rysujaca plansze (wraz z kratkami)
+	void paintBoard(); //metoda rysujaca plansze (wraz z kratkami, postawionymi juz statkami i wszystkimi innymi efektami)
 	void setFields(); //metoda ustawiajaca koordynaty kazdego pola znajdujacego sie w vectorze pol
 	void setOffset(float x, float y);
-	void setFieldOccupy(float mouse_x, float mouse_y, bool occupied); //metoda ustawiajaca flage okupowania pola przez dany statek
-	void setFieldHit(float mouse_x, float mouse_y, bool hit);
+	void setFieldsSurrounded(float mouse_x, float mouse_y, bool surrounded);
+	void setFieldsSurrounded(int indeks, bool surrounded);
 	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships
 	void paintClassicShip(float mouse_x, float mouse_y); //metoda ryzsujaca statek dla standardowych opcji statków
-	//TODO - DO DOKONCZENIA METODA NIZEJ
-	int deployClassicShip(float mouse_x, float mouse_y, int size, int orientation); //metoda rozstawiajaca statek, size - rozmiar statku, orientation - orientacja statku
-	int whichQuarterOfField(float mouse_x, float mouse_y, float center_of_field_x, float center_of_field_y); //metoda zwraca, ktora cwiartka pola zostala kliknieta; 1 - prawa gorna, 2 - lewa gorna, 3 - lewa dolna, 4 - prawa dolna
-	bool getFieldOccupied(float mouse_x, float mouse_y);
-	bool getFieldHit(float mouse_x, float mouse_y);
+	//TODO - DO DOKONCZENIA METODA NIZEJ (ZROBIC UNIWERSALNE METODY)
+	int deployClassicShip(float mouse_x, float mouse_y, vector <int>& numbers_of_not_deployed_ships); //metoda rozstawiajaca statek, zwraca 0, gdy rozstawianie sie powiedzie, zwraca -1 gdy rozstawianie sie nie powiedzie
+	int whichQuarterOfField(float c_x, float c_y, float center_of_field_x, float center_of_field_y); //metoda zwraca, ktora cwiartka pola zostala kliknieta; 1 - prawa gorna, 2 - lewa gorna, 3 - lewa dolna, 4 - prawa dolna
+	void clearVectors(); //metoda czyszczace vektory fieldow oraz shipow
+	
 };
 
 

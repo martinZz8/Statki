@@ -13,7 +13,7 @@ class Menu:public State
 	Board& b1;
 	Board& b2;
 	Options* o; //wskaznik tylko do porowania adresu
-	Deploying* d; //wskaznik tylko do porowania adresu
+	Deploying* d; //wskaznik tylko do porowania adresu i ustawienia rozmiarow statkow
 	State** s;
 	bool audio_play_guard; //zmienna zawierajaca informacje, czy mozna grac audio; true - tak, false - nie
 	const int windowID;

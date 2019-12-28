@@ -46,6 +46,7 @@ void Menu::mouseSwitches()
 		if (buttons.getActivated(BUTTON_MENU_PLAY) == true)
 		{
 			*s = d;
+			d->setNUmbersOfNotDeployedShips();
 			u.setMouseClickedBeforeStateSwitch(true);
 			cout << "Przelaczenie z MENU do DEPLOYING" << endl;
 		}

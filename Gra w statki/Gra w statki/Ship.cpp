@@ -41,3 +41,14 @@ int Ship::getNumberOfFields()
 	return number_of_fields;
 }
 
+void Ship::paintShip()
+{
+	for (Field f : fields)
+	{
+		f.paintField(SCHEME_OF_SHIP);
+		if (f.getHit() == true)
+			f.paintField(SCHEME_OF_HIT);
+	}
+		
+}
+
