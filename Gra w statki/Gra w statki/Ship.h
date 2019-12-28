@@ -12,7 +12,7 @@ class Ship
 	bool ship_destroyed_flag; //flaga wskazujaca na to, czy statek zostal znisczony czy nie; true - tak, false - nie
 	
 public:
-	Ship& operator=(const Ship& s);
+	//Ship& operator=(const Ship& s);
 	Ship(Utils& utils, vector<Field> f, vector<Field> surr_f = {});
 	void setFields(Field f);
 	void setShipDestroyedFlag();

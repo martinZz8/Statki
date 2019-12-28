@@ -13,9 +13,8 @@ class Field
 	bool surrounded_flag; //pole, na którym nie mo¿e zostaæ postawiony ¿aden statek (poniewa¿ ju¿ obok znajduje siê jakiœ statek) (false - nie ma obok statku, true - jest obok statek)
 
 public:
-	Field& operator=(Field& f);
+	//Field& operator=(Field& f);
 	Field(Utils& utils, float c_x, float c_y);
-	~Field();
 	void setCoordX(float c_x);
 	void setCoordY(float c_y);
 	void setOccupied(bool o);

@@ -1,15 +1,15 @@
 #include "Field.h"
 
-Field& Field::operator=(Field& f)
-{
-	this->c_x = f.c_x;
-	this->c_y = f.c_y;
-	this->occupied_flag = f.occupied_flag;
-	this->hitted_flag = f.hitted_flag;
-	this->missed_flag = f.missed_flag;
-	this->surrounded_flag = f.surrounded_flag;
-	return *this;
-}
+//Field& Field::operator=(Field& f)
+//{
+//	this->c_x = f.c_x;
+//	this->c_y = f.c_y;
+//	this->width = f.width;
+//	this->occupied_flag = f.occupied_flag;
+//	this->hitted_flag = f.hitted_flag;
+//	this->surrounded_flag = f.surrounded_flag;
+//	return *this;
+//}
 
 Field::Field(Utils& utils, float c_x, float c_y):u(utils),c_x(c_x),c_y(c_y)
 {
@@ -18,11 +18,6 @@ Field::Field(Utils& utils, float c_x, float c_y):u(utils),c_x(c_x),c_y(c_y)
 	hitted_flag = false;
 	missed_flag = false;
 	surrounded_flag = false;
-}
-
-Field::~Field()
-{
-
 }
 
 void Field::setCoordX(float c_x)

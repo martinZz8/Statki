@@ -1,10 +1,10 @@
 #include "Board.h"
 
-Board& Board::operator=(const Board& b)
-{
-	this->ships = b.ships;
-	return *this;
-}
+//Board& Board::operator=(const Board& b)
+//{
+//	this->ships = b.ships;
+//	return *this;
+//}
 
 Board::Board(Utils& utils, float offset_x, float offset_y) :u(utils), offset_x(offset_x), offset_y(offset_y)
 {
@@ -95,7 +95,7 @@ void Board::paintBoard(bool visible_ships, bool deploying_surrounded)
 
 }
 
-vector<Field>& Board::setFieldsSurrounded(int indeks, bool surrounded)
+vector<Field> Board::setFieldsSurrounded(int indeks, bool surrounded)
 {
 	int offset = -11;
 	vector <int> prohibited_offsets;
@@ -127,11 +127,11 @@ vector<Field>& Board::setFieldsSurrounded(int indeks, bool surrounded)
 			}
 		}
 		if (new_indeks >= 0 && new_indeks <= 99 && flag == true)
-			if (fields[new_indeks].getOccupied() == false && fields[new_indeks].getSurrounded() == false)
+			if (fields[new_indeks].getOccupied() == false)
 			{
 				fields[new_indeks].setSurrounded(surrounded);
-				surrounded_fields.push_back(fields[new_indeks]);
 				cout << "Dodalem surrounded na " << surrounded << endl;
+				surrounded_fields.push_back(fields[new_indeks]);
 			}
 		if (offset == -9)
 			offset = -2;
@@ -270,11 +270,13 @@ void Board::paintClassicShip(float mouse_x, float mouse_y)
 	}
 }
 
-//TODO
+//TODO ZMIENIC UZYWAJAC UNIWERSALNYCH FUNKCJI
 int Board::deployClassicShip(float mouse_x, float mouse_y)
 {
 	int ship_orientation = u.getShipOrientation();
 	int ship_size = u.getShipSize();
+	vector <Field> surr_f; //vector zawierajacy surrounding fieldy
+	vector <Field> to_insert; //vector do dodania surrounding fieldow
 	
 	if (ship_size == 1)
 	{
@@ -301,9 +303,16 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				return -1;
 			numbers_of_not_deployed_ships[ship_size - 1]--;
 			fields[indeks + 1].setOccupied(true);
-			setFieldsSurrounded(indeks + 1, true);
+			surr_f = setFieldsSurrounded(indeks + 1, true);
 			vector <Field> f{ fields[indeks + 1] };
-			ships.push_back(Ship(u, f));
+			ships.push_back(Ship(u, f, surr_f));
+			cout << "Wypisanie surr_f dla ship_size 1" << endl;
+			int iter = 0;
+			for (Field fi : surr_f)
+			{
+				cout << iter << ": " << fi.getSurrounded() << endl;
+				iter++;
+			}
 		}
 		else if (quarter_of_field == 2) //postawienie w fieldzie o indeksie "indeks"
 		{
@@ -311,9 +320,9 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				return -1;
 			numbers_of_not_deployed_ships[ship_size - 1]--;
 			fields[indeks].setOccupied(true);
-			setFieldsSurrounded(indeks, true);
+			surr_f = setFieldsSurrounded(indeks, true);
 			vector <Field> f{ fields[indeks] };
-			ships.push_back(Ship(u, f));
+			ships.push_back(Ship(u, f, surr_f));
 		}
 		else if (quarter_of_field == 3)
 		{
@@ -324,9 +333,9 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				return -1;
 			numbers_of_not_deployed_ships[ship_size - 1]--;
 			fields[indeks + 10].setOccupied(true);
-			setFieldsSurrounded(indeks + 10, true);
+			surr_f = setFieldsSurrounded(indeks + 10, true);
 			vector <Field> f{ fields[indeks + 10] };
-			ships.push_back(Ship(u, f));
+			ships.push_back(Ship(u, f, surr_f));
 		}
 		else //quarter_of_field == 4
 		{
@@ -337,9 +346,9 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				return -1;
 			numbers_of_not_deployed_ships[ship_size - 1]--;
 			fields[indeks + 11].setOccupied(true);
-			setFieldsSurrounded(indeks + 11, true);
+			surr_f = setFieldsSurrounded(indeks + 11, true);
 			vector <Field> f{ fields[indeks + 11] };
-			ships.push_back(Ship(u, f));
+			ships.push_back(Ship(u, f, surr_f));
 		}
 	}
 	else if (ship_orientation == 1) //pionowo
@@ -371,10 +380,12 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				numbers_of_not_deployed_ships[ship_size - 1]--;
 				fields[indeks + 1].setOccupied(true);
 				fields[indeks + 11].setOccupied(true);
-				setFieldsSurrounded(indeks + 1, true);
-				setFieldsSurrounded(indeks + 11, true);
+				to_insert = setFieldsSurrounded(indeks + 1, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 11] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
@@ -383,10 +394,12 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				numbers_of_not_deployed_ships[ship_size - 1]--;
 				fields[indeks].setOccupied(true);
 				fields[indeks+10].setOccupied(true);
-				setFieldsSurrounded(indeks, true);
-				setFieldsSurrounded(indeks + 10, true);
+				to_insert = setFieldsSurrounded(indeks, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 10, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks], fields[indeks + 10] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 3)
 			{
@@ -398,10 +411,12 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				numbers_of_not_deployed_ships[ship_size - 1]--;
 				fields[indeks + 10].setOccupied(true);
 				fields[indeks + 20].setOccupied(true);
-				setFieldsSurrounded(indeks + 10, true);
-				setFieldsSurrounded(indeks + 20, true);
+				to_insert = setFieldsSurrounded(indeks + 10, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 20, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 10], fields[indeks + 20] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else //quarter_of_field == 4
 			{
@@ -413,10 +428,12 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				numbers_of_not_deployed_ships[ship_size - 1]--;
 				fields[indeks + 11].setOccupied(true);
 				fields[indeks + 21].setOccupied(true);
-				setFieldsSurrounded(indeks + 11, true);
-				setFieldsSurrounded(indeks + 21, true);
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 21, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 11], fields[indeks + 21] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 		}
 		else if (ship_size == 3)
@@ -444,11 +461,13 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 1].setOccupied(true);
 				fields[indeks + 11].setOccupied(true);
 				fields[indeks + 21].setOccupied(true);
-				setFieldsSurrounded(indeks + 1, true);
-				setFieldsSurrounded(indeks + 11, true);
-				setFieldsSurrounded(indeks + 21, true);
+				to_insert = setFieldsSurrounded(indeks + 1, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 21, true);
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 11], fields[indeks + 21] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
@@ -458,11 +477,14 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks].setOccupied(true);
 				fields[indeks + 10].setOccupied(true);
 				fields[indeks + 20].setOccupied(true);
-				setFieldsSurrounded(indeks, true);
-				setFieldsSurrounded(indeks + 10, true);
-				setFieldsSurrounded(indeks + 20, true);
+				to_insert = setFieldsSurrounded(indeks, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 10, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 20, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks], fields[indeks + 10], fields[indeks + 20] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 3)
 			{
@@ -475,11 +497,14 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 10].setOccupied(true);
 				fields[indeks + 20].setOccupied(true);
 				fields[indeks + 30].setOccupied(true);
-				setFieldsSurrounded(indeks + 10, true);
-				setFieldsSurrounded(indeks + 20, true);
-				setFieldsSurrounded(indeks + 30, true);
+				to_insert = setFieldsSurrounded(indeks + 10, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 20, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 30, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 10], fields[indeks + 20], fields[indeks + 30] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else //quarter_of_field == 4
 			{
@@ -492,11 +517,14 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 11].setOccupied(true);
 				fields[indeks + 21].setOccupied(true);
 				fields[indeks + 31].setOccupied(true);
-				setFieldsSurrounded(indeks + 11, true);
-				setFieldsSurrounded(indeks + 21, true);
-				setFieldsSurrounded(indeks + 31, true);
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 21, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 31, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 11], fields[indeks + 21], fields[indeks + 31] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 		}
 		else //ship_size == 4
@@ -525,12 +553,16 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 11].setOccupied(true);
 				fields[indeks + 21].setOccupied(true);
 				fields[indeks + 31].setOccupied(true);
-				setFieldsSurrounded(indeks + 1, true);
-				setFieldsSurrounded(indeks + 11, true);
-				setFieldsSurrounded(indeks + 21, true);
-				setFieldsSurrounded(indeks + 31, true);
+				to_insert = setFieldsSurrounded(indeks + 1, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 21, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 31, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 11], fields[indeks + 21], fields[indeks + 31] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
@@ -541,12 +573,16 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 10].setOccupied(true);
 				fields[indeks + 20].setOccupied(true);
 				fields[indeks + 30].setOccupied(true);
-				setFieldsSurrounded(indeks, true);
-				setFieldsSurrounded(indeks + 10, true);
-				setFieldsSurrounded(indeks + 20, true);
-				setFieldsSurrounded(indeks + 30, true);
+				to_insert = setFieldsSurrounded(indeks, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 10, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 20, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 30, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks], fields[indeks + 10], fields[indeks + 20], fields[indeks + 30] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 3)
 			{
@@ -560,12 +596,16 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 20].setOccupied(true);
 				fields[indeks + 30].setOccupied(true);
 				fields[indeks + 40].setOccupied(true);
-				setFieldsSurrounded(indeks + 10, true);
-				setFieldsSurrounded(indeks + 20, true);
-				setFieldsSurrounded(indeks + 30, true);
-				setFieldsSurrounded(indeks + 40, true);
+				to_insert = setFieldsSurrounded(indeks + 10, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 20, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 30, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 40, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 10], fields[indeks + 20], fields[indeks + 30], fields[indeks + 40] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else //quarter_of_field == 4
 			{
@@ -579,12 +619,16 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 21].setOccupied(true);
 				fields[indeks + 31].setOccupied(true);
 				fields[indeks + 41].setOccupied(true);
-				setFieldsSurrounded(indeks + 11, true);
-				setFieldsSurrounded(indeks + 21, true);
-				setFieldsSurrounded(indeks + 31, true);
-				setFieldsSurrounded(indeks + 41, true);
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 21, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 31, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 41, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 11], fields[indeks + 21], fields[indeks + 31], fields[indeks + 41] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 		}
 	}
@@ -617,10 +661,12 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				numbers_of_not_deployed_ships[ship_size - 1]--;
 				fields[indeks + 1].setOccupied(true);
 				fields[indeks + 2].setOccupied(true);
-				setFieldsSurrounded(indeks + 1, true);
-				setFieldsSurrounded(indeks + 2, true);
+				to_insert = setFieldsSurrounded(indeks + 1, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 2, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 2] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
@@ -629,10 +675,12 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				numbers_of_not_deployed_ships[ship_size - 1]--;
 				fields[indeks].setOccupied(true);
 				fields[indeks + 1].setOccupied(true);
-				setFieldsSurrounded(indeks, true);
-				setFieldsSurrounded(indeks + 1, true);
+				to_insert = setFieldsSurrounded(indeks, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 1, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks], fields[indeks + 1] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 3)
 			{
@@ -644,10 +692,12 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				numbers_of_not_deployed_ships[ship_size - 1]--;
 				fields[indeks + 10].setOccupied(true);
 				fields[indeks + 11].setOccupied(true);
-				setFieldsSurrounded(indeks + 10, true);
-				setFieldsSurrounded(indeks + 11, true);
+				to_insert = setFieldsSurrounded(indeks + 10, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 10], fields[indeks + 11] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else //quarter_of_field == 4
 			{
@@ -659,10 +709,12 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				numbers_of_not_deployed_ships[ship_size - 1]--;
 				fields[indeks + 11].setOccupied(true);
 				fields[indeks + 12].setOccupied(true);
-				setFieldsSurrounded(indeks + 11, true);
-				setFieldsSurrounded(indeks + 12, true);
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 12, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 11], fields[indeks + 12] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 		}
 		else if (ship_size == 3)
@@ -690,11 +742,14 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 1].setOccupied(true);
 				fields[indeks + 2].setOccupied(true);
 				fields[indeks + 3].setOccupied(true);
-				setFieldsSurrounded(indeks + 1, true);
-				setFieldsSurrounded(indeks + 2, true);
-				setFieldsSurrounded(indeks + 3, true);
+				to_insert = setFieldsSurrounded(indeks + 1, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 2, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 3, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 2], fields[indeks + 3] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
@@ -704,11 +759,14 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks].setOccupied(true);
 				fields[indeks + 1].setOccupied(true);
 				fields[indeks + 2].setOccupied(true);
-				setFieldsSurrounded(indeks, true);
-				setFieldsSurrounded(indeks + 1, true);
-				setFieldsSurrounded(indeks + 2, true);
+				to_insert = setFieldsSurrounded(indeks, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 1, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 2, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks], fields[indeks + 1], fields[indeks + 2] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 3)
 			{
@@ -721,11 +779,14 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 10].setOccupied(true);
 				fields[indeks + 11].setOccupied(true);
 				fields[indeks + 12].setOccupied(true);
-				setFieldsSurrounded(indeks + 10, true);
-				setFieldsSurrounded(indeks + 11, true);
-				setFieldsSurrounded(indeks + 12, true);
+				to_insert = setFieldsSurrounded(indeks + 10, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 12, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 10], fields[indeks + 11], fields[indeks + 12] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else //quarter_of_field == 4
 			{
@@ -738,11 +799,14 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 11].setOccupied(true);
 				fields[indeks + 12].setOccupied(true);
 				fields[indeks + 13].setOccupied(true);
-				setFieldsSurrounded(indeks + 11, true);
-				setFieldsSurrounded(indeks + 12, true);
-				setFieldsSurrounded(indeks + 13, true);
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 12, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 13, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 11], fields[indeks + 12], fields[indeks + 13] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 		}
 		else //ship_size == 4
@@ -771,12 +835,16 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 2].setOccupied(true);
 				fields[indeks + 3].setOccupied(true);
 				fields[indeks + 4].setOccupied(true);
-				setFieldsSurrounded(indeks + 1, true);
-				setFieldsSurrounded(indeks + 2, true);
-				setFieldsSurrounded(indeks + 3, true);
-				setFieldsSurrounded(indeks + 4, true);
+				to_insert = setFieldsSurrounded(indeks + 1, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 2, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 3, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 4, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 2], fields[indeks + 3], fields[indeks + 4] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
@@ -787,12 +855,16 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 1].setOccupied(true);
 				fields[indeks + 2].setOccupied(true);
 				fields[indeks + 3].setOccupied(true);
-				setFieldsSurrounded(indeks, true);
-				setFieldsSurrounded(indeks + 1, true);
-				setFieldsSurrounded(indeks + 2, true);
-				setFieldsSurrounded(indeks + 3, true);
+				to_insert = setFieldsSurrounded(indeks, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 1, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 2, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 3, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks], fields[indeks + 1], fields[indeks + 2], fields[indeks + 3] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 3)
 			{
@@ -806,12 +878,16 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 11].setOccupied(true);
 				fields[indeks + 12].setOccupied(true);
 				fields[indeks + 13].setOccupied(true);
-				setFieldsSurrounded(indeks + 10, true);
-				setFieldsSurrounded(indeks + 11, true);
-				setFieldsSurrounded(indeks + 12, true);
-				setFieldsSurrounded(indeks + 13, true);
+				to_insert = setFieldsSurrounded(indeks + 10, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 12, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 13, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 10], fields[indeks + 11], fields[indeks + 12], fields[indeks + 13] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 			else //quarter_of_field == 4
 			{
@@ -825,12 +901,16 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				fields[indeks + 12].setOccupied(true);
 				fields[indeks + 13].setOccupied(true);
 				fields[indeks + 14].setOccupied(true);
-				setFieldsSurrounded(indeks + 11, true);
-				setFieldsSurrounded(indeks + 12, true);
-				setFieldsSurrounded(indeks + 13, true);
-				setFieldsSurrounded(indeks + 14, true);
+				to_insert = setFieldsSurrounded(indeks + 11, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 12, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 13, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				to_insert = setFieldsSurrounded(indeks + 14, true);
+				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				vector <Field> f{ fields[indeks + 11], fields[indeks + 12], fields[indeks + 13], fields[indeks + 14] };
-				ships.push_back(Ship(u, f));
+				ships.push_back(Ship(u, f, surr_f));
 			}
 		}
 	}

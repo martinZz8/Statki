@@ -1,11 +1,11 @@
 #include "Ship.h"
 
-Ship& Ship::operator=(const Ship& s)
-{
-	this->fields = s.fields;
-	this->surrounded_fields = s.surrounded_fields;
-	return *this;
-}
+//Ship& Ship::operator=(const Ship& s)
+//{
+//	this->fields = s.fields;
+//	this->surrounded_fields = s.surrounded_fields;
+//	return *this;
+//}
 
 Ship::Ship(Utils& utils, vector<Field> f, vector<Field> surr_f):u(utils),fields(f),surrounded_fields(surr_f)
 {
