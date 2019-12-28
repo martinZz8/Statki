@@ -87,6 +87,7 @@ class Utils
 	bool pvc_game_mode;                     /* true-aktywowane, false-dezaktywowane */
 	bool pvp_game_mode;                     /*                                      */
 	bool volume_on;                         /*                                      */
+	bool hints_on;                          /*                                      */
 	int ship_size; //rozmiar statku w danym momencie (ilosc fieldow)
 	int ship_orientation; //orientacja statku w danym momencie (1 - pionowo wzgledem osi x, 2 - poziomo wzgledem osi y)
 	int audio_samples;
@@ -124,6 +125,7 @@ public:
 	bool getPvCGameMode();
 	bool getPvPGameMode();
 	bool getVolumeOn();
+	bool getHintsOn();
 	int getShipSize();
 	int getShipOrientation();
 	int getAudioSamples();
@@ -155,6 +157,7 @@ public:
 	void setPvCGameMode(bool b);
 	void setPvPGameMode(bool b);
 	void setVolumeOn(bool b);
+	void setHintsOn(bool b);
 	void setShipSize(int s);
 	void setShipOrientation(int o);
 	void setNumberOfOneMastedShips(int n);

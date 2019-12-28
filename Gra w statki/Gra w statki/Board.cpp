@@ -1,5 +1,11 @@
 #include "Board.h"
 
+Board& Board::operator=(const Board& b)
+{
+	this->ships = b.ships;
+	return *this;
+}
+
 Board::Board(Utils& utils, float offset_x, float offset_y) :u(utils), offset_x(offset_x), offset_y(offset_y)
 {
 	width = u.getBoardSize();
@@ -65,18 +71,29 @@ void Board::setDeployShipsFlag()
 	deploy_ships_flag = false;
 }
 
-void Board::paintBoard()
+void Board::paintBoard(bool visible_ships, bool deploying_surrounded)
 {
+	/*Rysowanie fieldow*/
 	for (Field f : fields)
 	{
 		f.paintField(SCHEME_OF_FIELD);
-		if (f.getSurrounded() == true)
+		if (f.getSurrounded() == true && deploying_surrounded == true) //rysowanie surrounded dla deploying
+		{
+			f.paintField(SCHEME_OF_SURROUNDED);
+		}
+		else if (f.getMiss() == true)
 		{
 			f.paintField(SCHEME_OF_SURROUNDED);
 		}
 	}
+
+	/*Rysowanie statkow i fieldow surrounded zniszczonych statkow*/
 	for (Ship s : ships)
-		s.paintShip();
+	{
+		s.paintShip(visible_ships);
+	}
+		
+	
 
 }
 
@@ -133,7 +150,7 @@ void Board::setFieldsSurrounded(int indeks, bool surrounded)
 			}
 		}
 		if (new_indeks >= 0 && new_indeks <= 99 && flag == true)
-			if (fields[new_indeks].getHit() == false && fields[new_indeks].getSurrounded() == false)
+			if (fields[new_indeks].getOccupied() == false && fields[new_indeks].getSurrounded() == false)
 			{
 				fields[new_indeks].setSurrounded(surrounded);
 				cout << "Dodalem surrounded na " << surrounded << endl;
@@ -864,6 +881,4 @@ void Board::clearVectors()
 	ships.clear();
 	fields.clear();
 	numbers_of_not_deployed_ships.clear();
-	setFields();
-	
 }

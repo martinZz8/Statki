@@ -16,13 +16,12 @@ Utils::Utils()
 	key_down_pressed = false;
 	key_left_pressed = false;
 	key_right_pressed = false;
-	/*poczatek wybranych trybow gry*/
-	classic_game_mode = true;
-	advanced_game_mode = false;
-	pvc_game_mode = true;
-	pvp_game_mode = false;
-	volume_on = true;
-	/*koniec wybranych trybow gry*/
+	classic_game_mode = true;     /*                    */
+	advanced_game_mode = false;   /*                    */
+	pvc_game_mode = true;         /*  Ustawienia opcji  */
+	pvp_game_mode = false;        /*                    */
+	volume_on = true;             /*                    */
+	hints_on = true;              /*                    */
 	ship_size = 1;
 	ship_orientation = 1;
 	audio_samples = 6; //do zmiany jezeli bedzie wiecej audio sampli
@@ -145,6 +144,11 @@ bool Utils::getPvPGameMode()
 bool Utils::getVolumeOn()
 {
 	return volume_on;
+}
+
+bool Utils::getHintsOn()
+{
+	return hints_on;
 }
 
 int Utils::getShipSize()
@@ -300,6 +304,11 @@ void Utils::setPvPGameMode(bool b)
 void Utils::setVolumeOn(bool b)
 {
 	volume_on = b;
+}
+
+void Utils::setHintsOn(bool b)
+{
+	hints_on = b;
 }
 
 void Utils::setShipSize(int s)

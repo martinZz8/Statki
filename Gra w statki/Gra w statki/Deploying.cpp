@@ -17,7 +17,9 @@ void Deploying::fixShipSize()
 void Deploying::restoreDefaults()
 {
 	b1.clearVectors();
+	b1.setFields();
 	b2.clearVectors();
+	b2.setFields();
 	setNUmbersOfNotDeployedShips();
 
 }
@@ -63,11 +65,12 @@ void Deploying::tick()
 void Deploying::render()
 {
 	playAudio();
-	b1.paintBoard();
-	b2.paintBoard();
+	b1.paintBoard(true, true);
+	b2.paintBoard(false, true);
 	
+	if(b1.getDeployShipsFlag() == true)
+		b1.paintClassicShip(u.getMouseX(), u.getMouseY());
 	paintButtons();
-	b1.paintClassicShip(u.getMouseX(), u.getMouseY());
 	
 }
 

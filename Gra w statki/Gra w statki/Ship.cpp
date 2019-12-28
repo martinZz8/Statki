@@ -1,9 +1,14 @@
 #include "Ship.h"
 
+Ship& Ship::operator=(const Ship& s)
+{
+	this->fields = s.fields;
+	return *this;
+}
+
 Ship::Ship(Utils& utils, vector<Field> f):u(utils),fields(f)
 {
 	remaining_parts = 0;
-	number_of_fields = 0;
 	ship_destroyed_flag = false;
 }
 
@@ -12,42 +17,57 @@ void Ship::setFields(Field f)
 	fields.push_back(f);
 }
 
-void Ship::setNumberOfFields(int n)
+void Ship::setShipDestroyedFlag(bool d)
 {
-	number_of_fields = n;
+	ship_destroyed_flag = d;
 }
-
-//void Ship::setHitField(float x_mouse, float y_mouse)
-//{
-//
-//}
 
 float Ship::getCoordX(int indeks_vfields)
 {
-	if (indeks_vfields < number_of_fields)
+	if (indeks_vfields < fields.size())
 		return fields[indeks_vfields].getCoordX();
 	else return -1;
 }
 
 float Ship::getCoordY(int indeks_vfields)
 {
-	if (indeks_vfields < number_of_fields)
+	if (indeks_vfields < fields.size())
 		return fields[indeks_vfields].getCoordY();
 	else return -1;
 }
 
 int Ship::getNumberOfFields()
 {
-	return number_of_fields;
+	return fields.size();
 }
 
-void Ship::paintShip()
+bool Ship::getShipDestroyedFlag()
+{
+	return ship_destroyed_flag;
+}
+
+void Ship::paintShip(bool visible_ships)
 {
 	for (Field f : fields)
 	{
-		f.paintField(SCHEME_OF_SHIP);
+		if (ship_destroyed_flag == true)
+		{
+			f.paintField(SCHEME_OF_SHIP);
+			f.paintField(SCHEME_OF_HIT);
+		}
+		else if (visible_ships == true)
+			f.paintField(SCHEME_OF_SHIP);
+		
 		if (f.getHit() == true)
 			f.paintField(SCHEME_OF_HIT);
+		
+	}
+	for (Field f : surrounded_fields)
+	{
+		if (ship_destroyed_flag == true && u.getHintsOn() == true)
+		{
+			f.paintField(SCHEME_OF_SURROUNDED);
+		}
 	}
 		
 }
