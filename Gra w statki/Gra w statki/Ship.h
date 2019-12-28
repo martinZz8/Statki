@@ -13,9 +13,9 @@ class Ship
 	
 public:
 	Ship& operator=(const Ship& s);
-	Ship(Utils& utils, vector<Field> f);
+	Ship(Utils& utils, vector<Field> f, vector<Field> surr_f = {});
 	void setFields(Field f);
-	void setShipDestroyedFlag(bool d);
+	void setShipDestroyedFlag();
 	float getCoordX(int indeks_vfields); //zwraca koordynat x pola o danym indeksie z vectora pol
 	float getCoordY(int indeks_vfields);//zwraca koordynat y pola o danym indeksie z vectora pol
 	int getNumberOfFields(); //zwraca ilosc fieldow przyporzadkowanych do tego statku

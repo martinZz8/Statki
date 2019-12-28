@@ -27,8 +27,7 @@ public:
 	void setFields(); //metoda ustawiajaca koordynaty kazdego pola znajdujacego sie w vectorze pol
 	void setOffset(float x, float y);
 	void setDeployShipsFlag(); //metoda sprawdzajaca, czy mozna dalej rozstawiac statki na tym boardzie
-	void setFieldsSurrounded(float mouse_x, float mouse_y, bool surrounded);  /*metody ustawiajace polom sasiadujacym z polem o zadanych wartosciach wartosc surrounded_flag na true, gdy nie ma statku na danym polu - wywolywane przy stawianiu statku*/
-	void setFieldsSurrounded(int indeks, bool surrounded);                    /*                                                                                                                                                                        */
+	vector<Field>& setFieldsSurrounded(int indeks, bool surrounded); //metoda ustawiajaca polu sasiadujacemu z polem o zadanych wartosciach wartosc surrounded_flag na true, gdy nie ma statku na danym polu - wywolywane przy stawianiu statku
 	void setNumbersOfNotDeployedShips();
 	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships

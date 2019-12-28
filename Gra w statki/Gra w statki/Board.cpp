@@ -92,37 +92,14 @@ void Board::paintBoard(bool visible_ships, bool deploying_surrounded)
 	{
 		s.paintShip(visible_ships);
 	}
-		
-	
 
 }
 
-void Board::setFieldsSurrounded(float mouse_x, float mouse_y, bool surrounded)
-{
-	int indeks = whichField(mouse_x, mouse_y);
-	int offset = -11;
-	for (int i = 1; i <= 8; i++,offset++)
-	{
-		int new_indeks = indeks + offset;
-		if(new_indeks >=0 && new_indeks <= 99)
-			if (fields[new_indeks].getHit() == false && fields[new_indeks].getSurrounded() == false)
-			{
-				fields[new_indeks].setSurrounded(surrounded);
-				cout << "Dodalem surrounded na true" << endl;
-			}
-		if (offset == -9)
-			offset = -2;
-		else if (offset == -1)
-			offset = 0;
-		else if (offset == 1)
-			offset = 8;
-	}
-}
-
-void Board::setFieldsSurrounded(int indeks, bool surrounded)
+vector<Field>& Board::setFieldsSurrounded(int indeks, bool surrounded)
 {
 	int offset = -11;
 	vector <int> prohibited_offsets;
+	vector <Field> surrounded_fields;
 	if ((indeks % 10) == 0) //jezeli field jest przy lewej krawedzi boardu
 	{
 		prohibited_offsets.push_back(-11);
@@ -153,6 +130,7 @@ void Board::setFieldsSurrounded(int indeks, bool surrounded)
 			if (fields[new_indeks].getOccupied() == false && fields[new_indeks].getSurrounded() == false)
 			{
 				fields[new_indeks].setSurrounded(surrounded);
+				surrounded_fields.push_back(fields[new_indeks]);
 				cout << "Dodalem surrounded na " << surrounded << endl;
 			}
 		if (offset == -9)
@@ -162,6 +140,7 @@ void Board::setFieldsSurrounded(int indeks, bool surrounded)
 		else if (offset == 1)
 			offset = 8;
 	}
+	return surrounded_fields;
 }
 
 void Board::setNumbersOfNotDeployedShips()

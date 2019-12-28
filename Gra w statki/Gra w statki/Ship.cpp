@@ -3,10 +3,11 @@
 Ship& Ship::operator=(const Ship& s)
 {
 	this->fields = s.fields;
+	this->surrounded_fields = s.surrounded_fields;
 	return *this;
 }
 
-Ship::Ship(Utils& utils, vector<Field> f):u(utils),fields(f)
+Ship::Ship(Utils& utils, vector<Field> f, vector<Field> surr_f):u(utils),fields(f),surrounded_fields(surr_f)
 {
 	remaining_parts = 0;
 	ship_destroyed_flag = false;
@@ -17,9 +18,18 @@ void Ship::setFields(Field f)
 	fields.push_back(f);
 }
 
-void Ship::setShipDestroyedFlag(bool d)
+void Ship::setShipDestroyedFlag()
 {
-	ship_destroyed_flag = d;
+	int number_of_hits = 0;
+	for (Field f : fields)
+	{
+		if (f.getHit() == true)
+			number_of_hits++;
+	}
+	if (number_of_hits == fields.size())
+		ship_destroyed_flag = true;
+	else
+		ship_destroyed_flag = false;
 }
 
 float Ship::getCoordX(int indeks_vfields)
