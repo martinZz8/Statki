@@ -12,18 +12,20 @@ class Board
 	float width; //szerokosc
 	float height; //wysokosc
 	float field_size; //rozmiar pola
-	//bool setted_fields; //flaga do jednorazowego ustawienia koordynatow pol
-	bool made_ships; //?
+	bool deployed_ships_flag; //flaga wskzujaca, czy statki zostaly juz rozmieszczone; true - tak, false - nie
 	vector <Field> fields; //vector pol
 	vector <Ship> ships; //vector statkow
 
 public:
 	Board(Utils& utils, float offset_x, float offset_y);
+	vector <int> numbers_of_not_deployed_ships; //vector ilosci statkow, ktore zostaly jeszcze do rozstawienia; indeks+1 wskazuje jakiej dlugosci jest statek
 	float getXOffset();
 	float getYOffset();
+	bool getDeployedShipsFlag();
 	void paintBoard(); //metoda rysujaca plansze (wraz z kratkami, postawionymi juz statkami i wszystkimi innymi efektami)
 	void setFields(); //metoda ustawiajaca koordynaty kazdego pola znajdujacego sie w vectorze pol
 	void setOffset(float x, float y);
+	void setDeployedShipsFlag();
 	void setFieldsSurrounded(float mouse_x, float mouse_y, bool surrounded);
 	void setFieldsSurrounded(int indeks, bool surrounded);
 	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields

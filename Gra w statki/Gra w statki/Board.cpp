@@ -5,7 +5,7 @@ Board::Board(Utils& utils, float offset_x, float offset_y) :u(utils), offset_x(o
 	width = u.getBoardSize();
 	height = u.getBoardSize();
 	field_size = u.getFieldSize();
-	made_ships = false;
+	deployed_ships_flag = false;
 	setFields();
 
 }
@@ -19,6 +19,11 @@ float Board::getXOffset()
 float Board::getYOffset()
 {
 	return offset_y;
+}
+
+bool Board::getDeployedShipsFlag()
+{
+	return deployed_ships_flag;
 }
 
 void Board::setFields()
@@ -45,6 +50,11 @@ void Board::setOffset(float x, float y)
 {
 	offset_x = x;
 	offset_y = y;
+}
+
+void Board::setDeployedShipsFlag()
+{
+
 }
 
 void Board::paintBoard()
@@ -832,6 +842,8 @@ void Board::clearVectors()
 {
 	ships.clear();
 	fields.clear();
+	numbers_of_not_deployed_ships.clear();
+
 	setFields();
 	
 }
