@@ -65,6 +65,8 @@ void Deploying::tick()
 void Deploying::render()
 {
 	playAudio();
+	paintText();
+	paintBorders();
 	b1.paintBoard(true, true);
 	b2.paintBoard(false, true);
 	
@@ -266,6 +268,16 @@ void Deploying::paintButtons()
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
 	else if (buttons.getHighlighted(BUTTON_DEPLOYING_RESET) == true)
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_RESET, FONT_SIZE_SMALL);
+}
+
+void Deploying::paintText()
+{
+
+}
+
+void Deploying::paintBorders()
+{
+
 }
 
 void Deploying::playAudio()

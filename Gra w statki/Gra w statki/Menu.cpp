@@ -90,7 +90,6 @@ void Menu::paintText()
 
 void Menu::playAudio()
 {
-	
 	if (u.getVolumeOn() == true)
 	{
 		/*Audio dotyczace highlightow*/
@@ -111,8 +110,4 @@ void Menu::playAudio()
 		else if (highlighted == false)
 			audio_play_guard = true;
 	}
-
-
 }
-
-
