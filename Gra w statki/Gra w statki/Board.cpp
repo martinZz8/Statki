@@ -270,9 +270,7 @@ void Board::paintClassicShip(float mouse_x, float mouse_y)
 	}
 }
 
-//TODO
-//1) ZMIENIC UZYWAJAC UNIWERSALNYCH FUNKCJI
-//2) USUNAC TO_INSERT I PRZEKAZYWAÆ SURR_F PRZEZ REFERENCJE DO METODY SETFIELDSSURROUNDED, GDZIE BEDZIE USTAWIANY SURR_F BEZ POWTORZEN
+//TODO ZMIENIC UZYWAJAC UNIWERSALNYCH FUNKCJI
 int Board::deployClassicShip(float mouse_x, float mouse_y)
 {
 	int ship_orientation = u.getShipOrientation();

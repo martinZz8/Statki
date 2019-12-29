@@ -36,8 +36,6 @@ public:
 	void classicComputerDeploy();
 	void classicBoardCopy();
 	void paintButtons();
-	void paintText();
-	void paintBorders();
 	void playAudio();
 	
 		
