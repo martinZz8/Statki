@@ -11,7 +11,7 @@
 //	return *this;
 //}
 
-Field::Field(Utils& utils, float c_x, float c_y):u(utils),c_x(c_x),c_y(c_y)
+Field::Field(Utils& utils, float c_x, float c_y) :u(utils), c_x(c_x), c_y(c_y)
 {
 	width = u.getFieldSize();
 	occupied_flag = false;
@@ -94,5 +94,5 @@ void Field::paintField(int scheme)
 	else if (scheme == SCHEME_OF_SURROUNDED) //ciemniejsze pole na fieldzie
 		al_draw_filled_rectangle(c_x, c_y, c_x + width, c_y + width, u.getColorOfSurrounded());
 	al_draw_rectangle(c_x, c_y, c_x + width, c_y + width, u.getColorOfLine(), 3); //rysowanie otoczki fielda
-	
+
 }

@@ -2,7 +2,7 @@
 #include "Options.h"
 #include "Deploying.h"
 
-Menu::Menu(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2):windowID(WINDOW_MENU), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
+Menu::Menu(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2) :windowID(WINDOW_MENU), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
 {
 	audio_play_guard = true;
 	d = NULL;
@@ -12,13 +12,13 @@ Menu::Menu(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& 
 void Menu::setStates(Options* options, Deploying* deploying)
 {
 	o = options;
-	d = deploying;	
+	d = deploying;
 }
 
 void Menu::tick()
 {
 	mouseSwitches();
-		
+
 }
 
 void Menu::render()
@@ -61,7 +61,7 @@ void Menu::mouseSwitches()
 			u.setRunning(false);
 		}
 
-		
+
 	}
 }
 
@@ -78,8 +78,8 @@ void Menu::paintButtons()
 		buttons.paintButtonHighlight(BUTTON_MENU_OPTIONS, FONT_SIZE_BIG);
 	else if (buttons.getHighlighted(BUTTON_MENU_EXIT) == true)
 		buttons.paintButtonHighlight(BUTTON_MENU_EXIT, FONT_SIZE_BIG);
-	
-		
+
+
 }
 
 void Menu::paintText()

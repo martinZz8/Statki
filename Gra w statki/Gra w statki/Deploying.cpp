@@ -24,7 +24,7 @@ void Deploying::restoreDefaults()
 
 }
 
-Deploying::Deploying(State **state, Utils& utils, Buttons& buttons, Board& board1, Board& board2):windowID(WINDOW_DEPLOYING), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
+Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2) :windowID(WINDOW_DEPLOYING), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
 {
 	m = NULL;
 	audio_play_guard = true;
@@ -55,11 +55,11 @@ void Deploying::tick()
 	if (u.getClassicGameMode() == true)
 	{
 		classicKeyboardSwitches();
-		
+
 	}
 
 	mouseSwitches();
-	
+
 }
 
 void Deploying::render()
@@ -69,11 +69,11 @@ void Deploying::render()
 	paintBorders();
 	b1.paintBoard(true, true);
 	b2.paintBoard(false, true);
-	
-	if(b1.getDeployShipsFlag() == true)
+
+	if (b1.getDeployShipsFlag() == true)
 		b1.paintClassicShip(u.getMouseX(), u.getMouseY());
 	paintButtons();
-	
+
 }
 
 int Deploying::getWindowID()
@@ -83,9 +83,9 @@ int Deploying::getWindowID()
 
 void Deploying::classicKeyboardSwitches()
 {
-	
+
 	bool ship_can_be_changed_flag = b1.getDeployShipsFlag(); //zmienna wskazujaca na to, czy mozna zmienic statek
-	
+
 	if (ship_can_be_changed_flag == true)
 	{
 		if (u.getKeyUpPressed() == true && resize_ship_guard == true)
@@ -207,7 +207,7 @@ void Deploying::mouseSwitches()
 							warning_sample_play_flag = true;
 							place_ship_sample_flag = false;
 						}
-							
+
 					}
 					//TODO DOKONCZYC ROZSTAWIANIE STATKOW DLA KOLEJNEJ PLANSZY B2
 				}
@@ -227,7 +227,7 @@ void Deploying::mouseSwitches()
 
 				}
 			}
-			
+
 		}
 		else if (u.getMouse1Clicked() == false)
 		{
@@ -235,7 +235,7 @@ void Deploying::mouseSwitches()
 			place_ship_sample_flag = false;
 			warning_sample_play_flag = false;
 		}
-			
+
 	}
 }
 
@@ -261,7 +261,7 @@ void Deploying::paintButtons()
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_PLAY, FONT_SIZE_SMALL);
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_RESET, FONT_SIZE_SMALL);
-	
+
 	if (buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true)
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_PLAY, FONT_SIZE_SMALL);
 	else if (buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true)
@@ -282,7 +282,7 @@ void Deploying::paintBorders()
 
 void Deploying::playAudio()
 {
-	
+
 	if (u.getVolumeOn() == true)
 	{
 		/*Audio dotyczace highlightow*/
@@ -300,7 +300,7 @@ void Deploying::playAudio()
 			u.playSample(AUDIO_BUTTON_HIGHLIGHT);
 			audio_play_guard = false;
 		}
-		
+
 		/*Audio dotyczace warningow*/
 		if (warning_sample_play_flag == true && audio_play_guard == true)
 		{
@@ -319,7 +319,3 @@ void Deploying::playAudio()
 			audio_play_guard = true;
 	}
 }
-
-
-
-

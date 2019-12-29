@@ -29,4 +29,3 @@ public:
 	bool getSurrounded();
 	void paintField(int scheme); //metoda renderujaca pole o zadanym schemacie
 };
-

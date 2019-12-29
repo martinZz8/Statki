@@ -36,8 +36,5 @@ public:
 	int deployClassicShip(float mouse_x, float mouse_y); //metoda rozstawiajaca statek, zwraca 0, gdy rozstawianie sie powiedzie, zwraca -1 gdy rozstawianie sie nie powiedzie
 	int whichQuarterOfField(float c_x, float c_y, float center_of_field_x, float center_of_field_y); //metoda zwraca, ktora cwiartka pola zostala kliknieta; 1 - prawa gorna, 2 - lewa gorna, 3 - lewa dolna, 4 - prawa dolna
 	void clearVectors(); //metoda czyszczace vektory fieldow oraz shipow
-	
+
 };
-
-
-

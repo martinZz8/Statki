@@ -1,4 +1,4 @@
-#include "Board.h"
+ï»¿#include "Board.h"
 
 //Board& Board::operator=(const Board& b)
 //{
@@ -66,7 +66,7 @@ void Board::setDeployShipsFlag()
 		{
 			deploy_ships_flag = true;
 			return;
-		}	
+		}
 	}
 	deploy_ships_flag = false;
 }
@@ -170,7 +170,7 @@ int Board::whichField(float mouse_x, float mouse_y)
 			return i;
 		}
 	}
-	//zwrocenie -1 oznacza, ¿e pod danymi koordynatami mouse_x i mouse_y nie ma fielda
+	//zwrocenie -1 oznacza, ze pod danymi koordynatami mouse_x i mouse_y nie ma fielda
 	return -1;
 }
 
@@ -272,14 +272,14 @@ void Board::paintClassicShip(float mouse_x, float mouse_y)
 
 //TODO
 //1) ZMIENIC UZYWAJAC UNIWERSALNYCH FUNKCJI
-//2) USUNAC TO_INSERT I PRZEKAZYWAÆ SURR_F PRZEZ REFERENCJE DO METODY SETFIELDSSURROUNDED, GDZIE BEDZIE USTAWIANY SURR_F BEZ POWTORZEN
+//2) USUNAC TO_INSERT I PRZEKAZYWAC SURR_F PRZEZ REFERENCJE DO METODY SETFIELDSSURROUNDED, GDZIE BEDZIE USTAWIANY SURR_F BEZ POWTORZEN
 int Board::deployClassicShip(float mouse_x, float mouse_y)
 {
 	int ship_orientation = u.getShipOrientation();
 	int ship_size = u.getShipSize();
 	vector <Field> surr_f; //vector zawierajacy surrounding fieldy
 	vector <Field> to_insert; //vector do dodania surrounding fieldow
-	
+
 	if (ship_size == 1)
 	{
 		float l_x = mouse_x - (0.5 * field_size); /*koordynaty lewego gornego rogu statku*/
@@ -357,7 +357,7 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 	{
 		float l_x = mouse_x - (0.5 * field_size);
 		float r_x = mouse_x + (0.5 * field_size);
-		
+
 		if (ship_size == 2)
 		{
 			float u_y = mouse_y - field_size;
@@ -391,11 +391,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 			}
 			else if (quarter_of_field == 2)
 			{
-				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks+10].getOccupied() == true || fields[indeks+10].getSurrounded() == true)
+				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
 				fields[indeks].setOccupied(true);
-				fields[indeks+10].setOccupied(true);
+				fields[indeks + 10].setOccupied(true);
 				to_insert = setFieldsSurrounded(indeks, true);
 				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
 				to_insert = setFieldsSurrounded(indeks + 10, true);

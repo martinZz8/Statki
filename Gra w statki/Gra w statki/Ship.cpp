@@ -7,7 +7,7 @@
 //	return *this;
 //}
 
-Ship::Ship(Utils& utils, vector<Field> f, vector<Field> surr_f):u(utils),fields(f),surrounded_fields(surr_f)
+Ship::Ship(Utils& utils, vector<Field> f, vector<Field> surr_f) :u(utils), fields(f), surrounded_fields(surr_f)
 {
 	remaining_parts = 0;
 	ship_destroyed_flag = false;
@@ -67,10 +67,10 @@ void Ship::paintShip(bool visible_ships)
 		}
 		else if (visible_ships == true)
 			f.paintField(SCHEME_OF_SHIP);
-		
+
 		if (f.getHit() == true)
 			f.paintField(SCHEME_OF_HIT);
-		
+
 	}
 	for (Field f : surrounded_fields)
 	{
@@ -79,6 +79,5 @@ void Ship::paintShip(bool visible_ships)
 			f.paintField(SCHEME_OF_SURROUNDED);
 		}
 	}
-		
-}
 
+}

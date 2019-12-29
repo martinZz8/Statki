@@ -10,7 +10,7 @@ class Ship
 	vector <Field> surrounded_fields; //vector fieldow otaczajacych statek
 	int remaining_parts; //pozostale nie trafione pola statku
 	bool ship_destroyed_flag; //flaga wskazujaca na to, czy statek zostal znisczony czy nie; true - tak, false - nie
-	
+
 public:
 	//Ship& operator=(const Ship& s);
 	Ship(Utils& utils, vector<Field> f, vector<Field> surr_f = {});
@@ -24,4 +24,3 @@ public:
 
 
 };
-
