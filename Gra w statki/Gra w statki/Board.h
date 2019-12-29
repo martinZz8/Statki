@@ -17,7 +17,6 @@ class Board
 	vector <Ship> ships; //vector statkow
 
 public:
-	//Board& operator=(const Board& b);
 	Board(Utils& utils, float offset_x, float offset_y);
 	vector <int> numbers_of_not_deployed_ships; //vector ilosci statkow, ktore zostaly jeszcze do rozstawienia; indeks+1 wskazuje jakiej dlugosci jest statek
 	float getXOffset();

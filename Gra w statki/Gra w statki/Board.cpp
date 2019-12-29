@@ -1,11 +1,5 @@
 ﻿#include "Board.h"
 
-//Board& Board::operator=(const Board& b)
-//{
-//	this->ships = b.ships;
-//	return *this;
-//}
-
 Board::Board(Utils& utils, float offset_x, float offset_y) :u(utils), offset_x(offset_x), offset_y(offset_y)
 {
 	width = u.getBoardSize();

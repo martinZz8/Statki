@@ -1,13 +1,6 @@
 #include "Ship.h"
 
-//Ship& Ship::operator=(const Ship& s)
-//{
-//	this->fields = s.fields;
-//	this->surrounded_fields = s.surrounded_fields;
-//	return *this;
-//}
-
-Ship::Ship(Utils& utils, vector<Field> f, vector<Field> surr_f) :u(utils), fields(f), surrounded_fields(surr_f)
+Ship::Ship(Utils& utils, vector<Field> ship_f, vector<Field> surr_f) :u(utils), ship_fields(ship_f), surrounded_fields(surr_f)
 {
 	remaining_parts = 0;
 	ship_destroyed_flag = false;
@@ -16,34 +9,79 @@ Ship::Ship(Utils& utils, vector<Field> f, vector<Field> surr_f) :u(utils), field
 void Ship::setShipDestroyedFlag()
 {
 	int number_of_hits = 0;
-	for (Field f : fields)
+	for (Field f : ship_fields)
 	{
 		if (f.getHit() == true)
 			number_of_hits++;
 	}
-	if (number_of_hits == fields.size())
+	if (number_of_hits == ship_fields.size())
 		ship_destroyed_flag = true;
 	else
 		ship_destroyed_flag = false;
 }
 
+void Ship::setShipHit(Field& field, bool h)
+{
+	for (Field ship_field : ship_fields)
+	{
+		if (ship_field == field)
+			ship_field.setHit(h);
+	}
+}
+
+void Ship::setShipFields(vector<Field>& new_ship_f)
+{
+	ship_fields.clear();
+	for (Field f : new_ship_f)
+	{
+		ship_fields.push_back(f);
+	}
+}
+
+void Ship::setSurroundedFields(vector<Field>& new_surr_f)
+{
+	surrounded_fields.clear();
+	for (Field f : new_surr_f)
+	{
+		surrounded_fields.push_back(f);
+	}
+}
+
+void Ship::moveShipFields(float offset_x, float offset_y)
+{
+	for (Field f : ship_fields)
+	{
+		f.setCoordX(f.getCoordX() + offset_x);
+		f.setCoordY(f.getCoordY() + offset_y);
+	}
+}
+
+void Ship::moveSurroundedFields(float offset_x, float offset_y)
+{
+	for (Field f : surrounded_fields)
+	{
+		f.setCoordX(f.getCoordX() + offset_x);
+		f.setCoordY(f.getCoordY() + offset_y);
+	}
+}
+
 float Ship::getCoordX(int indeks_vfields)
 {
-	if (indeks_vfields < fields.size())
-		return fields[indeks_vfields].getCoordX();
+	if (indeks_vfields < ship_fields.size())
+		return ship_fields[indeks_vfields].getCoordX();
 	else return -1;
 }
 
 float Ship::getCoordY(int indeks_vfields)
 {
-	if (indeks_vfields < fields.size())
-		return fields[indeks_vfields].getCoordY();
+	if (indeks_vfields < ship_fields.size())
+		return ship_fields[indeks_vfields].getCoordY();
 	else return -1;
 }
 
 int Ship::getNumberOfFields()
 {
-	return fields.size();
+	return ship_fields.size();
 }
 
 bool Ship::getShipDestroyedFlag()
@@ -53,7 +91,7 @@ bool Ship::getShipDestroyedFlag()
 
 void Ship::paintShip(bool visible_ships, bool deploying_phase)
 {
-	for (Field f : fields)
+	for (Field f : ship_fields)
 	{
 		if (ship_destroyed_flag == true)
 		{
@@ -74,12 +112,11 @@ void Ship::paintShip(bool visible_ships, bool deploying_phase)
 			f.paintField(SCHEME_OF_SURROUNDED);
 		}
 	}
-
 }
 
 bool Ship::isOnShip(Field& checked_field)
 {
-	for (Field f : fields)
+	for (Field f : ship_fields)
 	{
 		if (f == checked_field)
 			return true;
