@@ -22,12 +22,15 @@ public:
 	float getXOffset();
 	float getYOffset();
 	bool getDeployShipsFlag();
+	vector <Ship> getShips(); //metoda zwracajaca vector shipów; stosowana przy kopiowaniu w deploying
 	void paintBoard(bool visible_ships, bool deploying_phase); //metoda rysujaca plansze; visible_ships == true - rysuje statki, deploying_phase == true - rysuje surrounded fieldsy, gdy statek nie jest zniszczony
 	void setFields(); //metoda ustawiajaca koordynaty kazdego pola znajdujacego sie w vectorze pol
 	void setOffset(float x, float y);
 	void setDeployShipsFlag(); //metoda sprawdzajaca, czy mozna dalej rozstawiac statki na tym boardzie
 	void setFieldsSurrounded(vector <int> indeks_of_ship_fields, vector <Field>& surrounded_fields); //metoda tworzaca vector surrounded danego statku; przyjmuje vector indeksow statku - wywolywane przy stawianiu statku
 	void setNumbersOfNotDeployedShips();
+	int setShipHit(Field& field, bool h);
+	void setShips(vector <Ship> s);
 	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships
 	void paintClassicShip(float mouse_x, float mouse_y); //metoda ryzsujaca statek dla standardowych opcji statków

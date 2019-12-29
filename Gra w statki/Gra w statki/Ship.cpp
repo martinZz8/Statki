@@ -20,13 +20,17 @@ void Ship::setShipDestroyedFlag()
 		ship_destroyed_flag = false;
 }
 
-void Ship::setShipHit(Field& field, bool h)
+int Ship::setShipHit(Field& field, bool h)
 {
 	for (Field ship_field : ship_fields)
 	{
 		if (ship_field == field)
+		{
 			ship_field.setHit(h);
+			return 0;
+		}	
 	}
+	return -1;
 }
 
 void Ship::setShipFields(vector<Field>& new_ship_f)

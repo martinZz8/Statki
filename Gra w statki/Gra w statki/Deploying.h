@@ -22,6 +22,8 @@ class Deploying :public State
 	bool mouse_click_guard; //true - mozna kliknac, false - nie mozna kliknac
 	bool done_deploying_b1; //true- rozstawiono finalnie board1, false - nie rozstawiono finalnie board1
 	bool done_deploying_b2; //true- rozstawiono finalnie board2, false - nie rozstawiono finalnie board2
+	bool done_copy_b1_to_b2; //true - skopiowano, false - nie skopiowano
+	bool button_play_can_be_clicked_flag; //flaga, czy mozna kliknac button play; true - tak, false - nie
 	void fixShipSize(); //metoda naprawiajaca zmienna ship_size, gdy nie ma statku o takim rozmiarze
 	void restoreDefaults();
 
@@ -41,6 +43,7 @@ public:
 	void paintText();
 	void paintBorders();
 	void playAudio();
+	void copyShips(Board& from, Board& to); //metoda kopiuje vector shipow z "from" do "to"
 
 
 };

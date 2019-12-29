@@ -21,6 +21,10 @@ void Deploying::restoreDefaults()
 	b2.clearVectors();
 	b2.setFields();
 	setNUmbersOfNotDeployedShips();
+	done_deploying_b1 = false;
+	done_deploying_b2 = false;
+	done_copy_b1_to_b2 = false;
+	button_play_can_be_clicked_flag = false;
 
 }
 
@@ -35,6 +39,8 @@ Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board
 	mouse_click_guard = true;
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
+	done_copy_b1_to_b2 = false;
+	button_play_can_be_clicked_flag = false;
 
 }
 
@@ -57,7 +63,18 @@ void Deploying::tick()
 	if (u.getClassicGameMode() == true)
 	{
 		classicKeyboardSwitches();
-
+		if (u.getPvCGameMode() == true && done_deploying_b1 == true && done_copy_b1_to_b2 == false)
+		{
+			done_copy_b1_to_b2 = true;
+			copyShips(b1, b2);
+			cout << "Skopiowalem ships z b1 do b2" << endl;
+			if (b2.getDeployShipsFlag() == false)
+			{
+				button_play_can_be_clicked_flag = true;
+				cout << "Mozna kliknac button play" << endl;
+			}
+				
+		}
 	}
 
 	mouseSwitches();
@@ -354,4 +371,10 @@ void Deploying::playAudio()
 		if (highlighted == false && warning_sample_play_flag == false && place_ship_sample_flag == false && audio_play_guard == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
 			audio_play_guard = true;
 	}
+}
+
+void Deploying::copyShips(Board& from, Board& to)
+{
+	vector <Ship> ships(from.getShips());
+	to.setShips(ships);
 }

@@ -26,6 +26,11 @@ bool Board::getDeployShipsFlag()
 	return deploy_ships_flag;
 }
 
+vector<Ship> Board::getShips()
+{
+	return ships;
+}
+
 void Board::setFields()
 {
 
@@ -158,6 +163,26 @@ void Board::setNumbersOfNotDeployedShips()
 	numbers_of_not_deployed_ships.push_back(u.getNumberOfTwoMastedShips()); //indeks 1
 	numbers_of_not_deployed_ships.push_back(u.getNumberOfThreeMastedShips()); //indeks 2
 	numbers_of_not_deployed_ships.push_back(u.getNumberOfFourMastedShips()); //indeks 3
+}
+
+int Board::setShipHit(Field& field, bool h)
+{
+	for (Ship s : ships)
+	{
+		int i = s.setShipHit(field, h);
+		if (i == 0)
+			return 0;
+	}
+	return -1;
+}
+
+void Board::setShips(vector<Ship> s)
+{
+	ships.clear();
+	for (Ship new_ship : s)
+	{
+		ships.push_back(new_ship);
+	}
 }
 
 int Board::whichField(float mouse_x, float mouse_y)
