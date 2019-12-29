@@ -13,11 +13,6 @@ Ship::Ship(Utils& utils, vector<Field> f, vector<Field> surr_f) :u(utils), field
 	ship_destroyed_flag = false;
 }
 
-void Ship::setFields(Field f)
-{
-	fields.push_back(f);
-}
-
 void Ship::setShipDestroyedFlag()
 {
 	int number_of_hits = 0;
@@ -56,28 +51,48 @@ bool Ship::getShipDestroyedFlag()
 	return ship_destroyed_flag;
 }
 
-void Ship::paintShip(bool visible_ships)
+void Ship::paintShip(bool visible_ships, bool deploying_phase)
 {
 	for (Field f : fields)
 	{
 		if (ship_destroyed_flag == true)
 		{
 			f.paintField(SCHEME_OF_SHIP);
-			f.paintField(SCHEME_OF_HIT);
 		}
 		else if (visible_ships == true)
 			f.paintField(SCHEME_OF_SHIP);
 
 		if (f.getHit() == true)
 			f.paintField(SCHEME_OF_HIT);
-
 	}
 	for (Field f : surrounded_fields)
 	{
-		if (ship_destroyed_flag == true && u.getHintsOn() == true)
+		if(deploying_phase == true)
+			f.paintField(SCHEME_OF_SURROUNDED);
+		else if (ship_destroyed_flag == true && u.getHintsOn() == true)
 		{
 			f.paintField(SCHEME_OF_SURROUNDED);
 		}
 	}
 
+}
+
+bool Ship::isOnShip(Field& checked_field)
+{
+	for (Field f : fields)
+	{
+		if (f == checked_field)
+			return true;
+	}
+	return false;
+}
+
+bool Ship::isOnSurrounding(Field& checked_surrounding_field)
+{
+	for (Field surr_f : surrounded_fields)
+	{
+		if (surr_f == checked_surrounding_field)
+			return true;
+	}
+	return false;
 }

@@ -20,6 +20,8 @@ class Deploying :public State
 	bool resize_ship_guard; //true - mozna zmienic rozmiar, false - nie mozna zmienci rozmiaru
 	bool rotate_ship_guard; //true - mozna zmienic polozenie, false - nie mozna zmienic polozenia
 	bool mouse_click_guard; //true - mozna kliknac, false - nie mozna kliknac
+	bool done_deploying_b1; //true- rozstawiono finalnie board1, false - nie rozstawiono finalnie board1
+	bool done_deploying_b2; //true- rozstawiono finalnie board2, false - nie rozstawiono finalnie board2
 	void fixShipSize(); //metoda naprawiajaca zmienna ship_size, gdy nie ma statku o takim rozmiarze
 	void restoreDefaults();
 

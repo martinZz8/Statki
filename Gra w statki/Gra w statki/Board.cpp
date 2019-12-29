@@ -71,76 +71,86 @@ void Board::setDeployShipsFlag()
 	deploy_ships_flag = false;
 }
 
-void Board::paintBoard(bool visible_ships, bool deploying_surrounded)
+void Board::paintBoard(bool visible_ships, bool deploying_phase)
 {
 	/*Rysowanie fieldow*/
 	for (Field f : fields)
 	{
 		f.paintField(SCHEME_OF_FIELD);
-		if (f.getSurrounded() == true && deploying_surrounded == true) //rysowanie surrounded dla deploying
-		{
+		if (f.getMiss() == true)
 			f.paintField(SCHEME_OF_SURROUNDED);
-		}
-		else if (f.getMiss() == true)
-		{
-			f.paintField(SCHEME_OF_SURROUNDED);
-		}
-	}
+    }
 
-	/*Rysowanie statkow i fieldow surrounded zniszczonych statkow*/
+	/*Rysowanie statkow i fieldow surrounded zniszczonych statkow, gdy sa wlaczone podpowiedzi*/
 	for (Ship s : ships)
 	{
-		s.paintShip(visible_ships);
+		s.paintShip(visible_ships, deploying_phase);
 	}
-
 }
 
-vector<Field> Board::setFieldsSurrounded(int indeks, bool surrounded)
+void Board::setFieldsSurrounded(vector <int> indeks_of_ship_fields, vector <Field>& surrounded_fields)
 {
-	int offset = -11;
-	vector <int> prohibited_offsets;
-	vector <Field> surrounded_fields;
-	if ((indeks % 10) == 0) //jezeli field jest przy lewej krawedzi boardu
+	for (int indeks : indeks_of_ship_fields)
 	{
-		prohibited_offsets.push_back(-11);
-		prohibited_offsets.push_back(-1);
-		prohibited_offsets.push_back(9);
-	}
-	else if (((indeks + 1) % 10) == 0) //jezeli field jest przy prawej krawedzi boardu
-	{
-		prohibited_offsets.push_back(-9);
-		prohibited_offsets.push_back(1);
-		prohibited_offsets.push_back(11);
-	}
-
-	int vector_size = prohibited_offsets.size();
-	for (int i = 1; i <= 8; i++, offset++)
-	{
-		int new_indeks = indeks + offset;
-		bool flag = true; //flaga wskazujaca, czy potencjalnie mozna zaznaczyc danego fielda za sasiadujacego ze statkiem
-		for (int j = 0; j < vector_size; j++)
+		int offset = -11;
+		vector <int> prohibited_offsets; //zabronione offsety
+		if ((indeks % 10) == 0) //jezeli field jest przy lewej krawedzi boardu
 		{
-			if (offset == prohibited_offsets[j])
-			{
-				flag = false;
-				break;
-			}
+			prohibited_offsets.push_back(-11);
+			prohibited_offsets.push_back(-1);
+			prohibited_offsets.push_back(9);
 		}
-		if (new_indeks >= 0 && new_indeks <= 99 && flag == true)
-			if (fields[new_indeks].getOccupied() == false)
+		else if (((indeks + 1) % 10) == 0) //jezeli field jest przy prawej krawedzi boardu
+		{
+			prohibited_offsets.push_back(-9);
+			prohibited_offsets.push_back(1);
+			prohibited_offsets.push_back(11);
+		}
+
+		for (int i = 1; i <= 8; i++, offset++)
+		{
+			int new_indeks = indeks + offset;
+			bool go_next_flag = true; //flaga wskazujaca, czy mozna isc dalej
+			for (int j : prohibited_offsets)
 			{
-				fields[new_indeks].setSurrounded(surrounded);
-				cout << "Dodalem surrounded na " << surrounded << endl;
-				surrounded_fields.push_back(fields[new_indeks]);
+				if (offset == j)
+				{
+					go_next_flag = false;
+					break;
+				}
 			}
-		if (offset == -9)
-			offset = -2;
-		else if (offset == -1)
-			offset = 0;
-		else if (offset == 1)
-			offset = 8;
+			for (int j : indeks_of_ship_fields)
+			{
+				if (new_indeks == j)
+				{
+					go_next_flag = false;
+					break;
+				}
+			}
+			
+			if (new_indeks >= 0 && new_indeks <= 99 && go_next_flag == true)
+				if (isOnShip(fields[new_indeks]) == false)
+				{
+					bool can_be_added = true;
+					for (Field f : surrounded_fields)
+					{
+						if (fields[new_indeks] == f)
+							can_be_added = false;
+					}
+					if (can_be_added == true)
+					{
+						surrounded_fields.push_back(fields[new_indeks]);
+						cout << "Dodalem surrounded fielda" << endl;
+					}
+				}
+			if (offset == -9)
+				offset = -2;
+			else if (offset == -1)
+				offset = 0;
+			else if (offset == 1)
+				offset = 8;
+		}
 	}
-	return surrounded_fields;
 }
 
 void Board::setNumbersOfNotDeployedShips()
@@ -277,9 +287,8 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 {
 	int ship_orientation = u.getShipOrientation();
 	int ship_size = u.getShipSize();
-	vector <Field> surr_f; //vector zawierajacy surrounding fieldy
-	vector <Field> to_insert; //vector do dodania surrounding fieldow
-
+	vector <Field> surr_f; //vector zawierajacy surrounding fieldy; wsadzany potem do vectora shipow
+	
 	if (ship_size == 1)
 	{
 		float l_x = mouse_x - (0.5 * field_size); /*koordynaty lewego gornego rogu statku*/
@@ -301,28 +310,21 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 			//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
 			if (indeks_r_u == -1)
 				return -1;
-			if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true)
+			if (isOnShip(fields[indeks + 1]) == true || isOnSurrounding(fields[indeks + 1]) == true)
 				return -1;
 			numbers_of_not_deployed_ships[ship_size - 1]--;
-			fields[indeks + 1].setOccupied(true);
-			surr_f = setFieldsSurrounded(indeks + 1, true);
-			vector <Field> f{ fields[indeks + 1] };
+			vector <int> indeks_of_ship_fields = { indeks + 1 };
+			setFieldsSurrounded(indeks_of_ship_fields, surr_f);
+			vector <Field> f{ fields[indeks + 1] }; //vector zawierajacy fieldy nalezace do statku
 			ships.push_back(Ship(u, f, surr_f));
-			cout << "Wypisanie surr_f dla ship_size 1" << endl;
-			int iter = 0;
-			for (Field fi : surr_f)
-			{
-				cout << iter << ": " << fi.getSurrounded() << endl;
-				iter++;
-			}
 		}
 		else if (quarter_of_field == 2) //postawienie w fieldzie o indeksie "indeks"
 		{
-			if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true)
+			if (isOnShip(fields[indeks]) == true || isOnSurrounding(fields[indeks]) == true)
 				return -1;
 			numbers_of_not_deployed_ships[ship_size - 1]--;
-			fields[indeks].setOccupied(true);
-			surr_f = setFieldsSurrounded(indeks, true);
+			vector <int> indeks_of_ship_fields = { indeks };
+			setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 			vector <Field> f{ fields[indeks] };
 			ships.push_back(Ship(u, f, surr_f));
 		}
@@ -331,11 +333,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 			//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
 			if (indeks_l_d == -1)
 				return -1;
-			if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true)
+			if (isOnShip(fields[indeks + 10]) == true || isOnSurrounding(fields[indeks + 10]) == true)
 				return -1;
 			numbers_of_not_deployed_ships[ship_size - 1]--;
-			fields[indeks + 10].setOccupied(true);
-			surr_f = setFieldsSurrounded(indeks + 10, true);
+			vector <int> indeks_of_ship_fields = { indeks + 10 };
+			setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 			vector <Field> f{ fields[indeks + 10] };
 			ships.push_back(Ship(u, f, surr_f));
 		}
@@ -344,11 +346,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 			//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
 			if (indeks_r_d == -1)
 				return -1;
-			if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true)
+			if (isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true)
 				return -1;
 			numbers_of_not_deployed_ships[ship_size - 1]--;
-			fields[indeks + 11].setOccupied(true);
-			surr_f = setFieldsSurrounded(indeks + 11, true);
+			vector <int> indeks_of_ship_fields = { indeks + 11 };
+			setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 			vector <Field> f{ fields[indeks + 11] };
 			ships.push_back(Ship(u, f, surr_f));
 		}
@@ -377,29 +379,21 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_r_u == -1)
 					return -1;
-				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 1]) == true || isOnSurrounding(fields[indeks + 1]) == true || isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 1].setOccupied(true);
-				fields[indeks + 11].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 1, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 1, indeks + 11 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 11] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
-				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true)
+				if (isOnShip(fields[indeks]) == true || isOnSurrounding(fields[indeks]) == true || isOnShip(fields[indeks + 10]) == true || isOnSurrounding(fields[indeks + 10]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks].setOccupied(true);
-				fields[indeks + 10].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 10, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks, indeks + 10 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks], fields[indeks + 10] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -408,15 +402,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_l_d == -1)
 					return -1;
-				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 20].getOccupied() == true || fields[indeks + 20].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 10]) == true || isOnSurrounding(fields[indeks + 10]) == true || isOnShip(fields[indeks + 20]) == true || isOnSurrounding(fields[indeks + 20]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 10].setOccupied(true);
-				fields[indeks + 20].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 10, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 20, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 10, indeks + 20 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 10], fields[indeks + 20] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -425,15 +415,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
 				if (indeks_r_d == -1)
 					return -1;
-				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 21].getOccupied() == true || fields[indeks + 21].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true || isOnShip(fields[indeks + 21]) == true || isOnSurrounding(fields[indeks + 21]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 11].setOccupied(true);
-				fields[indeks + 21].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 21, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 11, indeks + 21 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 11], fields[indeks + 21] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -457,34 +443,21 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_r_u == -1)
 					return -1;
-				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 21].getOccupied() == true || fields[indeks + 21].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 1]) == true || isOnSurrounding(fields[indeks + 1]) == true || isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true || isOnShip(fields[indeks + 21]) == true || isOnSurrounding(fields[indeks + 21]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 1].setOccupied(true);
-				fields[indeks + 11].setOccupied(true);
-				fields[indeks + 21].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 1, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 21, true);
+				vector <int> indeks_of_ship_fields = { indeks + 1, indeks + 11, indeks + 21 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 11], fields[indeks + 21] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
-				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 20].getOccupied() == true || fields[indeks + 20].getSurrounded() == true)
+				if (isOnShip(fields[indeks]) == true || isOnSurrounding(fields[indeks]) == true || isOnShip(fields[indeks + 10]) == true || isOnSurrounding(fields[indeks + 10]) == true || isOnShip(fields[indeks + 20]) == true || isOnSurrounding(fields[indeks + 20]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks].setOccupied(true);
-				fields[indeks + 10].setOccupied(true);
-				fields[indeks + 20].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 10, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 20, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks, indeks + 10, indeks + 20 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks], fields[indeks + 10], fields[indeks + 20] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -493,18 +466,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_l_d == -1)
 					return -1;
-				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 20].getOccupied() == true || fields[indeks + 20].getSurrounded() == true || fields[indeks + 30].getOccupied() == true || fields[indeks + 30].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 10]) == true || isOnSurrounding(fields[indeks + 10]) == true || isOnShip(fields[indeks + 20]) == true || isOnSurrounding(fields[indeks + 20]) == true || isOnShip(fields[indeks + 30]) == true || isOnSurrounding(fields[indeks + 30]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 10].setOccupied(true);
-				fields[indeks + 20].setOccupied(true);
-				fields[indeks + 30].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 10, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 20, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 30, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = {indeks + 10, indeks + 20, indeks + 30 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 10], fields[indeks + 20], fields[indeks + 30] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -513,18 +479,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
 				if (indeks_r_d == -1)
 					return -1;
-				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 21].getOccupied() == true || fields[indeks + 21].getSurrounded() == true || fields[indeks + 31].getOccupied() == true || fields[indeks + 31].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true || isOnShip(fields[indeks + 21]) == true || isOnSurrounding(fields[indeks + 21]) == true || isOnShip(fields[indeks + 31]) == true || isOnSurrounding(fields[indeks + 31]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 11].setOccupied(true);
-				fields[indeks + 21].setOccupied(true);
-				fields[indeks + 31].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 21, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 31, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 11, indeks + 21, indeks + 31 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 11], fields[indeks + 21], fields[indeks + 31] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -548,41 +507,21 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_r_u == -1)
 					return -1;
-				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 21].getOccupied() == true || fields[indeks + 21].getSurrounded() == true || fields[indeks + 31].getOccupied() == true || fields[indeks + 31].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 1]) == true || isOnSurrounding(fields[indeks + 1]) == true || isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true || isOnShip(fields[indeks + 21]) == true ||isOnSurrounding(fields[indeks + 21]) == true || isOnShip(fields[indeks + 31]) == true || isOnSurrounding(fields[indeks + 31]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 1].setOccupied(true);
-				fields[indeks + 11].setOccupied(true);
-				fields[indeks + 21].setOccupied(true);
-				fields[indeks + 31].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 1, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 21, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 31, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 1, indeks + 11, indeks + 21, indeks + 31 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 11], fields[indeks + 21], fields[indeks + 31] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
-				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 20].getOccupied() == true || fields[indeks + 20].getSurrounded() == true || fields[indeks + 30].getOccupied() == true || fields[indeks + 30].getSurrounded() == true)
+				if (isOnShip(fields[indeks]) == true || isOnSurrounding(fields[indeks]) == true || isOnShip(fields[indeks + 10]) == true || isOnSurrounding(fields[indeks + 10]) == true || isOnShip(fields[indeks + 20]) == true || isOnSurrounding(fields[indeks + 20]) == true || isOnShip(fields[indeks + 30]) == true || isOnSurrounding(fields[indeks + 30]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks].setOccupied(true);
-				fields[indeks + 10].setOccupied(true);
-				fields[indeks + 20].setOccupied(true);
-				fields[indeks + 30].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 10, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 20, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 30, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks, indeks + 10, indeks + 20, indeks + 30 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks], fields[indeks + 10], fields[indeks + 20], fields[indeks + 30] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -591,21 +530,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_l_d == -1)
 					return -1;
-				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 20].getOccupied() == true || fields[indeks + 20].getSurrounded() == true || fields[indeks + 30].getOccupied() == true || fields[indeks + 30].getSurrounded() == true || fields[indeks + 40].getOccupied() == true || fields[indeks + 40].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 10]) == true || isOnSurrounding(fields[indeks + 10]) == true || isOnShip(fields[indeks + 20]) == true || isOnSurrounding(fields[indeks + 20]) == true || isOnShip(fields[indeks + 30]) == true || isOnSurrounding(fields[indeks + 30]) == true || isOnShip(fields[indeks + 40]) == true || isOnSurrounding(fields[indeks + 40]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 10].setOccupied(true);
-				fields[indeks + 20].setOccupied(true);
-				fields[indeks + 30].setOccupied(true);
-				fields[indeks + 40].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 10, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 20, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 30, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 40, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 10, indeks + 20, indeks + 30, indeks + 40 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 10], fields[indeks + 20], fields[indeks + 30], fields[indeks + 40] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -614,21 +543,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
 				if (indeks_r_d == -1)
 					return -1;
-				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 21].getOccupied() == true || fields[indeks + 21].getSurrounded() == true || fields[indeks + 31].getOccupied() == true || fields[indeks + 31].getSurrounded() == true || fields[indeks + 41].getOccupied() == true || fields[indeks + 41].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true || isOnShip(fields[indeks + 21]) == true || isOnSurrounding(fields[indeks + 21]) == true || isOnShip(fields[indeks + 31]) == true || isOnSurrounding(fields[indeks + 31]) == true || isOnShip(fields[indeks + 41]) == true || isOnSurrounding(fields[indeks + 41]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 11].setOccupied(true);
-				fields[indeks + 21].setOccupied(true);
-				fields[indeks + 31].setOccupied(true);
-				fields[indeks + 41].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 21, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 31, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 41, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 11, indeks + 21, indeks + 31, indeks + 41 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 11], fields[indeks + 21], fields[indeks + 31], fields[indeks + 41] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -658,29 +577,21 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_r_u == -1)
 					return -1;
-				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 2].getOccupied() == true || fields[indeks + 2].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 1]) == true || isOnSurrounding(fields[indeks + 1]) == true || isOnShip(fields[indeks + 2]) == true || isOnSurrounding(fields[indeks + 2]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 1].setOccupied(true);
-				fields[indeks + 2].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 1, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 2, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 1, indeks + 2 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 2] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
-				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true)
+				if (isOnShip(fields[indeks]) == true || isOnSurrounding(fields[indeks]) == true || isOnShip(fields[indeks + 1]) == true || isOnSurrounding(fields[indeks + 1]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks].setOccupied(true);
-				fields[indeks + 1].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 1, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks, indeks + 1 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks], fields[indeks + 1] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -689,15 +600,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_l_d == -1)
 					return -1;
-				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 10]) == true || isOnSurrounding(fields[indeks + 10]) == true || isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 10].setOccupied(true);
-				fields[indeks + 11].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 10, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 10, indeks + 11 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 10], fields[indeks + 11] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -706,16 +613,12 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
 				if (indeks_r_d == -1)
 					return -1;
-				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 12].getOccupied() == true || fields[indeks + 12].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true || isOnShip(fields[indeks + 12]) == true || isOnSurrounding(fields[indeks + 12]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 11].setOccupied(true);
-				fields[indeks + 12].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 12, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				vector <Field> f{ fields[indeks + 11], fields[indeks + 12] };
+				vector <int> indeks_of_ship_fields = { indeks + 11, indeks + 12 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
+			    vector <Field> f{ fields[indeks + 11], fields[indeks + 12] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
 		}
@@ -738,35 +641,21 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_r_u == -1)
 					return -1;
-				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 2].getOccupied() == true || fields[indeks + 2].getSurrounded() == true || fields[indeks + 3].getOccupied() == true || fields[indeks + 3].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 1]) == true || isOnSurrounding(fields[indeks + 1]) == true || isOnShip(fields[indeks + 2]) == true || isOnSurrounding(fields[indeks + 2]) == true || isOnShip(fields[indeks + 3]) == true || isOnSurrounding(fields[indeks + 3]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 1].setOccupied(true);
-				fields[indeks + 2].setOccupied(true);
-				fields[indeks + 3].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 1, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 2, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 3, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 1, indeks + 2, indeks + 3 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 2], fields[indeks + 3] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
-				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 2].getOccupied() == true || fields[indeks + 2].getSurrounded() == true)
+				if (isOnShip(fields[indeks]) == true || isOnSurrounding(fields[indeks]) == true || isOnShip(fields[indeks + 1]) == true || isOnSurrounding(fields[indeks + 1]) == true || isOnShip(fields[indeks + 2]) == true || isOnSurrounding(fields[indeks + 2]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks].setOccupied(true);
-				fields[indeks + 1].setOccupied(true);
-				fields[indeks + 2].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 1, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 2, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks, indeks + 1, indeks + 2 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks], fields[indeks + 1], fields[indeks + 2] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -775,18 +664,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_l_d == -1)
 					return -1;
-				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 12].getOccupied() == true || fields[indeks + 12].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 10]) == true || isOnSurrounding(fields[indeks + 10]) == true || isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true || isOnShip(fields[indeks + 12]) == true || isOnSurrounding(fields[indeks + 12]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 10].setOccupied(true);
-				fields[indeks + 11].setOccupied(true);
-				fields[indeks + 12].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 10, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 12, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 10, indeks + 11, indeks + 12 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 10], fields[indeks + 11], fields[indeks + 12] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -795,18 +677,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
 				if (indeks_r_d == -1)
 					return -1;
-				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 12].getOccupied() == true || fields[indeks + 12].getSurrounded() == true || fields[indeks + 13].getOccupied() == true || fields[indeks + 13].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true || isOnShip(fields[indeks + 12]) == true || isOnSurrounding(fields[indeks + 12]) == true || isOnShip(fields[indeks + 13]) == true || isOnSurrounding(fields[indeks + 13]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 11].setOccupied(true);
-				fields[indeks + 12].setOccupied(true);
-				fields[indeks + 13].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 12, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 13, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 11, indeks + 12, indeks + 13 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 11], fields[indeks + 12], fields[indeks + 13] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -830,41 +705,21 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli prawy gorny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_r_u == -1)
 					return -1;
-				if (fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 2].getOccupied() == true || fields[indeks + 2].getSurrounded() == true || fields[indeks + 3].getOccupied() == true || fields[indeks + 3].getSurrounded() == true || fields[indeks + 4].getOccupied() == true || fields[indeks + 4].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 1]) == true || isOnSurrounding(fields[indeks + 1]) == true || isOnShip(fields[indeks + 2]) == true || isOnSurrounding(fields[indeks + 2]) == true || isOnShip(fields[indeks + 3]) == true || isOnSurrounding(fields[indeks + 3]) == true || isOnShip(fields[indeks + 4]) == true || isOnSurrounding(fields[indeks + 4]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 1].setOccupied(true);
-				fields[indeks + 2].setOccupied(true);
-				fields[indeks + 3].setOccupied(true);
-				fields[indeks + 4].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 1, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 2, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 3, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 4, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 1, indeks + 2, indeks + 3, indeks + 4 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 1], fields[indeks + 2], fields[indeks + 3], fields[indeks + 4] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
 			else if (quarter_of_field == 2)
 			{
-				if (fields[indeks].getOccupied() == true || fields[indeks].getSurrounded() == true || fields[indeks + 1].getOccupied() == true || fields[indeks + 1].getSurrounded() == true || fields[indeks + 2].getOccupied() == true || fields[indeks + 2].getSurrounded() == true || fields[indeks + 3].getOccupied() == true || fields[indeks + 3].getSurrounded() == true)
+				if (isOnShip(fields[indeks]) == true || isOnSurrounding(fields[indeks]) == true || isOnShip(fields[indeks + 1]) == true || isOnSurrounding(fields[indeks + 1]) == true || isOnShip(fields[indeks + 2]) == true || isOnSurrounding(fields[indeks + 2]) == true || isOnShip(fields[indeks + 3]) == true || isOnSurrounding(fields[indeks + 3]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks].setOccupied(true);
-				fields[indeks + 1].setOccupied(true);
-				fields[indeks + 2].setOccupied(true);
-				fields[indeks + 3].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 1, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 2, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 3, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks, indeks + 1, indeks + 2, indeks + 3 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks], fields[indeks + 1], fields[indeks + 2], fields[indeks + 3] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -873,22 +728,12 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli lewy dolny rog statku jest poza mapa, to nie dodajemy go
 				if (indeks_l_d == -1)
 					return -1;
-				if (fields[indeks + 10].getOccupied() == true || fields[indeks + 10].getSurrounded() == true || fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 12].getOccupied() == true || fields[indeks + 12].getSurrounded() == true || fields[indeks + 13].getOccupied() == true || fields[indeks + 13].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 10]) == true || isOnSurrounding(fields[indeks + 10]) == true || isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true || isOnShip(fields[indeks + 12]) == true || isOnSurrounding(fields[indeks + 12]) == true || isOnShip(fields[indeks + 13]) == true || isOnSurrounding(fields[indeks + 13]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 10].setOccupied(true);
-				fields[indeks + 11].setOccupied(true);
-				fields[indeks + 12].setOccupied(true);
-				fields[indeks + 13].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 10, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 12, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 13, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				vector <Field> f{ fields[indeks + 10], fields[indeks + 11], fields[indeks + 12], fields[indeks + 13] };
+				vector <int> indeks_of_ship_fields = { indeks + 10, indeks + 11, indeks + 12, indeks + 13 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
+			    vector <Field> f{ fields[indeks + 10], fields[indeks + 11], fields[indeks + 12], fields[indeks + 13] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
 			else //quarter_of_field == 4
@@ -896,21 +741,11 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 				//jezeli statek jest przy dolnej krawedzi i prawej krawedzi, to wtedy nie dodajemy go na mape
 				if (indeks_r_d == -1)
 					return -1;
-				if (fields[indeks + 11].getOccupied() == true || fields[indeks + 11].getSurrounded() == true || fields[indeks + 12].getOccupied() == true || fields[indeks + 12].getSurrounded() == true || fields[indeks + 13].getOccupied() == true || fields[indeks + 13].getSurrounded() == true || fields[indeks + 14].getOccupied() == true || fields[indeks + 14].getSurrounded() == true)
+				if (isOnShip(fields[indeks + 11]) == true || isOnSurrounding(fields[indeks + 11]) == true || isOnShip(fields[indeks + 12]) == true || isOnSurrounding(fields[indeks + 12]) == true || isOnShip(fields[indeks + 13]) == true || isOnSurrounding(fields[indeks + 13]) == true || isOnShip(fields[indeks + 14]) == true || isOnSurrounding(fields[indeks + 14]) == true)
 					return -1;
 				numbers_of_not_deployed_ships[ship_size - 1]--;
-				fields[indeks + 11].setOccupied(true);
-				fields[indeks + 12].setOccupied(true);
-				fields[indeks + 13].setOccupied(true);
-				fields[indeks + 14].setOccupied(true);
-				to_insert = setFieldsSurrounded(indeks + 11, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 12, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 13, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
-				to_insert = setFieldsSurrounded(indeks + 14, true);
-				surr_f.insert(surr_f.end(), to_insert.begin(), to_insert.end());
+				vector <int> indeks_of_ship_fields = { indeks + 11, indeks + 12, indeks + 13, indeks + 14 };
+				setFieldsSurrounded(indeks_of_ship_fields, surr_f);
 				vector <Field> f{ fields[indeks + 11], fields[indeks + 12], fields[indeks + 13], fields[indeks + 14] };
 				ships.push_back(Ship(u, f, surr_f));
 			}
@@ -942,4 +777,24 @@ void Board::clearVectors()
 	ships.clear();
 	fields.clear();
 	numbers_of_not_deployed_ships.clear();
+}
+
+bool Board::isOnShip(Field& to_check_field)
+{
+	for (Ship s : ships)
+	{
+		if (s.isOnShip(to_check_field) == true)
+			return true;
+	}
+	return false;
+}
+
+bool Board::isOnSurrounding(Field& to_check_field)
+{
+	for (Ship s : ships)
+	{
+		if (s.isOnSurrounding(to_check_field) == true)
+			return true;
+	}
+	return false;
 }

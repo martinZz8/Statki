@@ -351,10 +351,10 @@ int main()
 		{
 			
 			/*NAJECHANIE MYSZKA NA BUTTONA*/
-			if (buttons.isMouseOnButton(BUTTON_DEPLOYING_PLAY) == true)
-				buttons.setHighlighted(BUTTON_DEPLOYING_PLAY, true);
+			if (buttons.isMouseOnButton(BUTTON_DEPLOYING_DONE) == true)
+				buttons.setHighlighted(BUTTON_DEPLOYING_DONE, true);
 			else
-				buttons.setHighlighted(BUTTON_DEPLOYING_PLAY, false);
+				buttons.setHighlighted(BUTTON_DEPLOYING_DONE, false);
 			if (buttons.isMouseOnButton(BUTTON_DEPLOYING_BACK) == true)
 				buttons.setHighlighted(BUTTON_DEPLOYING_BACK, true);
 			else
@@ -367,22 +367,22 @@ int main()
 			/*KLIKNIECIE PRZYCISKU NA BUTTONIE*/
 			if (u.getMouse1Clicked() == true)
 			{
-				if (buttons.isMouseOnButton(BUTTON_DEPLOYING_PLAY) == true)
-					buttons.setActivated(BUTTON_DEPLOYING_PLAY, true);
+				if (buttons.isMouseOnButton(BUTTON_DEPLOYING_DONE) == true)
+					buttons.setActivated(BUTTON_DEPLOYING_DONE, true);
 				else if (buttons.isMouseOnButton(BUTTON_DEPLOYING_BACK) == true)
 					buttons.setActivated(BUTTON_DEPLOYING_BACK, true);
 				else if (buttons.isMouseOnButton(BUTTON_DEPLOYING_RESET) == true)
 					buttons.setActivated(BUTTON_DEPLOYING_RESET, true);
 				else
 				{
-					buttons.setActivated(BUTTON_DEPLOYING_PLAY, false);
+					buttons.setActivated(BUTTON_DEPLOYING_DONE, false);
 					buttons.setActivated(BUTTON_DEPLOYING_BACK, false);
 					buttons.setActivated(BUTTON_DEPLOYING_RESET, false);
 				}
 			}
 			else
 			{
-				buttons.setActivated(BUTTON_DEPLOYING_PLAY, false);
+				buttons.setActivated(BUTTON_DEPLOYING_DONE, false);
 				buttons.setActivated(BUTTON_DEPLOYING_BACK, false);
 				buttons.setActivated(BUTTON_DEPLOYING_RESET, false);
 			}

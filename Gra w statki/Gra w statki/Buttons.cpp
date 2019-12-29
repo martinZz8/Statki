@@ -30,7 +30,7 @@ void Buttons::setButtons()
 	buttons.push_back(Button(u, "RMV", 40, 30, 200, 440, 4, 4, false, BUTTON_OPTIONS_MINUS_ONE)); //17
 	buttons.push_back(Button(u, "RESET", 120, 40, 10, 545, 40, 9, false, BUTTON_OPTIONS_RESET)); //18
 	/*DEPLOYING*/
-	buttons.push_back(Button(u, "PLAY", 120, 40, 740, 545, 45, 12, false, BUTTON_DEPLOYING_PLAY)); //19
+	buttons.push_back(Button(u, "DONE", 120, 40, 740, 545, 45, 12, false, BUTTON_DEPLOYING_DONE)); //19
 	buttons.push_back(Button(u, "BACK TO MENU", 120, 40, 870, 545, 6, 12, false, BUTTON_DEPLOYING_BACK)); //20
 	buttons.push_back(Button(u, "RESET", 120, 40, 10, 545, 40, 9, false, BUTTON_DEPLOYING_RESET)); //21
 

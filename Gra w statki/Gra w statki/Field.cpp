@@ -11,13 +11,27 @@
 //	return *this;
 //}
 
+bool Field::operator==(const Field& f)
+{
+	if (c_x == f.c_x && c_y == f.c_y)
+		return true;
+	return false;
+}
+
+bool Field::operator!=(const Field& f)
+{
+	if (c_x != f.c_x || c_y != f.c_y)
+		return true;
+	return false;
+}
+
 Field::Field(Utils& utils, float c_x, float c_y) :u(utils), c_x(c_x), c_y(c_y)
 {
 	width = u.getFieldSize();
-	occupied_flag = false;
+	//occupied_flag = false;
 	hitted_flag = false;
 	missed_flag = false;
-	surrounded_flag = false;
+	//surrounded_flag = false;
 }
 
 void Field::setCoordX(float c_x)
@@ -30,10 +44,10 @@ void Field::setCoordY(float c_y)
 	this->c_y = c_y;
 }
 
-void Field::setOccupied(bool o)
-{
-	occupied_flag = o;
-}
+//void Field::setOccupied(bool o)
+//{
+//	occupied_flag = o;
+//}
 
 void Field::setHit(bool h)
 {
@@ -45,10 +59,10 @@ void Field::setMiss(bool m)
 	missed_flag = m;
 }
 
-void Field::setSurrounded(bool s)
-{
-	surrounded_flag = s;
-}
+//void Field::setSurrounded(bool s)
+//{
+//	surrounded_flag = s;
+//}
 
 float Field::getCoordX()
 {
@@ -60,10 +74,10 @@ float Field::getCoordY()
 	return c_y;
 }
 
-bool Field::getOccupied()
-{
-	return occupied_flag;
-}
+//bool Field::getOccupied()
+//{
+//	return occupied_flag;
+//}
 
 bool Field::getHit()
 {
@@ -75,10 +89,10 @@ bool Field::getMiss()
 	return missed_flag;
 }
 
-bool Field::getSurrounded()
-{
-	return surrounded_flag;
-}
+//bool Field::getSurrounded()
+//{
+//	return surrounded_flag;
+//}
 
 void Field::paintField(int scheme)
 {

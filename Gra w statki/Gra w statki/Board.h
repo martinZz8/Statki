@@ -23,11 +23,11 @@ public:
 	float getXOffset();
 	float getYOffset();
 	bool getDeployShipsFlag();
-	void paintBoard(bool visible_ships, bool deploying_surrounded); //metoda rysujaca plansze; visible_ships == true - rysuje statki, deploying_surrounded == true - rysuje wszystkie pola, ktore w surrounded maja true
+	void paintBoard(bool visible_ships, bool deploying_phase); //metoda rysujaca plansze; visible_ships == true - rysuje statki, deploying_phase == true - rysuje surrounded fieldsy, gdy statek nie jest zniszczony
 	void setFields(); //metoda ustawiajaca koordynaty kazdego pola znajdujacego sie w vectorze pol
 	void setOffset(float x, float y);
 	void setDeployShipsFlag(); //metoda sprawdzajaca, czy mozna dalej rozstawiac statki na tym boardzie
-	vector<Field> setFieldsSurrounded(int indeks, bool surrounded); //metoda ustawiajaca polu sasiadujacemu z polem o zadanych wartosciach wartosc surrounded_flag na true, gdy nie ma statku na danym polu - wywolywane przy stawianiu statku
+	void setFieldsSurrounded(vector <int> indeks_of_ship_fields, vector <Field>& surrounded_fields); //metoda tworzaca vector surrounded danego statku; przyjmuje vector indeksow statku - wywolywane przy stawianiu statku
 	void setNumbersOfNotDeployedShips();
 	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships
@@ -36,5 +36,7 @@ public:
 	int deployClassicShip(float mouse_x, float mouse_y); //metoda rozstawiajaca statek, zwraca 0, gdy rozstawianie sie powiedzie, zwraca -1 gdy rozstawianie sie nie powiedzie
 	int whichQuarterOfField(float c_x, float c_y, float center_of_field_x, float center_of_field_y); //metoda zwraca, ktora cwiartka pola zostala kliknieta; 1 - prawa gorna, 2 - lewa gorna, 3 - lewa dolna, 4 - prawa dolna
 	void clearVectors(); //metoda czyszczace vektory fieldow oraz shipow
+	bool isOnShip(Field& to_check_field); //metoda sprawdzajaca, czy to_check_field jest jakims statkiem; true - tak, false - nie
+	bool isOnSurrounding(Field& to_check_field); //metoda sprawdzajaca, czy to_check_field otacza jakis statek; true - tak, false - nie
 
 };

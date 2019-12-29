@@ -33,6 +33,8 @@ Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board
 	resize_ship_guard = true;
 	rotate_ship_guard = true;
 	mouse_click_guard = true;
+	done_deploying_b1 = false;
+	done_deploying_b2 = false;
 
 }
 
@@ -67,11 +69,40 @@ void Deploying::render()
 	playAudio();
 	paintText();
 	paintBorders();
-	b1.paintBoard(true, true);
-	b2.paintBoard(false, true);
+	if (u.getPvCGameMode() == true)
+	{
+		b1.paintBoard(true, true);
+		b2.paintBoard(false, true);
 
-	if (b1.getDeployShipsFlag() == true)
-		b1.paintClassicShip(u.getMouseX(), u.getMouseY());
+		if(u.getClassicGameMode() == true && b1.getDeployShipsFlag() == true)
+			b1.paintClassicShip(u.getMouseX(), u.getMouseY());
+	}
+	else if (u.getPvPGameMode() == true)
+	{
+		if (done_deploying_b1 == false) //roztsawianie gracza nr 1
+		{
+			b1.paintBoard(true, true);
+			b2.paintBoard(false, true);
+		}
+		else if (done_deploying_b2 == false) //rozstawianie gracza nr 2
+		{
+			b1.paintBoard(false, true);
+			b2.paintBoard(true, true);
+		}
+		else //koniec rozstawiania
+		{
+			b1.paintBoard(false, true);
+			b2.paintBoard(false, true);
+		}
+
+		if (u.getClassicGameMode() == true)
+		{
+			if (b1.getDeployShipsFlag() == true)
+				b1.paintClassicShip(u.getMouseX(), u.getMouseY());
+			else if (b2.getDeployShipsFlag() == true)
+				b2.paintClassicShip(u.getMouseX(), u.getMouseY());
+		}
+	}
 	paintButtons();
 
 }
@@ -83,7 +114,6 @@ int Deploying::getWindowID()
 
 void Deploying::classicKeyboardSwitches()
 {
-
 	bool ship_can_be_changed_flag = b1.getDeployShipsFlag(); //zmienna wskazujaca na to, czy mozna zmienic statek
 
 	if (ship_can_be_changed_flag == true)
@@ -94,9 +124,8 @@ void Deploying::classicKeyboardSwitches()
 			int i = actual_ship_size - 1;
 			i++; //pierwsze zwiekszenie indeksu petli
 			int size_of_vector = b1.numbers_of_not_deployed_ships.size();
-			bool running = true;
-
-			while (running)
+			
+			while (true)
 			{
 				if (i >= size_of_vector)
 				{
@@ -109,11 +138,11 @@ void Deploying::classicKeyboardSwitches()
 					continue;
 				}
 
-				u.setShipSize(i + 1);
-				cout << "Rozmiar: " << u.getShipSize() << endl;
-				resize_ship_guard = false;
-				running = false;
+				break;
 			}
+			u.setShipSize(i + 1);
+			cout << "Rozmiar: " << u.getShipSize() << endl;
+			resize_ship_guard = false;
 		}
 		if (u.getKeyDownPressed() == true && resize_ship_guard == true)
 		{
@@ -121,9 +150,8 @@ void Deploying::classicKeyboardSwitches()
 			int i = actual_ship_size - 1;
 			i--; //pierwsze zmniejszenie indeksu petli
 			int size_of_vector = b1.numbers_of_not_deployed_ships.size();
-			bool running = true;
-
-			while (running)
+			
+			while (true)
 			{
 				if (i < 0)
 				{
@@ -136,11 +164,11 @@ void Deploying::classicKeyboardSwitches()
 					continue;
 				}
 
-				u.setShipSize(i + 1);
-				cout << "Rozmiar: " << u.getShipSize() << endl;
-				resize_ship_guard = false;
-				running = false;
+				break;
 			}
+			u.setShipSize(i + 1);
+			cout << "Rozmiar: " << u.getShipSize() << endl;
+			resize_ship_guard = false;
 		}
 		if (u.getKeyUpPressed() == false && u.getKeyDownPressed() == false)
 			resize_ship_guard = true;
@@ -185,9 +213,19 @@ void Deploying::mouseSwitches()
 		{
 			restoreDefaults();
 		}
+		else if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == true && mouse_click_guard == true)
+		{
+			mouse_click_guard = false;
+			if (b1.getDeployShipsFlag() == false)
+				done_deploying_b1 = true;
+			if (b2.getDeployShipsFlag() == false)
+				done_deploying_b2 = true;
+
+		}
 		else if (u.getMouse1Clicked() == true && mouse_click_guard == true)
 		{
 			mouse_click_guard = false;
+			//TODO DODAC NOWE OPCJE DZIALANIA LEWEJ MYSZY
 			if (u.getClassicGameMode() == true)
 			{
 				if (u.getPvCGameMode() == true)
@@ -254,16 +292,14 @@ void Deploying::classicBoardCopy()
 
 }
 
-
-
 void Deploying::paintButtons()
 {
-	buttons.paintButtonWithText(BUTTON_DEPLOYING_PLAY, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_DEPLOYING_DONE, FONT_SIZE_SMALL);
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_RESET, FONT_SIZE_SMALL);
 
-	if (buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true)
-		buttons.paintButtonHighlight(BUTTON_DEPLOYING_PLAY, FONT_SIZE_SMALL);
+	if (buttons.getHighlighted(BUTTON_DEPLOYING_DONE) == true)
+		buttons.paintButtonHighlight(BUTTON_DEPLOYING_DONE, FONT_SIZE_SMALL);
 	else if (buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true)
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
 	else if (buttons.getHighlighted(BUTTON_DEPLOYING_RESET) == true)
@@ -287,7 +323,7 @@ void Deploying::playAudio()
 	{
 		/*Audio dotyczace highlightow*/
 		bool highlighted = false;
-		for (int indeks = BUTTON_DEPLOYING_PLAY; indeks <= BUTTON_DEPLOYING_RESET; indeks++)
+		for (int indeks = BUTTON_DEPLOYING_DONE; indeks <= BUTTON_DEPLOYING_RESET; indeks++)
 		{
 			if (buttons.getHighlighted(indeks) == true)
 			{
