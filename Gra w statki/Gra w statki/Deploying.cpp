@@ -66,16 +66,18 @@ void Deploying::tick()
 
 	if (u.getPvCGameMode() == true)
 	{
-		if (done_deploying_b1 == true && done_copy_b1_to_b2 == false)
+		if (done_deploying_b1 == true && b2.getDeployShipsFlag() == true) //&& done_copy_b1_to_b2 == false - jako drugi warunek
 		{
-			done_copy_b1_to_b2 = true;
-			copyShips(b1, b2);
-			cout << "Skopiowalem ships z b1 do b2" << endl;
+			//done_copy_b1_to_b2 = true;
+			//copyShips(b1, b2);
+			//cout << "Skopiowalem ships z b1 do b2" << endl;
+			classicComputerDeploy();
+			cout << "Komputer zakonczyl rozstawianie bourdu b2" << endl;
 		}
 		if (b2.getDeployShipsFlag() == false)
 		{
 			done_deploying_b2 = true;
-			cout << "Mozna kliknac button play" << endl;
+			//cout << "Mozna kliknac button play" << endl;
 		}
 	}
 	
@@ -91,7 +93,7 @@ void Deploying::render()
 	if (u.getPvCGameMode() == true)
 	{
 		b1.paintBoard(true, true);
-		b2.paintBoard(false, true);
+		b2.paintBoard(true, true); //PIERWSZY I DRUGI ARGUMENT METODY OBOK MAJA BYC NA FALSE; JEST TRUE TYLKO DLA TESTU!
 
 		if(u.getClassicGameMode() == true && b1.getDeployShipsFlag() == true)
 			b1.paintClassicShip(u.getMouseX(), u.getMouseY());
@@ -101,17 +103,17 @@ void Deploying::render()
 		if (done_deploying_b1 == false) //roztsawianie gracza nr 1
 		{
 			b1.paintBoard(true, true);
-			b2.paintBoard(false, true);
+			b2.paintBoard(false, false);
 		}
 		else if (done_deploying_b2 == false) //rozstawianie gracza nr 2
 		{
-			b1.paintBoard(false, true);
+			b1.paintBoard(false, false);
 			b2.paintBoard(true, true);
 		}
 		else //koniec rozstawiania
 		{
-			b1.paintBoard(false, true);
-			b2.paintBoard(false, true);
+			b1.paintBoard(false, false);
+			b2.paintBoard(false, false);
 		}
 
 		if (u.getClassicGameMode() == true)
@@ -252,18 +254,7 @@ void Deploying::mouseSwitches()
 					if (b1.getDeployShipsFlag() == true) //plaer1 moze rozstawiac statki
 					{
 						cout << "Klikam myszka w classicu" << endl;
-						int x = b1.deployClassicShip(u.getMouseX(), u.getMouseY());
-						if (x == 0)
-						{
-							place_ship_sample_flag = true;
-							warning_sample_play_flag = false;
-							fixShipSize();
-						}
-						else
-						{
-							warning_sample_play_flag = true;
-							place_ship_sample_flag = false;
-						}
+						classicPlayerDeploy();
 
 					}
 					//TODO DOKONCZYC ROZSTAWIANIE STATKOW DLA KOLEJNEJ PLANSZY B2
@@ -298,17 +289,44 @@ void Deploying::mouseSwitches()
 
 void Deploying::classicPlayerDeploy()
 {
-
+	int x = b1.deployClassicShip(u.getMouseX(), u.getMouseY(), u.getShipOrientation(), u.getShipSize());
+	if (x == 0)
+	{
+		place_ship_sample_flag = true;
+		warning_sample_play_flag = false;
+		fixShipSize();
+	}
+	else
+	{
+		warning_sample_play_flag = true;
+		place_ship_sample_flag = false;
+	}
 }
 
 void Deploying::classicComputerDeploy()
 {
-
-}
-
-void Deploying::classicBoardCopy()
-{
-
+	for (int indeks = b2.numbers_of_not_deployed_ships.size() - 1; indeks >= 0; indeks--)
+	{
+		while (b2.numbers_of_not_deployed_ships[indeks] > 0)
+		{
+			int warunek;
+			do
+			{
+				int orientation = (rand() % 2) + 1; //losowanie od 1 do 2
+				float l_x = b2.getXOffset();
+				float r_x = l_x + b2.getWidth();
+				float u_y = b2.getYOffset();
+				float d_y = u_y + b2.getHeight();
+				int mod_x = r_x - l_x + 1;
+				int mod_y = d_y - u_y + 1;
+				
+				float x = (rand() % mod_x) + l_x;
+				float y = (rand() % mod_y) + u_y;
+				cout << "wylosowane x wynosi: " << x << ", natomiast wylosowane y: " << y << endl;
+				warunek = b2.deployClassicShip(x, y, orientation, indeks + 1);
+			} while (warunek == -1);
+		}
+	}
 }
 
 void Deploying::paintButtons()

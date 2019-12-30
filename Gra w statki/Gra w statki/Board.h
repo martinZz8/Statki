@@ -21,9 +21,11 @@ public:
 	vector <int> numbers_of_not_deployed_ships; //vector ilosci statkow, ktore zostaly jeszcze do rozstawienia; indeks+1 wskazuje jakiej dlugosci jest statek
 	float getXOffset();
 	float getYOffset();
+	float getWidth();
+	float getHeight();
 	bool getDeployShipsFlag();
 	vector <Ship> getShips(); //metoda zwracajaca vector shipów; stosowana przy kopiowaniu w deploying
-	void paintBoard(bool visible_ships, bool deploying_phase); //metoda rysujaca plansze; visible_ships == true - rysuje statki, deploying_phase == true - rysuje surrounded fieldsy, gdy statek nie jest zniszczony
+	void paintBoard(bool visible_ships, bool const_visible_surrounding); //metoda rysujaca plansze; visible_ships == true - rysuje statki, const_visible_surrounding == true - rysuje surrounded fieldsy caly czas (nawet, gdy statek nie jest zniszczony)
 	void setFields(); //metoda ustawiajaca koordynaty kazdego pola znajdujacego sie w vectorze pol
 	void setOffset(float x, float y);
 	void setDeployShipsFlag(); //metoda sprawdzajaca, czy mozna dalej rozstawiac statki na tym boardzie
@@ -35,7 +37,7 @@ public:
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships
 	void paintClassicShip(float mouse_x, float mouse_y); //metoda ryzsujaca statek dla standardowych opcji statków
 	//TODO - DO DOKONCZENIA METODA NIZEJ (ZROBIC UNIWERSALNE METODY)
-	int deployClassicShip(float mouse_x, float mouse_y); //metoda rozstawiajaca statek, zwraca 0, gdy rozstawianie sie powiedzie, zwraca -1 gdy rozstawianie sie nie powiedzie
+	int deployClassicShip(float mouse_x, float mouse_y, int ship_orientation, int ship_size); //metoda rozstawiajaca statek, zwraca 0, gdy rozstawianie sie powiedzie, zwraca -1 gdy rozstawianie sie nie powiedzie
 	int whichQuarterOfField(float c_x, float c_y, float center_of_field_x, float center_of_field_y); //metoda zwraca, ktora cwiartka pola zostala kliknieta; 1 - prawa gorna, 2 - lewa gorna, 3 - lewa dolna, 4 - prawa dolna
 	void clearVectors(); //metoda czyszczace vektory fieldow oraz shipow
 	bool isOnShip(Field& to_check_field); //metoda sprawdzajaca, czy to_check_field jest jakims statkiem; true - tak, false - nie

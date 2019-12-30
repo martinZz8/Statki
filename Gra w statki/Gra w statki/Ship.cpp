@@ -93,7 +93,7 @@ bool Ship::getShipDestroyedFlag()
 	return ship_destroyed_flag;
 }
 
-void Ship::paintShip(bool visible_ships, bool deploying_phase)
+void Ship::paintShip(bool visible_ships, bool const_visible_surrounding)
 {
 	for (Field f : ship_fields)
 	{
@@ -109,7 +109,7 @@ void Ship::paintShip(bool visible_ships, bool deploying_phase)
 	}
 	for (Field f : surrounded_fields)
 	{
-		if(deploying_phase == true)
+		if(const_visible_surrounding == true)
 			f.paintField(SCHEME_OF_SURROUNDED);
 		else if (ship_destroyed_flag == true && u.getHintsOn() == true)
 		{

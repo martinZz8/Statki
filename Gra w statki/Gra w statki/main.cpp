@@ -53,6 +53,7 @@ int main()
 {
 	al_init();
 	install_addons();
+	srand(time(NULL));
 
 	ALLEGRO_DISPLAY* display;
 	ALLEGRO_EVENT_QUEUE* queue;

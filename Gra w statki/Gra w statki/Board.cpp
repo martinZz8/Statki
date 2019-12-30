@@ -21,6 +21,16 @@ float Board::getYOffset()
 	return offset_y;
 }
 
+float Board::getWidth()
+{
+	return width;
+}
+
+float Board::getHeight()
+{
+	return height;
+}
+
 bool Board::getDeployShipsFlag()
 {
 	return deploy_ships_flag;
@@ -70,7 +80,7 @@ void Board::setDeployShipsFlag()
 	deploy_ships_flag = false;
 }
 
-void Board::paintBoard(bool visible_ships, bool deploying_phase)
+void Board::paintBoard(bool visible_ships, bool const_visible_surrounding)
 {
 	/*Rysowanie fieldow*/
 	for (Field f : fields)
@@ -83,7 +93,7 @@ void Board::paintBoard(bool visible_ships, bool deploying_phase)
 	/*Rysowanie statkow i fieldow surrounded zniszczonych statkow, gdy sa wlaczone podpowiedzi*/
 	for (Ship s : ships)
 	{
-		s.paintShip(visible_ships, deploying_phase);
+		s.paintShip(visible_ships, const_visible_surrounding);
 	}
 }
 
@@ -302,10 +312,8 @@ void Board::paintClassicShip(float mouse_x, float mouse_y)
 //TODO
 //1) ZMIENIC UZYWAJAC UNIWERSALNYCH FUNKCJI
 //2) USUNAC TO_INSERT I PRZEKAZYWAC SURR_F PRZEZ REFERENCJE DO METODY SETFIELDSSURROUNDED, GDZIE BEDZIE USTAWIANY SURR_F BEZ POWTORZEN
-int Board::deployClassicShip(float mouse_x, float mouse_y)
+int Board::deployClassicShip(float mouse_x, float mouse_y, int ship_orientation, int ship_size)
 {
-	int ship_orientation = u.getShipOrientation();
-	int ship_size = u.getShipSize();
 	vector <Field> surr_f; //vector zawierajacy surrounding fieldy; wsadzany potem do vectora shipow
 	
 	if (ship_size == 1)
@@ -387,8 +395,9 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 			int indeks_r_u = whichField(r_x, u_y);
 			int indeks_r_d = whichField(r_x, d_y);
 			int indeks_l_d = whichField(l_x, d_y);
-			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
-			if (indeks == -1)
+			int check_indeks = whichField(l_x, u_y + field_size); //indeks sprawdzajacy, czy lewy dolny rog pierwszej kratki znajduje sie w planszy
+			//sprawdzenie, czy lewy gorny rog statku albo lewy dolny rog pierwszej kratki statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1 || check_indeks == -1)
 				return -1;
 			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
 			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
@@ -451,8 +460,9 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 			int indeks_r_u = whichField(r_x, u_y);
 			int indeks_r_d = whichField(r_x, d_y);
 			int indeks_l_d = whichField(l_x, d_y);
-			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
-			if (indeks == -1)
+			int check_indeks = whichField(l_x, u_y + 2 * field_size); //indeks sprawdzajacy, czy lewy dolny rog drugiej kratki znajduje sie w planszy
+			//sprawdzenie, czy lewy gorny rog statku albo lewy dolny rog drugiej kratki statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1 || check_indeks == -1)
 				return -1;
 			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
 			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
@@ -515,8 +525,9 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 			int indeks_r_u = whichField(r_x, u_y);
 			int indeks_r_d = whichField(r_x, d_y);
 			int indeks_l_d = whichField(l_x, d_y);
-			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
-			if (indeks == -1)
+			int check_indeks = whichField(l_x, u_y + 3 * field_size); //indeks sprawdzajacy, czy lewy dolny rog trzeciej kratki znajduje sie w planszy
+			//sprawdzenie, czy lewy gorny rog statku albo lewy dolny rog trzeciej kratki statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1 || check_indeks == -1)
 				return -1;
 			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
 			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
@@ -585,8 +596,9 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 			int indeks_r_u = whichField(r_x, u_y);
 			int indeks_r_d = whichField(r_x, d_y);
 			int indeks_l_d = whichField(l_x, d_y);
-			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
-			if (indeks == -1)
+			int check_indeks = whichField(l_x + field_size, u_y); //indeks sprawdzajacy, czy prawy gorny rog pierwszej kratki znajduje sie w planszy
+			//sprawdzenie, czy lewy gorny rog statku albo prawy gorny rog pierwszej kratki statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1 || check_indeks == -1)
 				return -1;
 			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
 			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
@@ -649,8 +661,9 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 			int indeks_r_u = whichField(r_x, u_y);
 			int indeks_r_d = whichField(r_x, d_y);
 			int indeks_l_d = whichField(l_x, d_y);
-			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
-			if (indeks == -1)
+			int check_indeks = whichField(l_x + 2 * field_size, u_y); //indeks sprawdzajacy, czy prawy gorny rog drugiej kratki znajduje sie w planszy
+			//sprawdzenie, czy lewy gorny rog statku albo prawy gorny rog drugiej kratki statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1 || check_indeks == -1)
 				return -1;
 			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
 			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);
@@ -713,8 +726,9 @@ int Board::deployClassicShip(float mouse_x, float mouse_y)
 			int indeks_r_u = whichField(r_x, u_y);
 			int indeks_r_d = whichField(r_x, d_y);
 			int indeks_l_d = whichField(l_x, d_y);
-			//sprawdzenie, czy lewy gorny rog statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
-			if (indeks == -1)
+			int check_indeks = whichField(l_x + 3 * field_size, u_y); //indeks sprawdzajacy, czy prawy gorny rog trzeciej kratki znajduje sie w planszy
+			//sprawdzenie, czy lewy gorny rog statku albo prawy gorny rog drugiej trzeciej statku znajduje sie w planszy, jezeli nie to nie dodajemy tego statku
+			if (indeks == -1 || check_indeks == -1)
 				return -1;
 			float center_of_field_l_x = fields[indeks].getCoordX() + (0.5 * field_size);
 			float center_of_field_u_y = fields[indeks].getCoordY() + (0.5 * field_size);

@@ -37,7 +37,6 @@ public:
 	void mouseSwitches();
 	void classicPlayerDeploy();
 	void classicComputerDeploy();
-	void classicBoardCopy();
 	void paintButtons();
 	void paintText();
 	void paintBorders();
