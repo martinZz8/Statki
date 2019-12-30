@@ -78,13 +78,11 @@ void Menu::paintButtons()
 		buttons.paintButtonHighlight(BUTTON_MENU_OPTIONS, FONT_SIZE_BIG);
 	else if (buttons.getHighlighted(BUTTON_MENU_EXIT) == true)
 		buttons.paintButtonHighlight(BUTTON_MENU_EXIT, FONT_SIZE_BIG);
-
-
 }
 
 void Menu::paintText()
 {
-	u.drawText("Statki", FONT_SIZE_HUGE, 183, 234, 243, 350, 40);
+	u.drawText("Statki", FONT_SIZE_HUGE, 183, 234, 243, 341, 40);
 	u.drawText("Made by Maciej Harbuz", FONT_SIZE_SMALL, 183, 234, 243, 850, 580);
 }
 

@@ -3,13 +3,28 @@
 
 void Deploying::fixShipSize()
 {
-	int size_of_vector = b1.numbers_of_not_deployed_ships.size();
-	for (int i = 0; i < size_of_vector; i++)
+	if (done_deploying_b1 == false)
 	{
-		if (b1.numbers_of_not_deployed_ships[i] > 0)
+		int size_of_vector = b1.numbers_of_not_deployed_ships.size();
+		for (int i = 0; i < size_of_vector; i++)
 		{
-			u.setShipSize(i + 1);
-			break;
+			if (b1.numbers_of_not_deployed_ships[i] > 0)
+			{
+				u.setShipSize(i + 1);
+				break;
+			}
+		}
+	}
+	else if (done_deploying_b2 == false && u.getPvPGameMode() == true)
+	{
+		int size_of_vector = b2.numbers_of_not_deployed_ships.size();
+		for (int i = 0; i < size_of_vector; i++)
+		{
+			if (b2.numbers_of_not_deployed_ships[i] > 0)
+			{
+				u.setShipSize(i + 1);
+				break;
+			}
 		}
 	}
 }
@@ -24,6 +39,7 @@ void Deploying::restoreDefaults()
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
 	done_copy_b1_to_b2 = false;
+	done_fix_ship_size_after_p1 = false;
 
 }
 
@@ -39,6 +55,7 @@ Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
 	done_copy_b1_to_b2 = false;
+	done_fix_ship_size_after_p1 = false;
 
 }
 
@@ -120,7 +137,7 @@ void Deploying::render()
 		{
 			if (b1.getDeployShipsFlag() == true)
 				b1.paintClassicShip(u.getMouseX(), u.getMouseY());
-			else if (b2.getDeployShipsFlag() == true)
+			else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true)
 				b2.paintClassicShip(u.getMouseX(), u.getMouseY());
 		}
 	}
@@ -133,84 +150,91 @@ int Deploying::getWindowID()
 	return windowID;
 }
 
+void Deploying::classicShipSwitch(vector <int>& numbers_of_not_deployed_ships)
+{
+	if (u.getKeyUpPressed() == true && resize_ship_guard == true)
+	{
+		int actual_ship_size = u.getShipSize();
+		int i = actual_ship_size - 1;
+		i++; //pierwsze zwiekszenie indeksu petli
+		int size_of_vector = numbers_of_not_deployed_ships.size();
+
+		while (true)
+		{
+			if (i >= size_of_vector)
+			{
+				i = 0;
+				continue;
+			}
+			if (numbers_of_not_deployed_ships[i] == 0)
+			{
+				i++;
+				continue;
+			}
+
+			break;
+		}
+		u.setShipSize(i + 1);
+		cout << "Rozmiar: " << u.getShipSize() << endl;
+		resize_ship_guard = false;
+	}
+	if (u.getKeyDownPressed() == true && resize_ship_guard == true)
+	{
+		int actual_ship_size = u.getShipSize();
+		int i = actual_ship_size - 1;
+		i--; //pierwsze zmniejszenie indeksu petli
+		int size_of_vector = numbers_of_not_deployed_ships.size();
+
+		while (true)
+		{
+			if (i < 0)
+			{
+				i = size_of_vector - 1;
+				continue;
+			}
+			if (numbers_of_not_deployed_ships[i] == 0)
+			{
+				i--;
+				continue;
+			}
+
+			break;
+		}
+		u.setShipSize(i + 1);
+		cout << "Rozmiar: " << u.getShipSize() << endl;
+		resize_ship_guard = false;
+	}
+	if (u.getKeyUpPressed() == false && u.getKeyDownPressed() == false)
+		resize_ship_guard = true;
+	if (u.getKeyRightPressed() == true && rotate_ship_guard == true)
+	{
+		u.setShipOrientation(u.getShipOrientation() + 1);
+		if (u.getShipOrientation() > 2)
+			u.setShipOrientation(1);
+		cout << "Orientacja: " << u.getShipOrientation() << endl;
+		rotate_ship_guard = false;
+	}
+	if (u.getKeyLeftPressed() == true && rotate_ship_guard == true)
+	{
+		u.setShipOrientation(u.getShipOrientation() - 1);
+		if (u.getShipOrientation() < 1)
+			u.setShipOrientation(2);
+		cout << "Orientacja: " << u.getShipOrientation() << endl;
+		rotate_ship_guard = false;
+	}
+	if (u.getKeyRightPressed() == false && u.getKeyLeftPressed() == false)
+		rotate_ship_guard = true;
+}
+
 void Deploying::classicKeyboardSwitches()
 {
-	bool ship_can_be_changed_flag = b1.getDeployShipsFlag(); //zmienna wskazujaca na to, czy mozna zmienic statek
-
-	if (ship_can_be_changed_flag == true)
+	if (b1.getDeployShipsFlag() == true)
 	{
-		if (u.getKeyUpPressed() == true && resize_ship_guard == true)
-		{
-			int actual_ship_size = u.getShipSize();
-			int i = actual_ship_size - 1;
-			i++; //pierwsze zwiekszenie indeksu petli
-			int size_of_vector = b1.numbers_of_not_deployed_ships.size();
-			
-			while (true)
-			{
-				if (i >= size_of_vector)
-				{
-					i = 0;
-					continue;
-				}
-				if (b1.numbers_of_not_deployed_ships[i] == 0)
-				{
-					i++;
-					continue;
-				}
-
-				break;
-			}
-			u.setShipSize(i + 1);
-			cout << "Rozmiar: " << u.getShipSize() << endl;
-			resize_ship_guard = false;
-		}
-		if (u.getKeyDownPressed() == true && resize_ship_guard == true)
-		{
-			int actual_ship_size = u.getShipSize();
-			int i = actual_ship_size - 1;
-			i--; //pierwsze zmniejszenie indeksu petli
-			int size_of_vector = b1.numbers_of_not_deployed_ships.size();
-			
-			while (true)
-			{
-				if (i < 0)
-				{
-					i = size_of_vector - 1;
-					continue;
-				}
-				if (b1.numbers_of_not_deployed_ships[i] == 0)
-				{
-					i--;
-					continue;
-				}
-
-				break;
-			}
-			u.setShipSize(i + 1);
-			cout << "Rozmiar: " << u.getShipSize() << endl;
-			resize_ship_guard = false;
-		}
-		if (u.getKeyUpPressed() == false && u.getKeyDownPressed() == false)
-			resize_ship_guard = true;
-		if (u.getKeyRightPressed() == true && rotate_ship_guard == true)
-		{
-			u.setShipOrientation(u.getShipOrientation() + 1);
-			if (u.getShipOrientation() > 2)
-				u.setShipOrientation(1);
-			cout << "Orientacja: " << u.getShipOrientation() << endl;
-			rotate_ship_guard = false;
-		}
-		if (u.getKeyLeftPressed() == true && rotate_ship_guard == true)
-		{
-			u.setShipOrientation(u.getShipOrientation() - 1);
-			if (u.getShipOrientation() < 1)
-				u.setShipOrientation(2);
-			cout << "Orientacja: " << u.getShipOrientation() << endl;
-			rotate_ship_guard = false;
-		}
-		if (u.getKeyRightPressed() == false && u.getKeyLeftPressed() == false)
-			rotate_ship_guard = true;
+		classicShipSwitch(b1.numbers_of_not_deployed_ships);
+	}
+	else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true)
+	{
+		classicShipSwitch(b2.numbers_of_not_deployed_ships);
 	}
 }
 
@@ -253,15 +277,29 @@ void Deploying::mouseSwitches()
 				{
 					if (b1.getDeployShipsFlag() == true) //plaer1 moze rozstawiac statki
 					{
-						cout << "Klikam myszka w classicu" << endl;
-						classicPlayerDeploy();
+						cout << "Gracz klika myszka w classicu" << endl;
+						classicPlayer1Deploy();
 
 					}
-					//TODO DOKONCZYC ROZSTAWIANIE STATKOW DLA KOLEJNEJ PLANSZY B2
+					//ROZTSAWIANIE PLANSZY KOMPUTERA JEST W TICKU
 				}
 				else //PvP_game_mode == true
 				{
-
+					if (b1.getDeployShipsFlag() == true) //player1 moze rozstawiac statki
+					{
+						cout << "Gracz 1 klika myszka w classicu" << endl;
+						classicPlayer1Deploy();
+					}
+					else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true) //player2 moze rozstawiac statki
+					{
+						if (done_fix_ship_size_after_p1 == false)
+						{
+							done_fix_ship_size_after_p1 = true;
+							fixShipSize();
+						}
+						cout << "Gracz 2 klika myszka w classicu" << endl;
+						classicPlayer2Deploy();
+					}
 				}
 			}
 			else //advanced_game_mode == true
@@ -283,13 +321,28 @@ void Deploying::mouseSwitches()
 			place_ship_sample_flag = false;
 			warning_sample_play_flag = false;
 		}
-
 	}
 }
 
-void Deploying::classicPlayerDeploy()
+void Deploying::classicPlayer1Deploy()
 {
 	int x = b1.deployClassicShip(u.getMouseX(), u.getMouseY(), u.getShipOrientation(), u.getShipSize());
+	if (x == 0)
+	{
+		place_ship_sample_flag = true;
+		warning_sample_play_flag = false;
+		fixShipSize();
+	}
+	else
+	{
+		warning_sample_play_flag = true;
+		place_ship_sample_flag = false;
+	}
+}
+
+void Deploying::classicPlayer2Deploy()
+{
+	int x = b2.deployClassicShip(u.getMouseX(), u.getMouseY(), u.getShipOrientation(), u.getShipSize());
 	if (x == 0)
 	{
 		place_ship_sample_flag = true;
@@ -345,17 +398,103 @@ void Deploying::paintButtons()
 
 void Deploying::paintText()
 {
+	if (u.getPvCGameMode() == true)
+	{
+		if (done_deploying_b1 == false) //wybiera gracz
+		{
+			u.drawText("GRACZ", FONT_SIZE_BIG, 255, 58, 37, 80, 25);
+			u.drawText("KOMPUTER", FONT_SIZE_BIG, 183, 234, 243, 500, 25);
+			u.drawText("4 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 177, 520);
+			u.drawText("3 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 328, 520);
+			u.drawText("2 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 477, 520);
+			u.drawText("1 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 629, 520);
+			u.drawText("POZOSTALE STATKI", FONT_SIZE_BIG, 255, 58, 37, 275, 477);
 
+			/*Wypisanie liczb na ekranie*/
+			string number;
+			number = to_string(b1.numbers_of_not_deployed_ships[3]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 200, 540);
+			number = to_string(b1.numbers_of_not_deployed_ships[2]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 350, 540);
+			number = to_string(b1.numbers_of_not_deployed_ships[1]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 500, 540);
+			number = to_string(b1.numbers_of_not_deployed_ships[0]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 650, 540);
+			
+		}
+		else if (done_deploying_b2 == false) //wybiera komputer
+		{
+			u.drawText("GRACZ", FONT_SIZE_BIG, 183, 234, 243, 80, 25); 
+			u.drawText("KOMPUTER", FONT_SIZE_BIG, 255, 58, 37, 500, 25);
+		}
+		else //wszyscy juz wybrali
+		{
+			u.drawText("GRACZ", FONT_SIZE_BIG, 183, 234, 243, 80, 25);
+			u.drawText("KOMPUTER", FONT_SIZE_BIG, 183, 234, 243, 500, 25);
+		}
+	}
+	else if (u.getPvPGameMode() == true)
+	{
+		if (done_deploying_b1 == false) //wybiera gracz nr 1
+		{
+			u.drawText("GRACZ NR 1", FONT_SIZE_BIG, 255, 58, 37, 80, 25);
+			u.drawText("GRACZ NR 2", FONT_SIZE_BIG, 183, 234, 243, 500, 25);
+			u.drawText("4 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 177, 520);
+			u.drawText("3 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 328, 520);
+			u.drawText("2 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 477, 520);
+			u.drawText("1 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 629, 520);
+			u.drawText("POZOSTALE STATKI", FONT_SIZE_BIG, 255, 58, 37, 275, 477);
+
+			/*Wypisanie liczb na ekranie*/
+			string number;
+			number = to_string(b1.numbers_of_not_deployed_ships[3]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 200, 540);
+			number = to_string(b1.numbers_of_not_deployed_ships[2]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 350, 540);
+			number = to_string(b1.numbers_of_not_deployed_ships[1]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 500, 540);
+			number = to_string(b1.numbers_of_not_deployed_ships[0]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 650, 540);
+		}
+		else if (done_deploying_b2 == false) //wybiera gracz nr 2
+		{
+			u.drawText("GRACZ NR 1", FONT_SIZE_BIG, 183, 234, 243, 80, 25);
+			u.drawText("GRACZ NR 2", FONT_SIZE_BIG, 255, 58, 37, 500, 25);
+			u.drawText("4 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 177, 520);
+			u.drawText("3 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 328, 520);
+			u.drawText("2 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 477, 520);
+			u.drawText("1 MASZT", FONT_SIZE_SMALL, 206, 97, 37, 629, 520);
+			u.drawText("POZOSTALE STATKI", FONT_SIZE_BIG, 255, 58, 37, 275, 477);
+
+			/*Wypisanie liczb na ekranie*/
+			string number;
+			number = to_string(b2.numbers_of_not_deployed_ships[3]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 200, 540);
+			number = to_string(b2.numbers_of_not_deployed_ships[2]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 350, 540);
+			number = to_string(b2.numbers_of_not_deployed_ships[1]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 500, 540);
+			number = to_string(b2.numbers_of_not_deployed_ships[0]);
+			u.drawText(number.c_str(), FONT_SIZE_BIG, 206, 97, 37, 650, 540);
+		}
+		else //wszyscy juz wybrali
+		{
+			u.drawText("GRACZ NR 1", FONT_SIZE_BIG, 183, 234, 243, 80, 25);
+			u.drawText("GRACZ NR 2", FONT_SIZE_BIG, 183, 234, 243, 500, 25);
+		}
+	}
 }
 
 void Deploying::paintBorders()
 {
-
+	if(u.getPvCGameMode() == true && done_deploying_b1 == false)
+		u.drawBorders(167, 480, 530, 103, 3, 159, 58, 37);
+	else if (u.getPvPGameMode() == true && (done_deploying_b1 == false || done_deploying_b2 == false))
+		u.drawBorders(167, 480, 530, 103, 3, 159, 58, 37);
 }
 
 void Deploying::playAudio()
 {
-
 	if (u.getVolumeOn() == true)
 	{
 		/*Audio dotyczace highlightow*/

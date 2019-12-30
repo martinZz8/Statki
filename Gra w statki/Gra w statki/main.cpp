@@ -267,6 +267,14 @@ int main()
 				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_FOUR, true);
 			else
 				buttons.setHighlighted(BUTTON_OPTIONS_PLUS_FOUR, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_HINTS_ON) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_HINTS_ON, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_HINTS_ON, false);
+			if (buttons.isMouseOnButton(BUTTON_OPTIONS_HINTS_OFF) == true)
+				buttons.setHighlighted(BUTTON_OPTIONS_HINTS_OFF, true);
+			else
+				buttons.setHighlighted(BUTTON_OPTIONS_HINTS_OFF, false);
 			if (buttons.isMouseOnButton(BUTTON_OPTIONS_RESET) == true)
 				buttons.setHighlighted(BUTTON_OPTIONS_RESET, true);
 			else
@@ -305,6 +313,10 @@ int main()
 					buttons.setActivated(BUTTON_OPTIONS_MINUS_FOUR, true);
 				else if (buttons.getHighlighted(BUTTON_OPTIONS_PLUS_FOUR) == true)
 					buttons.setActivated(BUTTON_OPTIONS_PLUS_FOUR, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_HINTS_ON) == true)
+					buttons.setActivated(BUTTON_OPTIONS_HINTS_ON, true);
+				else if (buttons.getHighlighted(BUTTON_OPTIONS_HINTS_OFF) == true)
+					buttons.setActivated(BUTTON_OPTIONS_HINTS_OFF, true);
 				else if (buttons.getHighlighted(BUTTON_OPTIONS_RESET) == true)
 					buttons.setActivated(BUTTON_OPTIONS_RESET, true);
 				else
@@ -324,6 +336,8 @@ int main()
 					buttons.setActivated(BUTTON_OPTIONS_PLUS_THREE, false);
 					buttons.setActivated(BUTTON_OPTIONS_MINUS_FOUR, false);
 					buttons.setActivated(BUTTON_OPTIONS_PLUS_FOUR, false);
+					buttons.setActivated(BUTTON_OPTIONS_HINTS_ON, false);
+					buttons.setActivated(BUTTON_OPTIONS_HINTS_OFF, false);
 					buttons.setActivated(BUTTON_OPTIONS_RESET, false);
 				}
 			}
@@ -344,9 +358,10 @@ int main()
 				buttons.setActivated(BUTTON_OPTIONS_PLUS_THREE, false);
 				buttons.setActivated(BUTTON_OPTIONS_MINUS_FOUR, false);
 				buttons.setActivated(BUTTON_OPTIONS_PLUS_FOUR, false);
+				buttons.setActivated(BUTTON_OPTIONS_HINTS_ON, false);
+				buttons.setActivated(BUTTON_OPTIONS_HINTS_OFF, false);
 				buttons.setActivated(BUTTON_OPTIONS_RESET, false);
 			}
-
 		}/*DEPLOYING*/
 		else if (s == &d)
 		{

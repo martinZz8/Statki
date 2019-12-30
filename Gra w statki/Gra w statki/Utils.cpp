@@ -388,6 +388,7 @@ void Utils::restoreDefaults()
 	pvc_game_mode = true;
 	pvp_game_mode = false;
 	volume_on = true;
+	hints_on = true;
 	number_of_one_masted_ships = 4;
 	number_of_two_masted_ships = 3;
 	number_of_three_masted_ships = 2;

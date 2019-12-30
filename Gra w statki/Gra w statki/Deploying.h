@@ -23,6 +23,7 @@ class Deploying :public State
 	bool done_deploying_b1; //true- rozstawiono finalnie board1, false - nie rozstawiono finalnie board1
 	bool done_deploying_b2; //true- rozstawiono finalnie board2, false - nie rozstawiono finalnie board2; jezeli rozstawiono board2, to mozna kliknac przycisk play
 	bool done_copy_b1_to_b2; //true - skopiowano, false - nie skopiowano
+	bool done_fix_ship_size_after_p1; //true - naprawione, false - nie naprawiono
 	void fixShipSize(); //metoda naprawiajaca zmienna ship_size, gdy nie ma statku o takim rozmiarze
 	void restoreDefaults();
 
@@ -33,9 +34,11 @@ public:
 	void tick(); //metoda wykonujaca obliczenia
 	void render(); //metoda wykonujaca rysowanie
 	int getWindowID(); //metoda zwracajaca indeks okna;
+	void classicShipSwitch(vector <int>& numbers_of_not_deployed_ships); //NOWA METODA
 	void classicKeyboardSwitches();
 	void mouseSwitches();
-	void classicPlayerDeploy();
+	void classicPlayer1Deploy();
+	void classicPlayer2Deploy();
 	void classicComputerDeploy();
 	void paintButtons();
 	void paintText();

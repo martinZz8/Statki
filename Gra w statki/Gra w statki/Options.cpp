@@ -215,6 +215,20 @@ void Options::mouseSwitches()
 			}
 			mouse_click_guard = false;
 		}
+		else if (buttons.getActivated(BUTTON_OPTIONS_HINTS_ON) == true && mouse_click_guard == true)
+		{
+			u.setHintsOn(true);
+			buttons.setChoosed(BUTTON_OPTIONS_HINTS_ON, true);
+			buttons.setChoosed(BUTTON_OPTIONS_HINTS_OFF, false);
+			mouse_click_guard = false;
+		}
+		else if (buttons.getActivated(BUTTON_OPTIONS_HINTS_OFF) == true && mouse_click_guard == true)
+		{
+			buttons.setChoosed(BUTTON_OPTIONS_HINTS_OFF, true);
+			u.setHintsOn(false);
+			buttons.setChoosed(BUTTON_OPTIONS_HINTS_ON, false);
+			mouse_click_guard = false;
+		}
 		else if (buttons.getActivated(BUTTON_OPTIONS_RESET) == true && mouse_click_guard == true)
 		{
 			u.restoreDefaults();
@@ -224,6 +238,8 @@ void Options::mouseSwitches()
 			buttons.setChoosed(BUTTON_OPTIONS_PVP_GAME_MODE, false);
 			buttons.setChoosed(BUTTON_OPTIONS_VOLUME_ON, true);
 			buttons.setChoosed(BUTTON_OPTIONS_VOLUME_OFF, false);
+			buttons.setChoosed(BUTTON_OPTIONS_HINTS_ON, true);
+			buttons.setChoosed(BUTTON_OPTIONS_HINTS_OFF, false);
 			mouse_click_guard = false;
 		}
 		else if (u.getMouse1Clicked() == false)
@@ -254,6 +270,8 @@ void Options::paintButtons()
 	buttons.paintButtonWithText(BUTTON_OPTIONS_PLUS_THREE, FONT_SIZE_SMALL);
 	buttons.paintButtonWithText(BUTTON_OPTIONS_MINUS_FOUR, FONT_SIZE_SMALL);
 	buttons.paintButtonWithText(BUTTON_OPTIONS_PLUS_FOUR, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_HINTS_ON, FONT_SIZE_BIG);
+	buttons.paintButtonWithText(BUTTON_OPTIONS_HINTS_OFF, FONT_SIZE_BIG);
 	buttons.paintButtonWithText(BUTTON_OPTIONS_RESET, FONT_SIZE_SMALL);
 
 	//Buttons highlights
@@ -287,6 +305,10 @@ void Options::paintButtons()
 		buttons.paintButtonHighlight(BUTTON_OPTIONS_MINUS_FOUR, FONT_SIZE_SMALL);
 	else if (buttons.getHighlighted(BUTTON_OPTIONS_PLUS_FOUR) == true)
 		buttons.paintButtonHighlight(BUTTON_OPTIONS_PLUS_FOUR, FONT_SIZE_SMALL);
+	else if (buttons.getHighlighted(BUTTON_OPTIONS_HINTS_ON) == true)
+		buttons.paintButtonHighlight(BUTTON_OPTIONS_HINTS_ON, FONT_SIZE_SMALL);
+	else if (buttons.getHighlighted(BUTTON_OPTIONS_HINTS_OFF) == true)
+		buttons.paintButtonHighlight(BUTTON_OPTIONS_HINTS_OFF, FONT_SIZE_SMALL);
 	else if (buttons.getHighlighted(BUTTON_OPTIONS_RESET) == true)
 		buttons.paintButtonHighlight(BUTTON_OPTIONS_RESET, FONT_SIZE_SMALL);
 }
@@ -295,13 +317,15 @@ void Options::paintText()
 {
 	u.drawText("POZOSTALE POLA", FONT_SIZE_SMALL, 183, 234, 243, 90, 8);
 	u.drawText("TRYB STAWIANIA", FONT_SIZE_BIG, 183, 234, 240, 372, 43);
-	u.drawText("STATKOW", FONT_SIZE_BIG, 183, 234, 243, 422, 80);
+	u.drawText("STATKOW", FONT_SIZE_BIG, 183, 234, 243, 433, 80);
 	u.drawText("TRYB GRY", FONT_SIZE_BIG, 183, 234, 243, 424, 220);
 	u.drawText("MUZYKA", FONT_SIZE_BIG, 183, 234, 243, 433, 360);
 	u.drawText("4 MASZTOWIEC", FONT_SIZE_SMALL, 183, 234, 243, 90, 77);
 	u.drawText("3 MASZTOWIEC", FONT_SIZE_SMALL, 183, 234, 243, 90, 178);
 	u.drawText("2 MASZTOWIEC", FONT_SIZE_SMALL, 183, 234, 243, 90, 279);
 	u.drawText("1 MASZTOWIEC", FONT_SIZE_SMALL, 183, 234, 243, 90, 380);
+	u.drawText("PODPOWIEDZI", FONT_SIZE_BIG, 183, 234, 243, 740, 43);
+	u.drawText("W GRZE", FONT_SIZE_BIG, 183, 234, 243, 788, 80);
 
 	/*Wypisanie liczb na ekranie*/
 	string number;
@@ -353,6 +377,7 @@ void Options::paintBorders()
 	u.drawBorders(363, 42, 300, 140, 4, 81, 75, 201);
 	u.drawBorders(390, 220, 230, 100, 4, 81, 75, 201);
 	u.drawBorders(390, 360, 230, 100, 4, 81, 75, 201);
+	u.drawBorders(727, 42, 253, 140, 4, 81, 75, 201);
 
 }
 
@@ -393,10 +418,6 @@ void Options::playAudio()
 			audio_error_play_guard = true;
 
 		if (highlighted == false && audio_play_guard == false)
-			audio_play_guard = true;
-			
+			audio_play_guard = true;		
 	}
-
-	
-
 }
