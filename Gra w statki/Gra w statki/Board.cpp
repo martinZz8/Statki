@@ -43,7 +43,6 @@ vector<Ship> Board::getShips()
 
 void Board::setFields()
 {
-
 	int iter = 0;
 	int number_of_fields = u.getNumberOfFields();
 	float field_size = u.getFieldSize();
@@ -58,7 +57,6 @@ void Board::setFields()
 			iter++;
 			cout << "Iter: " << iter << endl;
 		}
-
 }
 
 void Board::setOffset(float x, float y)
@@ -137,21 +135,20 @@ void Board::setFieldsSurrounded(vector <int> indeks_of_ship_fields, vector <Fiel
 				}
 			}
 			
-			if (new_indeks >= 0 && new_indeks <= 99 && go_next_flag == true)
-				if (isOnShip(fields[new_indeks]) == false)
+			if (new_indeks >= 0 && new_indeks <= 99 && go_next_flag == true) //if (isOnShip(fields[new_indeks]) == false) NIEPOTRZEBNY WARUNEK BYL TUTAJ
+			{
+				bool can_be_added = true;
+				for (Field f : surrounded_fields)
 				{
-					bool can_be_added = true;
-					for (Field f : surrounded_fields)
-					{
-						if (fields[new_indeks] == f)
-							can_be_added = false;
-					}
-					if (can_be_added == true)
-					{
-						surrounded_fields.push_back(fields[new_indeks]);
-						cout << "Dodalem surrounded fielda" << endl;
-					}
+					if (fields[new_indeks] == f)
+						can_be_added = false;
 				}
+				if (can_be_added == true)
+				{
+					surrounded_fields.push_back(fields[new_indeks]);
+					cout << "Dodalem surrounded fielda" << endl;
+				}
+			}
 			if (offset == -9)
 				offset = -2;
 			else if (offset == -1)
@@ -166,7 +163,6 @@ void Board::setNumbersOfNotDeployedShips()
 {
 	if (numbers_of_not_deployed_ships.empty() == false)
 	{
-		numbers_of_not_deployed_ships.clear();
 		numbers_of_not_deployed_ships.clear();
 	}
 	numbers_of_not_deployed_ships.push_back(u.getNumberOfOneMastedShips()); //indeks 0

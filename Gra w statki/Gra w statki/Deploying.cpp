@@ -11,6 +11,7 @@ void Deploying::fixShipSize()
 			if (b1.numbers_of_not_deployed_ships[i] > 0)
 			{
 				u.setShipSize(i + 1);
+				cout << "Naprawiono ship_size" << endl;
 				break;
 			}
 		}
@@ -39,7 +40,6 @@ void Deploying::restoreDefaults()
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
 	done_copy_b1_to_b2 = false;
-	done_fix_ship_size_after_p1 = false;
 
 }
 
@@ -55,7 +55,6 @@ Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
 	done_copy_b1_to_b2 = false;
-	done_fix_ship_size_after_p1 = false;
 
 }
 
@@ -89,7 +88,7 @@ void Deploying::tick()
 			//copyShips(b1, b2);
 			//cout << "Skopiowalem ships z b1 do b2" << endl;
 			classicComputerDeploy();
-			cout << "Komputer zakonczyl rozstawianie bourdu b2" << endl;
+			cout << "Komputer zakonczyl rozstawianie boardu b2" << endl;
 		}
 		if (b2.getDeployShipsFlag() == false)
 		{
@@ -112,7 +111,7 @@ void Deploying::render()
 		b1.paintBoard(true, true);
 		b2.paintBoard(true, true); //PIERWSZY I DRUGI ARGUMENT METODY OBOK MAJA BYC NA FALSE; JEST TRUE TYLKO DLA TESTU!
 
-		if(u.getClassicGameMode() == true && b1.getDeployShipsFlag() == true)
+		if (u.getClassicGameMode() == true && b1.getDeployShipsFlag() == true)
 			b1.paintClassicShip(u.getMouseX(), u.getMouseY());
 	}
 	else if (u.getPvPGameMode() == true)
@@ -138,7 +137,7 @@ void Deploying::render()
 			if (b1.getDeployShipsFlag() == true)
 				b1.paintClassicShip(u.getMouseX(), u.getMouseY());
 			else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true)
-				b2.paintClassicShip(u.getMouseX(), u.getMouseY());
+				b2.paintClassicShip(u.getMouseX(), u.getMouseY());				
 		}
 	}
 	paintButtons();
@@ -262,7 +261,10 @@ void Deploying::mouseSwitches()
 		{
 			mouse_click_guard = false;
 			if (b1.getDeployShipsFlag() == false)
+			{
 				done_deploying_b1 = true;
+				fixShipSize();
+			}
 			if (b2.getDeployShipsFlag() == false)
 				done_deploying_b2 = true;
 
@@ -292,11 +294,6 @@ void Deploying::mouseSwitches()
 					}
 					else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true) //player2 moze rozstawiac statki
 					{
-						if (done_fix_ship_size_after_p1 == false)
-						{
-							done_fix_ship_size_after_p1 = true;
-							fixShipSize();
-						}
 						cout << "Gracz 2 klika myszka w classicu" << endl;
 						classicPlayer2Deploy();
 					}
