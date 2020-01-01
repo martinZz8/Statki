@@ -13,7 +13,7 @@ class Ship
 public:
 	Ship(Utils& utils, vector<Field> ship_f, vector<Field> surr_f = {});
 	void setShipDestroyedFlag();
-	int setShipHit(Field& field, bool h); //metoda sprawdzajaca czy wybrany field istenieje w podanym statku, jezeli tak, to ustawia hit na wartosc h ;zwraca 0 gdy trafienie sie powiedzie, -1 gdy sie nie powiedzie
+	int setShipHitted(Field& field); //metoda sprawdzajaca czy wybrany field istenieje w podanym statku i czy nie jest juz hitted. jezeli istnieje i nie jet hitted, to ustawia fielda shipa na hitted ;zwraca 0 gdy trafienie sie powiedzie, -1 gdy sie nie powiedzie, 1 gdy dany field jest juz trafiony
 	//Dwie metody ponizej byly problematyczne
 	void setShipFields(vector <Field>& new_ship_f);
 	void setSurroundedFields(vector <Field>& new_surr_f);

@@ -171,13 +171,15 @@ void Board::setNumbersOfNotDeployedShips()
 	numbers_of_not_deployed_ships.push_back(u.getNumberOfFourMastedShips()); //indeks 3
 }
 
-int Board::setShipHit(Field& field, bool h)
+int Board::setShipHitted(Field& field)
 {
 	for (Ship s : ships)
 	{
-		int i = s.setShipHit(field, h);
+		int i = s.setShipHitted(field);
 		if (i == 0)
 			return 0;
+		else if (i == 1)
+			return -1;
 	}
 	return -1;
 }
