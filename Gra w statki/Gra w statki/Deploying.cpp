@@ -532,10 +532,7 @@ void Deploying::advancedPlayer1Deploy()
 			created_advanced_ship.clear();
 		add_advanced_ship_field_sample_flag = false;
 		if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == false && buttons.getActivated(BUTTON_DEPLOYING_PLAY) == false && buttons.getActivated(BUTTON_DEPLOYING_RESET) == false && buttons.getActivated(BUTTON_DEPLOYING_BACK) == false)
-		{
-			warning_sample_play_flag = true;
-			cout << "Gram warninga, ze nie mozna bylo dodac fielda" << endl;
-		}
+			warning_sample_play_flag = true;	
 	}
 }
 
@@ -553,10 +550,7 @@ void Deploying::advancedPlayer2Deploy()
 			created_advanced_ship.clear();
 		add_advanced_ship_field_sample_flag = false;
 		if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == false && buttons.getActivated(BUTTON_DEPLOYING_PLAY) == false && buttons.getActivated(BUTTON_DEPLOYING_RESET) == false && buttons.getActivated(BUTTON_DEPLOYING_BACK) == false)
-		{
 			warning_sample_play_flag = true;
-			cout << "Gram warninga, ze nie mozna bylo dodac fielda" << endl;
-		}
 	}
 }
 
