@@ -16,6 +16,7 @@ class Deploying :public State
 	vector <Field> created_advanced_ship; //vector fieldow jednego shipa, ktory jest tworzony tylko przy wyborze opcji advanced (tymczasowy statek)
 	const int windowID;
 	bool audio_play_guard; //true - mozna grac, false - nie mozna grac
+	bool warning_sample_play_guard; //true - mozna grac, false - nie mozna grac
 	bool warning_sample_play_flag; //zmienna zawierajaca informacje, czy grac audio warninga; true - tak, false - nie
 	bool place_ship_sample_flag; //zmienna zawierajaca informacje, czy grac audio rozstawiania statku; true - tak, false - nie
 	bool resize_ship_guard; //true - mozna zmienic rozmiar, false - nie mozna zmienci rozmiaru

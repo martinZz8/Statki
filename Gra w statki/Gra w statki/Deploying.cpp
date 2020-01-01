@@ -46,6 +46,7 @@ Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board
 {
 	m = NULL;
 	audio_play_guard = true;
+	warning_sample_play_guard = true;
 	warning_sample_play_flag = false;
 	place_ship_sample_flag = false;
 	resize_ship_guard = true;
@@ -262,22 +263,22 @@ void Deploying::mouseSwitches()
 			mouse_click_guard = false;
 			if (b2.getDeployShipsFlag() == false && done_deploying_b2 == false)
 				done_deploying_b2 = true;
-			/*else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true)
+			else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true)
 			{
-				cout << "Blad 2" << endl;
+				cout << "Blad roztawiania b2" << endl;
 				warning_sample_play_flag = true;
-			}*/
+			}
 
 			if (b1.getDeployShipsFlag() == false && done_deploying_b1 == false)
 			{
 				done_deploying_b1 = true;
 				fixShipSize();
 			}
-			/*else if (b1.getDeployShipsFlag() == true)
+			else if (b1.getDeployShipsFlag() == true)
 			{
-				cout << "Blad 1" << endl;
+				cout << "Blad rozstawiania b1" << endl;
 				warning_sample_play_flag = true;
-			}*/
+			}
 		}
 		else if (u.getMouse1Clicked() == true && mouse_click_guard == true)
 		{
@@ -536,10 +537,10 @@ void Deploying::playAudio()
 		}
 
 		/*Audio dotyczace warningow*/
-		if (warning_sample_play_flag == true && audio_play_guard == true)
+		if (warning_sample_play_flag == true && warning_sample_play_guard == true)
 		{
 			u.playSample(AUDIO_ERROR);
-			audio_play_guard = false;
+			warning_sample_play_guard = false;
 		}
 
 		/*Audio dotyczace rozstawiania statkow*/
@@ -549,8 +550,10 @@ void Deploying::playAudio()
 			audio_play_guard = false;
 		}
 
-		if (highlighted == false && warning_sample_play_flag == false && place_ship_sample_flag == false && audio_play_guard == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
+		if (highlighted == false && place_ship_sample_flag == false && audio_play_guard == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
 			audio_play_guard = true;
+		if (warning_sample_play_flag == false && warning_sample_play_guard == false)
+			warning_sample_play_guard = true;
 	}
 }
 
