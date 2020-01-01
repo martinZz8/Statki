@@ -371,6 +371,10 @@ int main()
 				buttons.setHighlighted(BUTTON_DEPLOYING_DONE, true);
 			else
 				buttons.setHighlighted(BUTTON_DEPLOYING_DONE, false);
+			if (buttons.isMouseOnButton(BUTTON_DEPLOYING_PLAY) == true)
+				buttons.setHighlighted(BUTTON_DEPLOYING_PLAY, true);
+			else
+				buttons.setHighlighted(BUTTON_DEPLOYING_PLAY, false);
 			if (buttons.isMouseOnButton(BUTTON_DEPLOYING_BACK) == true)
 				buttons.setHighlighted(BUTTON_DEPLOYING_BACK, true);
 			else
@@ -385,6 +389,8 @@ int main()
 			{
 				if (buttons.isMouseOnButton(BUTTON_DEPLOYING_DONE) == true)
 					buttons.setActivated(BUTTON_DEPLOYING_DONE, true);
+				else if (buttons.isMouseOnButton(BUTTON_DEPLOYING_PLAY) == true)
+					buttons.setActivated(BUTTON_DEPLOYING_PLAY, true);
 				else if (buttons.isMouseOnButton(BUTTON_DEPLOYING_BACK) == true)
 					buttons.setActivated(BUTTON_DEPLOYING_BACK, true);
 				else if (buttons.isMouseOnButton(BUTTON_DEPLOYING_RESET) == true)
@@ -392,6 +398,7 @@ int main()
 				else
 				{
 					buttons.setActivated(BUTTON_DEPLOYING_DONE, false);
+					buttons.setActivated(BUTTON_DEPLOYING_PLAY, false);
 					buttons.setActivated(BUTTON_DEPLOYING_BACK, false);
 					buttons.setActivated(BUTTON_DEPLOYING_RESET, false);
 				}
@@ -399,6 +406,7 @@ int main()
 			else
 			{
 				buttons.setActivated(BUTTON_DEPLOYING_DONE, false);
+				buttons.setActivated(BUTTON_DEPLOYING_PLAY, false);
 				buttons.setActivated(BUTTON_DEPLOYING_BACK, false);
 				buttons.setActivated(BUTTON_DEPLOYING_RESET, false);
 			}

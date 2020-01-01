@@ -39,7 +39,7 @@ void Deploying::restoreDefaults()
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
 	done_copy_b1_to_b2 = false;
-	if (created_advanced_ship.empty() == true)
+	if (created_advanced_ship.empty() == false)
 		created_advanced_ship.clear();
 
 }
@@ -102,7 +102,7 @@ void Deploying::tick()
 			}
 		}
 	}
-	else // advanced_game_mode == true
+	else //advanced_game_mode == true
 	{
 		if (u.getPvCGameMode() == true)
 		{
@@ -313,8 +313,13 @@ void Deploying::mouseSwitches()
 				warning_sample_play_flag = true;
 			}
 		}
+		else if (buttons.getActivated(BUTTON_DEPLOYING_PLAY) == true && mouse_click_guard == true)
+		{
+			mouse_click_guard = false;
+
+		}
 		else if (u.getClassicGameMode() == true)
-		{			
+		{
 			//TODO DODAC NOWE OPCJE DZIALANIA PRAWEGO KLAWISZA MYSZY (opcje zmiany polozenia rozstawionego statku)
 			if (u.getMouse1Clicked() == true && mouse_click_guard == true)
 			{
@@ -325,7 +330,6 @@ void Deploying::mouseSwitches()
 					{
 						cout << "Gracz klika myszka w classicu" << endl;
 						classicPlayer1Deploy();
-
 					}
 					//ROZTSAWIANIE PLANSZY KOMPUTERA JEST W TICKU
 				}
@@ -367,7 +371,10 @@ void Deploying::mouseSwitches()
 				}
 				else //PvP_game_mode == true
 				{
-
+					if (b1.getDeployShipsFlag() == true) //player1 moze rozstawiac statki
+						advancedPlayer1Deploy();
+					else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true) //player2 moze rozstawiac statki
+						advancedPlayer2Deploy();
 				}
 			}
 			else if (u.getMouse1Clicked() == false)
@@ -400,7 +407,52 @@ void Deploying::mouseSwitches()
 				}
 				else //PvP_game_mode == true
 				{
-
+					if (b1.getDeployShipsFlag() == true) //plaer1 moze rozstawiac statki
+					{
+						int ship_size = created_advanced_ship.size();
+						if (ship_size == 1 || ship_size == 2 || ship_size == 3 || ship_size == 4) //dowzwolone rozmiary statku
+						{
+							if (b1.numbers_of_not_deployed_ships[ship_size - 1] > 0)
+							{
+								b1.addAdvancedShip(created_advanced_ship);
+								place_ship_sample_flag = true;
+								created_advanced_ship.clear();
+							}
+							else
+							{
+								warning_sample_play_flag = true;
+								created_advanced_ship.clear();
+							}
+						}
+						else if (ship_size > 4) //niedozwolony rozmiar statku
+						{
+							created_advanced_ship.clear();
+							warning_sample_play_flag = true;
+						}
+					}
+					else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true) //plaer2 moze rozstawiac statki
+					{
+						int ship_size = created_advanced_ship.size();
+						if (ship_size == 1 || ship_size == 2 || ship_size == 3 || ship_size == 4) //dowzwolone rozmiary statku
+						{
+							if (b2.numbers_of_not_deployed_ships[ship_size - 1] > 0)
+							{
+								b2.addAdvancedShip(created_advanced_ship);
+								place_ship_sample_flag = true;
+								created_advanced_ship.clear();
+							}
+							else
+							{
+								warning_sample_play_flag = true;
+								created_advanced_ship.clear();
+							}
+						}
+						else if (ship_size > 4) //niedozwolony rozmiar statku
+						{
+							created_advanced_ship.clear();
+							warning_sample_play_flag = true;
+						}
+					}
 				}
 			}
 		}
@@ -466,7 +518,6 @@ void Deploying::classicComputerDeploy()
 	}
 }
 
-//TODO METODA NIZEJ
 void Deploying::advancedPlayer1Deploy()
 {
 	int x = b1.deployAdvancedShip(u.getMouseX(), u.getMouseY(), created_advanced_ship, true);
@@ -479,14 +530,34 @@ void Deploying::advancedPlayer1Deploy()
 	{
 		if (created_advanced_ship.empty() == false)
 			created_advanced_ship.clear();
-		warning_sample_play_flag = true;
 		add_advanced_ship_field_sample_flag = false;
+		if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == false && buttons.getActivated(BUTTON_DEPLOYING_PLAY) == false && buttons.getActivated(BUTTON_DEPLOYING_RESET) == false && buttons.getActivated(BUTTON_DEPLOYING_BACK) == false)
+		{
+			warning_sample_play_flag = true;
+			cout << "Gram warninga, ze nie mozna bylo dodac fielda" << endl;
+		}
 	}
 }
 
 void Deploying::advancedPlayer2Deploy()
 {
-
+	int x = b2.deployAdvancedShip(u.getMouseX(), u.getMouseY(), created_advanced_ship, true);
+	if (x == 0) //dodano fielda
+	{
+		add_advanced_ship_field_sample_flag = true;
+		warning_sample_play_flag = false;
+	}
+	else if (x == -1) //nie dodano fielda, bo kliknieto w zabrionione miejsce
+	{
+		if (created_advanced_ship.empty() == false)
+			created_advanced_ship.clear();
+		add_advanced_ship_field_sample_flag = false;
+		if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == false && buttons.getActivated(BUTTON_DEPLOYING_PLAY) == false && buttons.getActivated(BUTTON_DEPLOYING_RESET) == false && buttons.getActivated(BUTTON_DEPLOYING_BACK) == false)
+		{
+			warning_sample_play_flag = true;
+			cout << "Gram warninga, ze nie mozna bylo dodac fielda" << endl;
+		}
+	}
 }
 
 void Deploying::advancedComputerDeploy()
@@ -539,11 +610,14 @@ void Deploying::advancedComputerDeploy()
 void Deploying::paintButtons()
 {
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_DONE, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_DEPLOYING_PLAY, FONT_SIZE_BIG);
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_RESET, FONT_SIZE_SMALL);
 
 	if (buttons.getHighlighted(BUTTON_DEPLOYING_DONE) == true)
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_DONE, FONT_SIZE_SMALL);
+	else if (buttons.getHighlighted(BUTTON_DEPLOYING_PLAY) == true)
+		buttons.paintButtonHighlight(BUTTON_DEPLOYING_PLAY, FONT_SIZE_BIG);
 	else if (buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true)
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
 	else if (buttons.getHighlighted(BUTTON_DEPLOYING_RESET) == true)
