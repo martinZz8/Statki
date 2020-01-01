@@ -11,7 +11,6 @@ void Deploying::fixShipSize()
 			if (b1.numbers_of_not_deployed_ships[i] > 0)
 			{
 				u.setShipSize(i + 1);
-				cout << "Naprawiono ship_size" << endl;
 				break;
 			}
 		}
@@ -255,24 +254,35 @@ void Deploying::mouseSwitches()
 		}
 		else if (buttons.getActivated(BUTTON_DEPLOYING_RESET) == true && mouse_click_guard == true)
 		{
+			mouse_click_guard = false;
 			restoreDefaults();
 		}
 		else if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == true && mouse_click_guard == true)
 		{
 			mouse_click_guard = false;
-			if (b1.getDeployShipsFlag() == false)
+			if (b2.getDeployShipsFlag() == false && done_deploying_b2 == false)
+				done_deploying_b2 = true;
+			/*else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true)
+			{
+				cout << "Blad 2" << endl;
+				warning_sample_play_flag = true;
+			}*/
+
+			if (b1.getDeployShipsFlag() == false && done_deploying_b1 == false)
 			{
 				done_deploying_b1 = true;
 				fixShipSize();
 			}
-			if (b2.getDeployShipsFlag() == false)
-				done_deploying_b2 = true;
-
+			/*else if (b1.getDeployShipsFlag() == true)
+			{
+				cout << "Blad 1" << endl;
+				warning_sample_play_flag = true;
+			}*/
 		}
 		else if (u.getMouse1Clicked() == true && mouse_click_guard == true)
 		{
 			mouse_click_guard = false;
-			//TODO DODAC NOWE OPCJE DZIALANIA LEWEJ MYSZY
+			//TODO DODAC NOWE OPCJE DZIALANIA LEWEJ MYSZY (opcje zmiany polozenia rozstawionego statku)
 			if (u.getClassicGameMode() == true)
 			{
 				if (u.getPvCGameMode() == true)
@@ -377,6 +387,21 @@ void Deploying::classicComputerDeploy()
 			} while (warunek == -1);
 		}
 	}
+}
+
+void Deploying::advancedPlayer1Deploy()
+{
+
+}
+
+void Deploying::advancedPlayer2Deploy()
+{
+
+}
+
+void Deploying::advancedComputerDeploy()
+{
+
 }
 
 void Deploying::paintButtons()

@@ -4,7 +4,7 @@
 #include "Buttons.h"
 
 class Menu;
-//TODO ZROBIC KLASE PLAYER I PRZEKAZAC JEMU WSZYSTKIE RZECZY ZWIAZANE Z PLAYEREM (BEDA OBIEKTY PLAYER1, PLAYER2, COMPUTER)
+
 class Deploying :public State
 {
 	Utils& u;
@@ -13,6 +13,7 @@ class Deploying :public State
 	Board& b2;
 	Menu* m; //wskaznik tylko do porowania adresu
 	State** s;
+	vector <Field> created_advanced_ship; //vector fieldow jednego shipa, ktory jest tworzony tylko przy wyborze opcji advanced (tymczasowy statek)
 	const int windowID;
 	bool audio_play_guard; //true - mozna grac, false - nie mozna grac
 	bool warning_sample_play_flag; //zmienna zawierajaca informacje, czy grac audio warninga; true - tak, false - nie
@@ -39,6 +40,9 @@ public:
 	void classicPlayer1Deploy();
 	void classicPlayer2Deploy();
 	void classicComputerDeploy();
+	void advancedPlayer1Deploy(); //nowa metoda
+	void advancedPlayer2Deploy(); //nowa metoda
+	void advancedComputerDeploy(); //nowa metoda
 	void paintButtons();
 	void paintText();
 	void paintBorders();
