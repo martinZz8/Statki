@@ -23,6 +23,7 @@ public:
 	float getYOffset();
 	float getWidth();
 	float getHeight();
+	float getFieldSize();
 	bool getDeployShipsFlag();
 	vector <Ship> getShips(); //metoda zwracajaca vector shipów; stosowana przy kopiowaniu w deploying
 	void paintBoard(bool visible_ships, bool const_visible_surrounding); //metoda rysujaca plansze; visible_ships == true - rysuje statki, const_visible_surrounding == true - rysuje surrounded fieldsy caly czas (nawet, gdy statek nie jest zniszczony)
@@ -37,7 +38,9 @@ public:
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships
 	void paintClassicShip(float mouse_x, float mouse_y); //metoda ryzsujaca statek dla standardowych opcji statków
 	//TODO - DO DOKONCZENIA METODA NIZEJ (ZROBIC UNIWERSALNE METODY)
-	int deployClassicShip(float mouse_x, float mouse_y, int ship_orientation, int ship_size); //metoda rozstawiajaca statek, zwraca 0, gdy rozstawianie sie powiedzie, zwraca -1 gdy rozstawianie sie nie powiedzie
+	int deployClassicShip(float mouse_x, float mouse_y, int ship_orientation, int ship_size); //metoda rozstawiajaca calssic ship; zwraca 0, gdy rozstawianie sie powiedzie, zwraca -1 gdy rozstawianie sie nie powiedzie
+	int deployAdvancedShip(float mouse_x, float mouse_y, vector <Field>& created_advanced_ship, bool player_deploy); //metoda rozstawiajaca advanced ship, player_deploy - zmienna wskazujaca, czy rozstawia gracz czy komputer; zwraca 0, gdy sie powiedzie, zwraca -1 gdy sie nie powiedzie, zwraca 1 gdy (przy player_deploy == true) myszka znajduje sie nadal na tym samym fieldzie co ostatnio dodany do vectora created_advanced_ship albo (przy player_deploy == false) wylosowano field, ktory juz nalezy do vectora created_advanced_ship badz lezy za daleko od danego fielda badz lezy w zabronionym miejscu (aby nie marnowac juz dobrze wylosowanych fieldow)
+	void addAdvancedShip(vector <Field>& created_advanced_ship); //metoda dodaje statek do vectora Shipow
 	int whichQuarterOfField(float c_x, float c_y, float center_of_field_x, float center_of_field_y); //metoda zwraca, ktora cwiartka pola zostala kliknieta; 1 - prawa gorna, 2 - lewa gorna, 3 - lewa dolna, 4 - prawa dolna
 	void clearVectors(); //metoda czyszczace vektory fieldow oraz shipow
 	bool isOnShip(Field& to_check_field); //metoda sprawdzajaca, czy to_check_field jest jakims statkiem; true - tak, false - nie

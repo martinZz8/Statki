@@ -21,6 +21,7 @@ public:
 	void setMiss(bool m);
 	float getCoordX();
 	float getCoordY();
+	float getWidth();
 	bool getHit();
 	bool getMiss();
 	void paintField(int scheme); //metoda renderujaca pole o zadanym schemacie

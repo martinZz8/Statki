@@ -62,6 +62,11 @@ float Field::getCoordY()
 	return c_y;
 }
 
+float Field::getWidth()
+{
+	return width;
+}
+
 bool Field::getHit()
 {
 	return hitted_flag;

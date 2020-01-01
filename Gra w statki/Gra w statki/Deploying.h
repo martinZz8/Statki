@@ -19,6 +19,8 @@ class Deploying :public State
 	bool warning_sample_play_guard; //true - mozna grac, false - nie mozna grac
 	bool warning_sample_play_flag; //zmienna zawierajaca informacje, czy grac audio warninga; true - tak, false - nie
 	bool place_ship_sample_flag; //zmienna zawierajaca informacje, czy grac audio rozstawiania statku; true - tak, false - nie
+	bool add_advanced_ship_field_sample_flag; //zmienna zawierajaca informacje, czy grac audio dodawania fielda do advanced statku; true - tak, false - nie
+	bool add_advanced_ship_field_sample_guard; //true - mozna grac, false - nie mozna grac
 	bool resize_ship_guard; //true - mozna zmienic rozmiar, false - nie mozna zmienci rozmiaru
 	bool rotate_ship_guard; //true - mozna zmienic polozenie, false - nie mozna zmienic polozenia
 	bool mouse_click_guard; //true - mozna kliknac, false - nie mozna kliknac
@@ -47,6 +49,7 @@ public:
 	void paintButtons();
 	void paintText();
 	void paintBorders();
+	void paintCreatedAdvancedShip();
 	void playAudio();
 	void copyShips(Board& from, Board& to); //metoda kopiuje vector shipow z "from" do "to"
 

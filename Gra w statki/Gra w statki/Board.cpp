@@ -31,6 +31,11 @@ float Board::getHeight()
 	return height;
 }
 
+float Board::getFieldSize()
+{
+	return field_size;
+}
+
 bool Board::getDeployShipsFlag()
 {
 	return deploy_ships_flag;
@@ -783,6 +788,103 @@ int Board::deployClassicShip(float mouse_x, float mouse_y, int ship_orientation,
 		}
 	}
 	return 0;
+}
+
+int Board::deployAdvancedShip(float mouse_x, float mouse_y, vector<Field>& created_advanced_ship, bool player_deploy)
+{
+	int indeks = whichField(mouse_x, mouse_y);
+	if (indeks != -1)
+	{
+		if (created_advanced_ship.empty() == true)
+		{
+			if (isOnShip(fields[indeks]) == false && isOnSurrounding(fields[indeks]) == false)
+			{
+				created_advanced_ship.push_back(fields[indeks]);
+				return 0;
+			}
+			return -1;
+		}
+		else if (created_advanced_ship[created_advanced_ship.size()-1] != fields[indeks])
+		{
+			int last_ship_indeks = created_advanced_ship.size() - 1;
+			if (player_deploy == true)
+			{
+				if (last_ship_indeks >= 1)
+				{
+					if (fields[indeks] == created_advanced_ship[last_ship_indeks - 1]) //kiedy najechano kliknieta myszka na przedostatni field w vectorze created_advanced_ship
+					{
+						created_advanced_ship.pop_back();
+						return 0;
+					}
+				}
+			}
+			
+			float last_field_x = created_advanced_ship[last_ship_indeks].getCoordX();
+			float last_field_y = created_advanced_ship[last_ship_indeks].getCoordY();
+			float l_x = last_field_x - field_size;
+			float r_x = last_field_x + (2 * field_size);
+			float u_y = last_field_y - field_size;
+			float d_y = last_field_y + (2 * field_size);
+			if (mouse_x >= l_x && mouse_x <= r_x && mouse_y >= u_y && mouse_y <= d_y)
+			{
+				int indeks_left_field = whichField(l_x, last_field_y);
+				int indeks_right_field = whichField(last_field_x + field_size, last_field_y);
+				int indeks_upper_field = whichField(last_field_x, u_y);
+				int indeks_down_field = whichField(last_field_x, last_field_y + field_size);
+				if (indeks == indeks_left_field || indeks == indeks_right_field || indeks == indeks_upper_field || indeks == indeks_down_field)
+				{
+					if (player_deploy == true)
+					{
+						for (Field f : created_advanced_ship)
+						{
+							if (fields[indeks] == f)
+								return -1;
+						}
+					}
+					else //player_deploy == false
+					{
+						for (Field f : created_advanced_ship)
+						{
+							if (fields[indeks] == f)
+								return 1;
+						}
+					}
+
+					if (isOnShip(fields[indeks]) == false && isOnSurrounding(fields[indeks]) == false)
+					{
+						created_advanced_ship.push_back(fields[indeks]);
+						return 0;
+					}
+					
+					if (player_deploy == true)
+						return -1;
+					return 1;
+				}
+				if (player_deploy == true)
+					return -1;
+				return 1;
+			}
+			if (player_deploy == true)
+				return -1;
+			return 1;
+		}
+		return 1;
+	}
+	return -1;
+}
+
+void Board::addAdvancedShip(vector<Field>& created_advanced_ship)
+{
+	numbers_of_not_deployed_ships[created_advanced_ship.size() - 1]--;
+	vector <int> indeks_of_ship_fields;
+	vector <Field> surr_f; //vector zawierajacy surrounding fieldy; wsadzany potem do vectora shipow
+	for (Field f : created_advanced_ship)
+	{
+		int indeks = whichField(f.getCoordX(), f.getCoordY());
+		indeks_of_ship_fields.push_back(indeks);
+	}
+	setFieldsSurrounded(indeks_of_ship_fields, surr_f);
+	ships.push_back(Ship(u, created_advanced_ship, surr_f));
 }
 
 int Board::whichQuarterOfField(float c_x, float c_y, float center_of_field_x, float center_of_field_y)
