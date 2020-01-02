@@ -43,10 +43,10 @@ public:
 	void mouseSwitches();
 	void classicPlayer1Deploy();
 	void classicPlayer2Deploy();
-	void classicComputerDeploy();
-	void advancedPlayer1Deploy(); //nowa metoda
-	void advancedPlayer2Deploy(); //nowa metoda
-	void advancedComputerDeploy(); //nowa metoda
+	void classicComputerDeploy(Board& b);
+	void advancedPlayer1Deploy(); 
+	void advancedPlayer2Deploy(); 
+	void advancedComputerDeploy(Board& b); 
 	void paintButtons();
 	void paintText();
 	void paintBorders();

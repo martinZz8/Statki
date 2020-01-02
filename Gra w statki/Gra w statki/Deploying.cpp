@@ -109,14 +109,11 @@ void Deploying::tick()
 		{
 			if (done_deploying_b1 == true && b2.getDeployShipsFlag() == true)
 			{
-				classicComputerDeploy();
+				classicComputerDeploy(b2);
 				cout << "Komputer zakonczyl rozstawianie boardu b2" << endl;
 			}
 			if (b2.getDeployShipsFlag() == false)
-			{
 				done_deploying_b2 = true;
-				//cout << "Mozna kliknac button play" << endl;
-			}
 		}
 	}
 	else //advanced_game_mode == true
@@ -125,14 +122,11 @@ void Deploying::tick()
 		{
 			if (done_deploying_b1 == true && b2.getDeployShipsFlag() == true)
 			{
-				advancedComputerDeploy();
+				advancedComputerDeploy(b2);
 				cout << "Komputer zakonczyl rozstawianie boardu b2" << endl;
 			}
 			if (b2.getDeployShipsFlag() == false)
-			{
 				done_deploying_b2 = true;
-				//cout << "Mozna kliknac button play" << endl;
-			}
 		}
 	}
 
@@ -161,8 +155,8 @@ void Deploying::render()
 	{
 		if (done_deploying_b1 == false) //roztsawianie gracza nr 1
 		{
-			b1.paintBoard(true, true);
-			b2.paintBoard(false , false);
+			b1.paintBoard(true, true); 
+			b2.paintBoard(false, false);
 		}
 		else if (done_deploying_b2 == false) //rozstawianie gracza nr 2
 		{
@@ -303,6 +297,48 @@ void Deploying::mouseSwitches()
 			u.setMouseClickedBeforeStateSwitch(true);
 			cout << "Przelaczenie z DEPLOYING do MENU" << endl;
 		}
+		else if (buttons.getActivated(BUTTON_DEPLOYING_AUTO) == true && mouse_click_guard == true)
+		{
+			mouse_click_guard = false;
+			if (u.getClassicGameMode() == true)
+			{
+				if (u.getPvCGameMode() == true)
+				{
+					if (b1.getDeployShipsFlag() == true && done_deploying_b1 == false)
+						classicComputerDeploy(b1);
+					else
+						warning_sample_play_flag = true;
+				}
+				else //PvP_game_mode == true
+				{
+					if (b1.getDeployShipsFlag() == true && done_deploying_b1 == false)
+						classicComputerDeploy(b1);
+					else if (b2.getDeployShipsFlag() == true && done_deploying_b2 == false && done_deploying_b1 == true)
+						classicComputerDeploy(b2);
+					else
+						warning_sample_play_flag = true;
+				}
+			}
+			else //advanced_game_mode == true
+			{
+				if (u.getPvCGameMode() == true)
+				{
+					if (b1.getDeployShipsFlag() == true && done_deploying_b1 == false)
+						advancedComputerDeploy(b1);
+					else
+						warning_sample_play_flag = true;
+				}
+				else //PvP_game_mode == true
+				{
+					if (b1.getDeployShipsFlag() == true && done_deploying_b1 == false)
+						advancedComputerDeploy(b1);
+					else if (b2.getDeployShipsFlag() == true && done_deploying_b2 == false && done_deploying_b1 == true)
+						advancedComputerDeploy(b2);
+					else
+						warning_sample_play_flag = true;
+				}
+			}
+		}
 		else if (buttons.getActivated(BUTTON_DEPLOYING_RESET) == true && mouse_click_guard == true)
 		{
 			mouse_click_guard = false;
@@ -344,7 +380,13 @@ void Deploying::mouseSwitches()
 		else if (buttons.getActivated(BUTTON_DEPLOYING_PLAY) == true && mouse_click_guard == true)
 		{
 			mouse_click_guard = false;
-
+			if (done_deploying_b1 == true && done_deploying_b2 == true)
+			{
+				//TODO przelaczanie okna z deploying do game
+				cout << "Przelaczanie okna z DEPLOYING do GAME" << endl;
+			}
+			else
+				warning_sample_play_flag = true;
 		}
 		else if (u.getClassicGameMode() == true)
 		{
@@ -520,18 +562,18 @@ void Deploying::classicPlayer2Deploy()
 	}
 }
 
-void Deploying::classicComputerDeploy()
+void Deploying::classicComputerDeploy(Board& b)
 {
-	float l_x = b2.getXOffset();
-	float r_x = l_x + b2.getWidth();
-	float u_y = b2.getYOffset();
-	float d_y = u_y + b2.getHeight();
+	float l_x = b.getXOffset();
+	float r_x = l_x + b.getWidth();
+	float u_y = b.getYOffset();
+	float d_y = u_y + b.getHeight();
 	int mod_x = r_x - l_x + 1;
 	int mod_y = d_y - u_y + 1;
 
-	for (int indeks = b2.numbers_of_not_deployed_ships.size() - 1; indeks >= 0; indeks--)
+	for (int indeks = b.numbers_of_not_deployed_ships.size() - 1; indeks >= 0; indeks--)
 	{
-		while (b2.numbers_of_not_deployed_ships[indeks] > 0)
+		while (b.numbers_of_not_deployed_ships[indeks] > 0)
 		{
 			int condition;
 			do
@@ -540,7 +582,7 @@ void Deploying::classicComputerDeploy()
 				float x = (rand() % mod_x) + l_x;
 				float y = (rand() % mod_y) + u_y;
 				cout << "wylosowane x wynosi: " << x << ", natomiast wylosowane y: " << y << endl;
-				condition = b2.deployClassicShip(x, y, orientation, indeks + 1);
+				condition = b.deployClassicShip(x, y, orientation, indeks + 1);
 			} while (condition == -1);
 		}
 	}
@@ -559,7 +601,7 @@ void Deploying::advancedPlayer1Deploy()
 		if (created_advanced_ship.empty() == false)
 			created_advanced_ship.clear();
 		add_advanced_ship_field_sample_flag = false;
-		if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == false && buttons.getActivated(BUTTON_DEPLOYING_PLAY) == false && buttons.getActivated(BUTTON_DEPLOYING_RESET) == false && buttons.getActivated(BUTTON_DEPLOYING_BACK) == false)
+		if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == false && buttons.getActivated(BUTTON_DEPLOYING_PLAY) == false && buttons.getActivated(BUTTON_DEPLOYING_AUTO) == false && buttons.getActivated(BUTTON_DEPLOYING_RESET) == false && buttons.getActivated(BUTTON_DEPLOYING_BACK) == false)
 			warning_sample_play_flag = true;	
 	}
 }
@@ -577,23 +619,23 @@ void Deploying::advancedPlayer2Deploy()
 		if (created_advanced_ship.empty() == false)
 			created_advanced_ship.clear();
 		add_advanced_ship_field_sample_flag = false;
-		if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == false && buttons.getActivated(BUTTON_DEPLOYING_PLAY) == false && buttons.getActivated(BUTTON_DEPLOYING_RESET) == false && buttons.getActivated(BUTTON_DEPLOYING_BACK) == false)
+		if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == false && buttons.getActivated(BUTTON_DEPLOYING_PLAY) == false && buttons.getActivated(BUTTON_DEPLOYING_AUTO) == false && buttons.getActivated(BUTTON_DEPLOYING_RESET) == false && buttons.getActivated(BUTTON_DEPLOYING_BACK) == false)
 			warning_sample_play_flag = true;
 	}
 }
 
-void Deploying::advancedComputerDeploy()
+void Deploying::advancedComputerDeploy(Board& b)
 {
-	float l_x = b2.getXOffset();
-	float r_x = l_x + b2.getWidth();
-	float u_y = b2.getYOffset();
-	float d_y = u_y + b2.getHeight();
+	float l_x = b.getXOffset();
+	float r_x = l_x + b.getWidth();
+	float u_y = b.getYOffset();
+	float d_y = u_y + b.getHeight();
 	int mod_x = r_x - l_x + 1;
 	int mod_y = d_y - u_y + 1;
 
-	for (int indeks = b2.numbers_of_not_deployed_ships.size() - 1; indeks >= 0; indeks--)
+	for (int indeks = b.numbers_of_not_deployed_ships.size() - 1; indeks >= 0; indeks--)
 	{
-		while (b2.numbers_of_not_deployed_ships[indeks] > 0)
+		while (b.numbers_of_not_deployed_ships[indeks] > 0)
 		{
 			int condition;
 			do
@@ -618,12 +660,12 @@ void Deploying::advancedComputerDeploy()
 					y = (rand() % mod_y) + u_y;
 				}
 				cout << "wylosowane x wynosi: " << x << ", natomiast wylosowane y: " << y << endl;
-				condition = b2.deployAdvancedShip(x, y, created_advanced_ship, false);
+				condition = b.deployAdvancedShip(x, y, created_advanced_ship, false);
 				if (condition == -1 && created_advanced_ship.empty() == false)
 					created_advanced_ship.clear();
 				cout << created_advanced_ship.size() << endl;
 			} while (created_advanced_ship.size() < (indeks + 1));
-			b2.addAdvancedShip(created_advanced_ship);
+			b.addAdvancedShip(created_advanced_ship);
 			created_advanced_ship.clear();
 		}
 	}
@@ -634,6 +676,7 @@ void Deploying::paintButtons()
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_DONE, FONT_SIZE_SMALL);
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_PLAY, FONT_SIZE_BIG);
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
+	buttons.paintButtonWithText(BUTTON_DEPLOYING_AUTO, FONT_SIZE_SMALL);
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_RESET, FONT_SIZE_SMALL);
 
 	if (buttons.getHighlighted(BUTTON_DEPLOYING_DONE) == true)
@@ -642,6 +685,8 @@ void Deploying::paintButtons()
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_PLAY, FONT_SIZE_BIG);
 	else if (buttons.getHighlighted(BUTTON_DEPLOYING_BACK) == true)
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_BACK, FONT_SIZE_SMALL);
+	else if (buttons.getHighlighted(BUTTON_DEPLOYING_AUTO) == true)
+		buttons.paintButtonHighlight(BUTTON_DEPLOYING_AUTO, FONT_SIZE_SMALL);
 	else if (buttons.getHighlighted(BUTTON_DEPLOYING_RESET) == true)
 		buttons.paintButtonHighlight(BUTTON_DEPLOYING_RESET, FONT_SIZE_SMALL);
 }

@@ -35,7 +35,8 @@ void Buttons::setButtons()
 	buttons.push_back(Button(u, "ZATWIERDZ", 120, 40, 740, 545, 20, 12, false, BUTTON_DEPLOYING_DONE)); //21
 	buttons.push_back(Button(u, "GRAJ", 250, 40, 740, 500, 85, 1, false, BUTTON_DEPLOYING_PLAY)); //22
 	buttons.push_back(Button(u, "WROC DO MENU", 120, 40, 870, 545, 1, 12, false, BUTTON_DEPLOYING_BACK)); //23
-	buttons.push_back(Button(u, "RESET", 120, 40, 10, 545, 40, 9, false, BUTTON_DEPLOYING_RESET)); //24
+	buttons.push_back(Button(u, "AUTO", 120, 40, 10, 495, 40, 9, false, BUTTON_DEPLOYING_AUTO)); //25
+	buttons.push_back(Button(u, "RESET", 120, 40, 10, 545, 40, 9, false, BUTTON_DEPLOYING_RESET)); //25
 
 }
 
