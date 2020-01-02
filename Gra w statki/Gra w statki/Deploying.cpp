@@ -109,7 +109,7 @@ void Deploying::tick()
 		{
 			if (done_deploying_b1 == true && b2.getDeployShipsFlag() == true)
 			{
-				classicComputerDeploy(b2);
+				classicComputerDeploy(b2, false);
 				cout << "Komputer zakonczyl rozstawianie boardu b2" << endl;
 			}
 			if (b2.getDeployShipsFlag() == false)
@@ -122,7 +122,7 @@ void Deploying::tick()
 		{
 			if (done_deploying_b1 == true && b2.getDeployShipsFlag() == true)
 			{
-				advancedComputerDeploy(b2);
+				advancedComputerDeploy(b2, false);
 				cout << "Komputer zakonczyl rozstawianie boardu b2" << endl;
 			}
 			if (b2.getDeployShipsFlag() == false)
@@ -305,16 +305,16 @@ void Deploying::mouseSwitches()
 				if (u.getPvCGameMode() == true)
 				{
 					if (b1.getDeployShipsFlag() == true && done_deploying_b1 == false)
-						classicComputerDeploy(b1);
+						classicComputerDeploy(b1, true);
 					else
 						warning_sample_play_flag = true;
 				}
 				else //PvP_game_mode == true
 				{
 					if (b1.getDeployShipsFlag() == true && done_deploying_b1 == false)
-						classicComputerDeploy(b1);
+						classicComputerDeploy(b1, true);
 					else if (b2.getDeployShipsFlag() == true && done_deploying_b2 == false && done_deploying_b1 == true)
-						classicComputerDeploy(b2);
+						classicComputerDeploy(b2, true);
 					else
 						warning_sample_play_flag = true;
 				}
@@ -324,16 +324,16 @@ void Deploying::mouseSwitches()
 				if (u.getPvCGameMode() == true)
 				{
 					if (b1.getDeployShipsFlag() == true && done_deploying_b1 == false)
-						advancedComputerDeploy(b1);
+						advancedComputerDeploy(b1, true);
 					else
 						warning_sample_play_flag = true;
 				}
 				else //PvP_game_mode == true
 				{
 					if (b1.getDeployShipsFlag() == true && done_deploying_b1 == false)
-						advancedComputerDeploy(b1);
+						advancedComputerDeploy(b1, true);
 					else if (b2.getDeployShipsFlag() == true && done_deploying_b2 == false && done_deploying_b1 == true)
-						advancedComputerDeploy(b2);
+						advancedComputerDeploy(b2, true);
 					else
 						warning_sample_play_flag = true;
 				}
@@ -562,7 +562,7 @@ void Deploying::classicPlayer2Deploy()
 	}
 }
 
-void Deploying::classicComputerDeploy(Board& b)
+void Deploying::classicComputerDeploy(Board& b, bool deploy_for_player)
 {
 	float l_x = b.getXOffset();
 	float r_x = l_x + b.getWidth();
@@ -575,6 +575,7 @@ void Deploying::classicComputerDeploy(Board& b)
 	{
 		while (b.numbers_of_not_deployed_ships[indeks] > 0)
 		{
+			int iteration = 0;
 			int condition;
 			do
 			{
@@ -583,6 +584,12 @@ void Deploying::classicComputerDeploy(Board& b)
 				float y = (rand() % mod_y) + u_y;
 				cout << "wylosowane x wynosi: " << x << ", natomiast wylosowane y: " << y << endl;
 				condition = b.deployClassicShip(x, y, orientation, indeks + 1);
+				iteration++;
+				if (deploy_for_player == true && iteration > 500) //zakleszczenie, nie mozna znalezc odpowiedniego fielda
+				{
+					warning_sample_play_flag = true;
+					return;
+				}	
 			} while (condition == -1);
 		}
 	}
@@ -624,7 +631,7 @@ void Deploying::advancedPlayer2Deploy()
 	}
 }
 
-void Deploying::advancedComputerDeploy(Board& b)
+void Deploying::advancedComputerDeploy(Board& b, bool deploy_for_player)
 {
 	float l_x = b.getXOffset();
 	float r_x = l_x + b.getWidth();
@@ -637,6 +644,7 @@ void Deploying::advancedComputerDeploy(Board& b)
 	{
 		while (b.numbers_of_not_deployed_ships[indeks] > 0)
 		{
+			int iteration = 0;
 			int condition;
 			do
 			{
@@ -663,7 +671,13 @@ void Deploying::advancedComputerDeploy(Board& b)
 				condition = b.deployAdvancedShip(x, y, created_advanced_ship, false);
 				if (condition == -1 && created_advanced_ship.empty() == false)
 					created_advanced_ship.clear();
-				cout << created_advanced_ship.size() << endl;
+				if (deploy_for_player == true && iteration > 500) //zakleszczenie, nie mozna znalezc odpowiedniego fielda
+				{
+					if(created_advanced_ship.empty() == false)
+						created_advanced_ship.clear();
+					warning_sample_play_flag = true;
+					return;
+				}
 			} while (created_advanced_ship.size() < (indeks + 1));
 			b.addAdvancedShip(created_advanced_ship);
 			created_advanced_ship.clear();

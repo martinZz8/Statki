@@ -37,6 +37,7 @@ void Buttons::setButtons()
 	buttons.push_back(Button(u, "WROC DO MENU", 120, 40, 870, 545, 1, 12, false, BUTTON_DEPLOYING_BACK)); //23
 	buttons.push_back(Button(u, "AUTO", 120, 40, 10, 495, 40, 9, false, BUTTON_DEPLOYING_AUTO)); //25
 	buttons.push_back(Button(u, "RESET", 120, 40, 10, 545, 40, 9, false, BUTTON_DEPLOYING_RESET)); //25
+	/*GAME*/
 
 }
 
