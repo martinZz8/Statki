@@ -26,9 +26,10 @@ class Deploying :public State
 	bool mouse_click_guard; //true - mozna kliknac, false - nie mozna kliknac
 	bool done_deploying_b1; //true- rozstawiono finalnie board1, false - nie rozstawiono finalnie board1
 	bool done_deploying_b2; //true- rozstawiono finalnie board2, false - nie rozstawiono finalnie board2; jezeli rozstawiono board2, to mozna kliknac przycisk play
-	bool done_copy_b1_to_b2; //true - skopiowano, false - nie skopiowano
 	void fixShipSize(); //metoda naprawiajaca zmienna ship_size, gdy nie ma statku o takim rozmiarze
 	void restoreDefaults();
+	void clearBoard1();
+	void clearBoard2();
 
 public:
 	Deploying(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2);

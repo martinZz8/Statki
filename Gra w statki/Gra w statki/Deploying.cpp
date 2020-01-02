@@ -35,13 +35,34 @@ void Deploying::restoreDefaults()
 	b1.setFields();
 	b2.clearVectors();
 	b2.setFields();
-	setNUmbersOfNotDeployedShips();
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
-	done_copy_b1_to_b2 = false;
+	setNUmbersOfNotDeployedShips();
 	if (created_advanced_ship.empty() == false)
 		created_advanced_ship.clear();
 
+}
+
+void Deploying::clearBoard1()
+{
+	b1.clearVectors();
+	b1.setFields();
+	done_deploying_b1 = false;
+	b1.setNumbersOfNotDeployedShips();
+	fixShipSize();
+	if (created_advanced_ship.empty() == false)
+		created_advanced_ship.clear();
+}
+
+void Deploying::clearBoard2()
+{
+	b2.clearVectors();
+	b2.setFields();
+	done_deploying_b2 = false;
+	b2.setNumbersOfNotDeployedShips();
+	fixShipSize();
+	if (created_advanced_ship.empty() == false)
+		created_advanced_ship.clear();
 }
 
 Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2) :windowID(WINDOW_DEPLOYING), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
@@ -58,7 +79,6 @@ Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board
 	mouse_click_guard = true;
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
-	done_copy_b1_to_b2 = false;
 
 }
 
@@ -87,11 +107,8 @@ void Deploying::tick()
 	{
 		if (u.getPvCGameMode() == true)
 		{
-			if (done_deploying_b1 == true && b2.getDeployShipsFlag() == true) //&& done_copy_b1_to_b2 == false - byl jako drugi warunek
+			if (done_deploying_b1 == true && b2.getDeployShipsFlag() == true)
 			{
-				//done_copy_b1_to_b2 = true;
-				//copyShips(b1, b2);
-				//cout << "Skopiowalem ships z b1 do b2" << endl;
 				classicComputerDeploy();
 				cout << "Komputer zakonczyl rozstawianie boardu b2" << endl;
 			}
@@ -145,7 +162,7 @@ void Deploying::render()
 		if (done_deploying_b1 == false) //roztsawianie gracza nr 1
 		{
 			b1.paintBoard(true, true);
-			b2.paintBoard(false, false);
+			b2.paintBoard(false , false);
 		}
 		else if (done_deploying_b2 == false) //rozstawianie gracza nr 2
 		{
@@ -289,7 +306,18 @@ void Deploying::mouseSwitches()
 		else if (buttons.getActivated(BUTTON_DEPLOYING_RESET) == true && mouse_click_guard == true)
 		{
 			mouse_click_guard = false;
-			restoreDefaults();
+			if (u.getPvPGameMode() == true)
+			{
+				if (done_deploying_b1 == false)
+					clearBoard1();
+				else if (done_deploying_b2 == false)
+					clearBoard2();
+			}
+			else //PvC_game_mode == true
+			{
+				if (done_deploying_b1 == false)
+					clearBoard1();
+			}
 		}
 		else if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == true && mouse_click_guard == true)
 		{
