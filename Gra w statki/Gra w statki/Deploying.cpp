@@ -49,6 +49,8 @@ void Deploying::restoreDefaults()
 		difference_x.clear();
 	if (difference_y.empty() == false)
 		difference_y.clear();
+	coppied_ship.clearShipFields();
+	coppied_ship.clearSurroundingFields();
 }
 
 void Deploying::clearBoard1()
@@ -69,6 +71,8 @@ void Deploying::clearBoard1()
 		difference_x.clear();
 	if (difference_y.empty() == false)
 		difference_y.clear();
+	coppied_ship.clearShipFields();
+	coppied_ship.clearSurroundingFields();
 }
 
 void Deploying::clearBoard2()
@@ -89,6 +93,8 @@ void Deploying::clearBoard2()
 		difference_x.clear();
 	if (difference_y.empty() == false)
 		difference_y.clear();
+	coppied_ship.clearShipFields();
+	coppied_ship.clearSurroundingFields();
 }
 
 Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2) :coppied_ship(u),windowID(WINDOW_DEPLOYING), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
@@ -442,7 +448,6 @@ void Deploying::mouseSwitches()
 			{
 				//TODO przelaczanie okna z deploying do game
 				u.setMouseClickedBeforeStateSwitch(true);
-				restoreDefaults();
 				cout << "Przelaczanie okna z DEPLOYING do GAME" << endl;
 			}
 			else
@@ -870,6 +875,8 @@ int Deploying::placeMovedPlayerShip(Board& b)
 	fields_of_temporary_ship.clear();
 	difference_x.clear();
 	difference_y.clear();
+	coppied_ship.clearShipFields();
+	coppied_ship.clearSurroundingFields();
 	return result;
 }
 

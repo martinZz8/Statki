@@ -34,13 +34,13 @@ class Deploying :public State
 	bool done_deploying_b2; //true- rozstawiono finalnie board2, false - nie rozstawiono finalnie board2; jezeli rozstawiono board2, to mozna kliknac przycisk play
 	bool moving_ship_mode_on; //tryb przesuwania statku; true - wlaczony, false - wylaczony (wtedy jest wlaczony zwykly tryb rozstawiania statku)
 	void fixShipSize(); //metoda naprawiajaca zmienna ship_size, gdy nie ma statku o takim rozmiarze
-	void restoreDefaults();
 	void clearBoard1();
 	void clearBoard2();
 
 public:
 	Deploying(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2);
 	void setStates(Menu* menu);
+	void restoreDefaults();
 	void setNUmbersOfNotDeployedShips();
 	void tick(); //metoda wykonujaca obliczenia
 	void render(); //metoda wykonujaca rysowanie

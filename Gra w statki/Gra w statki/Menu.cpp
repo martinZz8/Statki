@@ -60,8 +60,6 @@ void Menu::mouseSwitches()
 		{
 			u.setRunning(false);
 		}
-
-
 	}
 }
 
