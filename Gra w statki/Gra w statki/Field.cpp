@@ -32,14 +32,14 @@ Field::Field(Utils& utils, float c_x, float c_y) :u(utils), c_x(c_x), c_y(c_y)
 	missed_flag = false;
 }
 
-void Field::setCoordX(float c_x)
+void Field::setCoordX(float new_c_x)
 {
-	this->c_x = c_x;
+	c_x = new_c_x;
 }
 
-void Field::setCoordY(float c_y)
+void Field::setCoordY(float new_c_y)
 {
-	this->c_y = c_y;
+	c_y = new_c_y;
 }
 
 void Field::setHit(bool h)

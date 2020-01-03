@@ -25,6 +25,8 @@ public:
 	float getHeight();
 	float getFieldSize();
 	bool getDeployShipsFlag();
+	float getShipX(int indeks);
+	float getShipY(int indeks);
 	vector <Ship> getShips(); //metoda zwracajaca vector shipów; stosowana przy kopiowaniu w deploying
 	void paintBoard(bool visible_ships, bool const_visible_surrounding); //metoda rysujaca plansze; visible_ships == true - rysuje statki, const_visible_surrounding == true - rysuje surrounded fieldsy caly czas (nawet, gdy statek nie jest zniszczony)
 	void setFields(); //metoda ustawiajaca koordynaty kazdego pola znajdujacego sie w vectorze pol
@@ -43,7 +45,13 @@ public:
 	void addAdvancedShip(vector <Field>& created_advanced_ship); //metoda dodaje statek do vectora Shipow
 	int whichQuarterOfField(float c_x, float c_y, float center_of_field_x, float center_of_field_y); //metoda zwraca, ktora cwiartka pola zostala kliknieta; 1 - prawa gorna, 2 - lewa gorna, 3 - lewa dolna, 4 - prawa dolna
 	void clearVectors(); //metoda czyszczace vektory fieldow oraz shipow
+	void clearVectorsOfShip(int indeks); //metoda czyszczace evektory ship_fields i surrounding_fields danego shipa
+	void clearSurroundedFieldsVector(int indeks); //metoda czyszczaca vector surrounded filedow statku o danym indeksie w vectorze shipow
 	bool isOnShip(Field& to_check_field); //metoda sprawdzajaca, czy to_check_field jest jakims statkiem; true - tak, false - nie
 	bool isOnSurrounding(Field& to_check_field); //metoda sprawdzajaca, czy to_check_field otacza jakis statek; true - tak, false - nie
-
+	bool isOnOtherShip(Field& to_check_field, vector <Field>& ship_fields);
+	void copyShip(Ship& new_ship, int indeks); //metoda kopiuje statek o zadanym indeksie do shipa new_ship
+	void copyFieldsOfShip(Ship& ship, vector <Field>& fields);
+	void moveShipFields(int indeks, float offset_x, float offset_y); //metoda przesuwajaca fieldy shipa z vectora shipsow o zadanym indeksie o zadane wartosci offset
+	int placeShip(Ship& coppied_ship, int indeks_of_coppied_ship, vector <Field>& fields_of_new_ship); //metoda stawiajaca statek w danym miejscu, gdy jest to mozliwe; zwraca 0, gdy sie powiedzie, -1 gdy sie nie powiedzie
 };

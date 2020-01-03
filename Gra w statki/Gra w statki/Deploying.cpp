@@ -38,9 +38,17 @@ void Deploying::restoreDefaults()
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
 	setNUmbersOfNotDeployedShips();
+	moving_ship_mode_on = false;
+	indeks_of_coppied_ship = -1;
+	choosed_for_move_ship_guard = false;
 	if (created_advanced_ship.empty() == false)
 		created_advanced_ship.clear();
-
+	if (fields_of_temporary_ship.empty() == false)
+		fields_of_temporary_ship.clear();
+	if (difference_x.empty() == false)
+		difference_x.clear();
+	if (difference_y.empty() == false)
+		difference_y.clear();
 }
 
 void Deploying::clearBoard1()
@@ -50,8 +58,17 @@ void Deploying::clearBoard1()
 	done_deploying_b1 = false;
 	b1.setNumbersOfNotDeployedShips();
 	fixShipSize();
+	moving_ship_mode_on = false;
+	indeks_of_coppied_ship = -1;
+	choosed_for_move_ship_guard = false;
 	if (created_advanced_ship.empty() == false)
 		created_advanced_ship.clear();
+	if (fields_of_temporary_ship.empty() == false)
+		fields_of_temporary_ship.clear();
+	if (difference_x.empty() == false)
+		difference_x.clear();
+	if (difference_y.empty() == false)
+		difference_y.clear();
 }
 
 void Deploying::clearBoard2()
@@ -61,13 +78,24 @@ void Deploying::clearBoard2()
 	done_deploying_b2 = false;
 	b2.setNumbersOfNotDeployedShips();
 	fixShipSize();
+	moving_ship_mode_on = false;
+	indeks_of_coppied_ship = -1;
+	choosed_for_move_ship_guard = false;
 	if (created_advanced_ship.empty() == false)
 		created_advanced_ship.clear();
+	if (fields_of_temporary_ship.empty() == false)
+		fields_of_temporary_ship.clear();
+	if (difference_x.empty() == false)
+		difference_x.clear();
+	if (difference_y.empty() == false)
+		difference_y.clear();
 }
 
-Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2) :windowID(WINDOW_DEPLOYING), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
+Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2) :coppied_ship(u),windowID(WINDOW_DEPLOYING), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
 {
 	m = NULL;
+	indeks_of_coppied_ship = -1;
+	choosed_for_move_ship_guard = false;
 	audio_play_guard = true;
 	warning_sample_play_guard = true;
 	warning_sample_play_flag = false;
@@ -79,6 +107,7 @@ Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board
 	mouse_click_guard = true;
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
+	moving_ship_mode_on = false;
 
 }
 
@@ -145,11 +174,13 @@ void Deploying::render()
 
 		if (b1.getDeployShipsFlag() == true)
 		{
-			if (u.getClassicGameMode() == true)
+			if (u.getClassicGameMode() == true && moving_ship_mode_on == false)
 				b1.paintClassicShip(u.getMouseX(), u.getMouseY());
-			else if (u.getAdvancedGameMode() == true)
+			else if (u.getAdvancedGameMode() == true && moving_ship_mode_on == false)
 				paintCreatedAdvancedShip();
 		}
+		if (done_deploying_b1 == false && moving_ship_mode_on == true)
+			paintTemporaryShip();
 	}
 	else if (u.getPvPGameMode() == true)
 	{
@@ -171,18 +202,20 @@ void Deploying::render()
 
 		if (u.getClassicGameMode() == true)
 		{
-			if (b1.getDeployShipsFlag() == true)
+			if (b1.getDeployShipsFlag() == true && moving_ship_mode_on == false)
 				b1.paintClassicShip(u.getMouseX(), u.getMouseY());
-			else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true)
-				b2.paintClassicShip(u.getMouseX(), u.getMouseY());				
+			else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true && moving_ship_mode_on == false)
+				b2.paintClassicShip(u.getMouseX(), u.getMouseY());
 		}
 		else if (u.getAdvancedGameMode() == true)
 		{
-			if (b1.getDeployShipsFlag() == true)
+			if (b1.getDeployShipsFlag() == true && moving_ship_mode_on == false)
 				paintCreatedAdvancedShip();
-			else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true)
+			else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true && moving_ship_mode_on == false)
 				paintCreatedAdvancedShip();
 		}
+		if ((done_deploying_b1 == false || (done_deploying_b1 == true && done_deploying_b2 == false)) && moving_ship_mode_on == true)
+			paintTemporaryShip();
 	}
 	paintButtons();
 
@@ -290,7 +323,23 @@ void Deploying::mouseSwitches()
 	}
 	else
 	{
-		if (buttons.getActivated(BUTTON_DEPLOYING_BACK) == true)
+		if (u.getMouse1Clicked() == false && u.getMouse2Clicked() == false)
+		{
+			mouse_click_guard = true;
+			place_ship_sample_flag = false;
+			add_advanced_ship_field_sample_flag = false;
+			warning_sample_play_flag = false;
+		}
+
+		if (u.getMouse2Clicked() == true && mouse_click_guard == true && (done_deploying_b1 == false || (done_deploying_b1 == true && done_deploying_b2 == false))) //przelaczanie moving_ship_mode_on
+		{
+			mouse_click_guard = false;
+			if (moving_ship_mode_on == false)
+				moving_ship_mode_on = true;
+			else //moving_ship_mode_on == true
+				moving_ship_mode_on = false;
+		}
+		else if (buttons.getActivated(BUTTON_DEPLOYING_BACK) == true)
 		{
 			*s = m;
 			restoreDefaults();
@@ -348,18 +397,25 @@ void Deploying::mouseSwitches()
 					clearBoard1();
 				else if (done_deploying_b2 == false)
 					clearBoard2();
+				else
+					warning_sample_play_flag = true;
 			}
 			else //PvC_game_mode == true
 			{
 				if (done_deploying_b1 == false)
 					clearBoard1();
+				else
+					warning_sample_play_flag = true;
 			}
 		}
 		else if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == true && mouse_click_guard == true)
 		{
 			mouse_click_guard = false;
 			if (b2.getDeployShipsFlag() == false && done_deploying_b2 == false)
+			{
 				done_deploying_b2 = true;
+				moving_ship_mode_on = false;
+			}
 			else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true)
 			{
 				cout << "Blad roztawiania b2" << endl;
@@ -370,6 +426,7 @@ void Deploying::mouseSwitches()
 			{
 				done_deploying_b1 = true;
 				fixShipSize();
+				moving_ship_mode_on = false;
 			}
 			else if (b1.getDeployShipsFlag() == true)
 			{
@@ -380,9 +437,12 @@ void Deploying::mouseSwitches()
 		else if (buttons.getActivated(BUTTON_DEPLOYING_PLAY) == true && mouse_click_guard == true)
 		{
 			mouse_click_guard = false;
+			moving_ship_mode_on = false;
 			if (done_deploying_b1 == true && done_deploying_b2 == true)
 			{
 				//TODO przelaczanie okna z deploying do game
+				u.setMouseClickedBeforeStateSwitch(true);
+				restoreDefaults();
 				cout << "Przelaczanie okna z DEPLOYING do GAME" << endl;
 			}
 			else
@@ -391,7 +451,7 @@ void Deploying::mouseSwitches()
 		else if (u.getClassicGameMode() == true)
 		{
 			//TODO DODAC NOWE OPCJE DZIALANIA PRAWEGO KLAWISZA MYSZY (opcje zmiany polozenia rozstawionego statku)
-			if (u.getMouse1Clicked() == true && mouse_click_guard == true)
+			if (u.getMouse1Clicked() == true && mouse_click_guard == true && moving_ship_mode_on == false)
 			{
 				mouse_click_guard = false;
 				if (u.getPvCGameMode() == true)
@@ -417,19 +477,56 @@ void Deploying::mouseSwitches()
 					}
 				}
 			}
-		}
-
-		if (u.getMouse1Clicked() == false)
-		{
-			mouse_click_guard = true;
-			place_ship_sample_flag = false;
-			add_advanced_ship_field_sample_flag = false;
-			warning_sample_play_flag = false;
+			else if (u.getMouse1Clicked() == true && moving_ship_mode_on == true)
+			{
+				if(u.getPvCGameMode() == true)
+					movePlayerShip(b1);
+				else //PvP_game_mode == true
+				{
+					if(done_deploying_b1 == false)
+						movePlayerShip(b1);
+					else if (done_deploying_b2 == false)
+						movePlayerShip(b2);
+				}
+			}
+			else if (u.getMouse1Clicked() == false && moving_ship_mode_on == true && indeks_of_coppied_ship != -1)
+			{
+				if (u.getPvCGameMode() == true)
+				{
+					int result = placeMovedPlayerShip(b1);
+					if (result == 0)
+						place_ship_sample_flag = true;
+					else if (result == -1)
+						warning_sample_play_flag = true;
+					choosed_for_move_ship_guard = false;
+				}
+				else //PvP_game_mode == true
+				{
+					if (done_deploying_b1 == false)
+					{
+						int result = placeMovedPlayerShip(b1);
+						if (result == 0)
+							place_ship_sample_flag = true;
+						else if (result == -1)
+							warning_sample_play_flag = true;
+						choosed_for_move_ship_guard = false;
+					}
+					else if (done_deploying_b2 == false)
+					{
+						int result = placeMovedPlayerShip(b2);
+						if (result == 0)
+							place_ship_sample_flag = true;
+						else if (result == -1)
+							warning_sample_play_flag = true;
+						choosed_for_move_ship_guard = false;
+					}
+				}
+			}
 		}
 
 		if (u.getAdvancedGameMode() == true)
 		{
-			if (u.getMouse1Clicked() == true)
+			if (u.getMouse1Clicked() == true && moving_ship_mode_on == false)
 			{
 				if (u.getPvCGameMode() == true)
 				{
@@ -447,7 +544,7 @@ void Deploying::mouseSwitches()
 						advancedPlayer2Deploy();
 				}
 			}
-			else if (u.getMouse1Clicked() == false)
+			else if (u.getMouse1Clicked() == false && moving_ship_mode_on == false)
 			{
 				if (u.getPvCGameMode() == true)
 				{
@@ -525,8 +622,52 @@ void Deploying::mouseSwitches()
 					}
 				}
 			}
+			else if (u.getMouse1Clicked() == true && moving_ship_mode_on == true)
+			{
+				if (u.getPvCGameMode() == true)
+					movePlayerShip(b1);
+				else //PvP_game_mode == true
+				{
+					if (done_deploying_b1 == false)
+						movePlayerShip(b1);
+					else if (done_deploying_b2 == false)
+						movePlayerShip(b2);
+				}
+			}
+			else if (u.getMouse1Clicked() == false && moving_ship_mode_on == true && indeks_of_coppied_ship != -1)
+			{
+				if (u.getPvCGameMode() == true)
+				{
+					int result = placeMovedPlayerShip(b1);
+					if (result == 0)
+						place_ship_sample_flag = true;
+					else if (result == -1)
+						warning_sample_play_flag = true;
+					choosed_for_move_ship_guard = false;
+				}
+				else //PvP_game_mode == true
+				{
+					if (done_deploying_b1 == false)
+					{
+						int result = placeMovedPlayerShip(b1);
+						if (result == 0)
+							place_ship_sample_flag = true;
+						else if (result == -1)
+							warning_sample_play_flag = true;
+						choosed_for_move_ship_guard = false;
+					}
+					else if (done_deploying_b2 == false)
+					{
+						int result = placeMovedPlayerShip(b2);
+						if (result == 0)
+							place_ship_sample_flag = true;
+						else if (result == -1)
+							warning_sample_play_flag = true;
+						choosed_for_move_ship_guard = false;
+					}
+				}
+			}
 		}
-
 	}
 }
 
@@ -685,6 +826,53 @@ void Deploying::advancedComputerDeploy(Board& b, bool deploy_for_player)
 	}
 }
 
+void Deploying::movePlayerShip(Board& b)
+{
+	if (choosed_for_move_ship_guard == false)
+	{
+		indeks_of_coppied_ship = b.whichShip(u.getMouseX(), u.getMouseY());
+		if (indeks_of_coppied_ship != -1)
+		{
+			b.copyShip(coppied_ship, indeks_of_coppied_ship);
+			b.copyFieldsOfShip(coppied_ship, fields_of_temporary_ship);
+			b.clearVectorsOfShip(indeks_of_coppied_ship);
+			float mouse_x = u.getMouseX();
+			float mouse_y = u.getMouseY();
+			int size_of_vector = fields_of_temporary_ship.size();
+			for (int i = 0; i < size_of_vector; i++)
+			{
+				difference_x.push_back(fields_of_temporary_ship[i].getCoordX() - mouse_x);
+				difference_y.push_back(fields_of_temporary_ship[i].getCoordY() - mouse_y);
+			}
+			choosed_for_move_ship_guard = true;
+		}
+		else
+			warning_sample_play_flag = true;
+	}
+	else if (indeks_of_coppied_ship != -1) //choosed_for_move_ship_guard == true
+	{
+		float mouse_x = u.getMouseX();
+		float mouse_y = u.getMouseY();
+		int size_of_vector = fields_of_temporary_ship.size();
+		for (int i = 0; i < size_of_vector; i++)
+		{
+			fields_of_temporary_ship[i].setCoordX(mouse_x + difference_x[i]);
+			fields_of_temporary_ship[i].setCoordY(mouse_y + difference_y[i]);
+		}
+	}
+}
+
+int Deploying::placeMovedPlayerShip(Board& b)
+{
+	int result = b.placeShip(coppied_ship, indeks_of_coppied_ship, fields_of_temporary_ship);
+	coppied_ship.clearShipFields();
+	indeks_of_coppied_ship = -1;
+	fields_of_temporary_ship.clear();
+	difference_x.clear();
+	difference_y.clear();
+	return result;
+}
+
 void Deploying::paintButtons()
 {
 	buttons.paintButtonWithText(BUTTON_DEPLOYING_DONE, FONT_SIZE_SMALL);
@@ -792,6 +980,15 @@ void Deploying::paintText()
 			u.drawText("GRACZ NR 2", FONT_SIZE_BIG, 183, 234, 243, 500, 25);
 		}
 	}
+
+	if (done_deploying_b1 == false || (done_deploying_b1 == true && done_deploying_b2 == false))
+	{
+		u.drawText("Tryb", FONT_SIZE_SMALL, 183, 234, 243, 740, 475);
+		if (moving_ship_mode_on == false)
+			u.drawText("rozstawiania", FONT_SIZE_SMALL, 206, 97, 37, 780, 475);
+		else //moving_ship_mode_on == true
+			u.drawText("przestawiania", FONT_SIZE_SMALL, 101, 226, 49, 780, 475);
+	}
 }
 
 void Deploying::paintBorders()
@@ -807,6 +1004,20 @@ void Deploying::paintCreatedAdvancedShip()
 	if (created_advanced_ship.empty() == false)
 	{
 		for (Field f : created_advanced_ship)
+		{
+			float c_x = f.getCoordX();
+			float c_y = f.getCoordY();
+			float width = f.getWidth();
+			al_draw_filled_rectangle(c_x, c_y, c_x + width, c_y + width, u.getColorOfShip());
+		}
+	}
+}
+
+void Deploying::paintTemporaryShip()
+{
+	if (fields_of_temporary_ship.empty() == false)
+	{
+		for (Field f : fields_of_temporary_ship)
 		{
 			float c_x = f.getCoordX();
 			float c_y = f.getCoordY();

@@ -41,6 +41,16 @@ bool Board::getDeployShipsFlag()
 	return deploy_ships_flag;
 }
 
+float Board::getShipX(int indeks)
+{
+	return ships[indeks].getCoordX(0);
+}
+
+float Board::getShipY(int indeks)
+{
+	return ships[indeks].getCoordY(0);
+}
+
 vector<Ship> Board::getShips()
 {
 	return ships;
@@ -910,6 +920,17 @@ void Board::clearVectors()
 	numbers_of_not_deployed_ships.clear();
 }
 
+void Board::clearVectorsOfShip(int indeks)
+{
+	ships[indeks].clearShipFields();
+	ships[indeks].clearSurroundingFields();
+}
+
+void Board::clearSurroundedFieldsVector(int indeks)
+{
+	ships[indeks].clearSurroundingFields();
+}
+
 bool Board::isOnShip(Field& to_check_field)
 {
 	for (Ship s : ships)
@@ -928,4 +949,66 @@ bool Board::isOnSurrounding(Field& to_check_field)
 			return true;
 	}
 	return false;
+}
+
+bool Board::isOnOtherShip(Field& to_check_field, vector <Field>& ship_fields)
+{
+	for (Ship s : ships)
+	{
+		if (s.isOnOtherShip(to_check_field, ship_fields) == true)
+			return true;
+	}
+	return false;
+}
+
+void Board::copyShip(Ship& new_ship, int indeks)
+{
+	vector <Field> ship_fields;
+	vector <Field> surrounded_fields;
+	ships[indeks].copyShip(ship_fields, surrounded_fields);
+	new_ship.setShipFields(ship_fields);
+	new_ship.setSurroundedFields(surrounded_fields);
+}
+
+void Board::copyFieldsOfShip(Ship& ship, vector<Field>& fields)
+{
+	ship.copyShipFields(fields);
+}
+
+void Board::moveShipFields(int indeks, float offset_x, float offset_y)
+{
+	ships[indeks].moveShipFields(offset_x, offset_y);
+}
+
+int Board::placeShip(Ship& coppied_ship, int indeks_of_coppied_ship, vector <Field>& fields_of_new_ship)
+{
+	vector <int> indeks_of_fields;
+	vector <Field> surrounded_fields;
+	int size_of_vector = fields_of_new_ship.size();
+	for (int i = 0; i < size_of_vector; i++)
+	{
+		int indeks = whichField(fields_of_new_ship[i].getCoordX(), fields_of_new_ship[i].getCoordY());
+		if (indeks == -1)
+		{
+			ships[indeks_of_coppied_ship].setShip(coppied_ship);
+			return -1;
+		}
+		fields_of_new_ship[i].setCoordX(fields[indeks].getCoordX());
+		fields_of_new_ship[i].setCoordY(fields[indeks].getCoordY());
+		indeks_of_fields.push_back(indeks);
+	}
+
+	for (int i = 0; i < size_of_vector; i++)
+	{
+		if (isOnOtherShip(fields_of_new_ship[i], fields_of_new_ship) == true || isOnSurrounding(fields_of_new_ship[i]) == true)
+		{
+			ships[indeks_of_coppied_ship].setShip(coppied_ship);
+			return -1;
+		}
+	}
+
+	setFieldsSurrounded(indeks_of_fields, surrounded_fields);
+	ships[indeks_of_coppied_ship].setShipFields(fields_of_new_ship);
+	ships[indeks_of_coppied_ship].setSurroundedFields(surrounded_fields);
+	return 0;
 }

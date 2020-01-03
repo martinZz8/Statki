@@ -15,8 +15,8 @@ public:
 	bool operator==(const Field& f); //porownuje c_x z f.c_x oraz c_y z f.c_y;
 	bool operator!=(const Field& f); //porownuje c_x z f.c_x oraz c_y z f.c_y;
 	Field(Utils& utils, float c_x, float c_y);
-	void setCoordX(float c_x);
-	void setCoordY(float c_y);
+	void setCoordX(float new_c_x);
+	void setCoordY(float new_c_y);
 	void setHit(bool h);
 	void setMiss(bool m);
 	float getCoordX();
