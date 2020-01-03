@@ -36,6 +36,7 @@
 #include "Menu.h"
 #include "Options.h"
 #include "Deploying.h"
+#include "Game.h"
 #include "Buttons.h"
 
 void install_addons()
@@ -67,13 +68,14 @@ int main()
 	Menu m(&s, u, buttons, b1, b2);
 	Options o(&s, u, buttons);
 	Deploying d(&s, u, buttons, b1, b2);
-	//Game game(&s,u, buttons,b1,b2);
+	Game g(&s, u, buttons, b1, b2);
 	//Player player1(&s, u, buttons, b1, b2);
 	//Player player2(&s, u, buttons, b1, b2);
 
 	m.setStates(&o, &d);
 	o.setStates(&m);
-	d.setStates(&m);	
+	d.setStates(&m, &g);
+	g.setStates(&m, &d);
 
 	//USTAWIENIE POCZATKOWEJ FAZY (MA BYC NA POCZATKU MENU)
 	s = &m;
@@ -365,7 +367,6 @@ int main()
 		}/*DEPLOYING*/
 		else if (s == &d)
 		{
-			
 			/*NAJECHANIE MYSZKA NA BUTTONA*/
 			if (buttons.isMouseOnButton(BUTTON_DEPLOYING_DONE) == true)
 				buttons.setHighlighted(BUTTON_DEPLOYING_DONE, true);
@@ -418,8 +419,26 @@ int main()
 				buttons.setActivated(BUTTON_DEPLOYING_AUTO, false);
 				buttons.setActivated(BUTTON_DEPLOYING_RESET, false);
 			}
+		}/*GAME*/
+		else if (s == &g)
+		{
+			/*NAJECHANIE MYSZKA NA BUTTONA*/
+			if (buttons.isMouseOnButton(BUTTON_GAME_BACK) == true)
+				buttons.setHighlighted(BUTTON_GAME_BACK, true);
+			else
+				buttons.setHighlighted(BUTTON_GAME_BACK, false);
+
+			/*KLIKNIECIE PRZYCISKU NA BUTTONIE*/
+			if (u.getMouse1Clicked() == true)
+			{
+				if (buttons.isMouseOnButton(BUTTON_GAME_BACK) == true)
+					buttons.setActivated(BUTTON_GAME_BACK, true);
+				else
+					buttons.setActivated(BUTTON_GAME_BACK, false);
+			}
+			else
+				buttons.setActivated(BUTTON_GAME_BACK, false);
 		}
-		
 
 		/***GLOWNE WYWOLANIA METOD***/
 		if (event.type == ALLEGRO_EVENT_TIMER)

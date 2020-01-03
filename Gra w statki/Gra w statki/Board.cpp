@@ -186,6 +186,36 @@ void Board::setNumbersOfNotDeployedShips()
 	numbers_of_not_deployed_ships.push_back(u.getNumberOfFourMastedShips()); //indeks 3
 }
 
+void Board::setNumbersOfNotDestroyedShips()
+{
+	int one_masted = 0;
+	int two_masted = 0;
+	int three_masted = 0;
+	int four_masted = 0;
+	int size_of_vector = ships.size();
+	for (int i = 0; i < size_of_vector; i++)
+	{
+		if (ships[i].getShipDestroyedFlag() == false)
+		{
+			int ship_size = ships[i].getNumberOfFields();
+			if (ship_size == 1)
+				one_masted++;
+			else if (ship_size == 2)
+				two_masted++;
+			else if (ship_size == 3)
+				three_masted++;
+			else if (ship_size == 4)
+				four_masted++;
+		}
+	}
+	if (numbers_of_not_destroyed_ships.empty() == false)
+		numbers_of_not_destroyed_ships.clear();
+	numbers_of_not_destroyed_ships.push_back(one_masted);
+	numbers_of_not_destroyed_ships.push_back(two_masted);
+	numbers_of_not_destroyed_ships.push_back(three_masted);
+	numbers_of_not_destroyed_ships.push_back(four_masted);
+}
+
 int Board::setShipHitted(Field& field)
 {
 	for (Ship s : ships)

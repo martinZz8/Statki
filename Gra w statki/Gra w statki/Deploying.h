@@ -4,6 +4,7 @@
 #include "Buttons.h"
 
 class Menu;
+class Game;
 
 class Deploying :public State
 {
@@ -11,7 +12,8 @@ class Deploying :public State
 	Buttons& buttons;
 	Board& b1;
 	Board& b2;
-	Menu* m; //wskaznik tylko do porowania adresu
+	Menu* m; //wskaznik tylko do ustawienia adresu
+	Game* g; //wskaznik tylko do ustawienia adresu
 	State** s;
 	vector <Field> created_advanced_ship; //vector fieldow jednego shipa, ktory jest tworzony tylko przy wyborze opcji advanced (tymczasowy statek)
 	Ship coppied_ship; //przechowywana kopia zapasowa danego shipa
@@ -39,7 +41,7 @@ class Deploying :public State
 
 public:
 	Deploying(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2);
-	void setStates(Menu* menu);
+	void setStates(Menu* menu, Game* game);
 	void restoreDefaults();
 	void setNUmbersOfNotDeployedShips();
 	void tick(); //metoda wykonujaca obliczenia

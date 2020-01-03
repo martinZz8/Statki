@@ -1,5 +1,6 @@
 #include "Deploying.h"
 #include "Menu.h"
+#include "Game.h"
 
 void Deploying::fixShipSize()
 {
@@ -100,6 +101,7 @@ void Deploying::clearBoard2()
 Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board1, Board& board2) :coppied_ship(u),windowID(WINDOW_DEPLOYING), s(state), u(utils), buttons(buttons), b1(board1), b2(board2)
 {
 	m = NULL;
+	g = NULL;
 	indeks_of_coppied_ship = -1;
 	choosed_for_move_ship_guard = false;
 	audio_play_guard = true;
@@ -117,9 +119,10 @@ Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board
 
 }
 
-void Deploying::setStates(Menu* menu)
+void Deploying::setStates(Menu* menu, Game* game)
 {
 	m = menu;
+	g = game;
 }
 
 void Deploying::setNUmbersOfNotDeployedShips()
@@ -176,7 +179,7 @@ void Deploying::render()
 	if (u.getPvCGameMode() == true)
 	{
 		b1.paintBoard(true, true);
-		b2.paintBoard(true, true); //PIERWSZY I DRUGI ARGUMENT METODY OBOK MAJA BYC NA FALSE; JEST TRUE TYLKO DLA TESTU!
+		b2.paintBoard(false, false); //PIERWSZY I DRUGI ARGUMENT METODY OBOK MAJA BYC NA FALSE; JEST TRUE TYLKO DLA TESTU!
 
 		if (b1.getDeployShipsFlag() == true)
 		{
@@ -345,9 +348,10 @@ void Deploying::mouseSwitches()
 			else //moving_ship_mode_on == true
 				moving_ship_mode_on = false;
 		}
-		else if (buttons.getActivated(BUTTON_DEPLOYING_BACK) == true)
+		else if (buttons.getActivated(BUTTON_DEPLOYING_BACK) == true && mouse_click_guard == true)
 		{
 			*s = m;
+			mouse_click_guard = false;
 			restoreDefaults();
 			u.setMouseClickedBeforeStateSwitch(true);
 			cout << "Przelaczenie z DEPLOYING do MENU" << endl;
@@ -443,10 +447,12 @@ void Deploying::mouseSwitches()
 		else if (buttons.getActivated(BUTTON_DEPLOYING_PLAY) == true && mouse_click_guard == true)
 		{
 			mouse_click_guard = false;
-			moving_ship_mode_on = false;
 			if (done_deploying_b1 == true && done_deploying_b2 == true)
 			{
-				//TODO przelaczanie okna z deploying do game
+				*s = g;
+				moving_ship_mode_on = false;
+				b1.setNumbersOfNotDestroyedShips();
+				b2.setNumbersOfNotDestroyedShips();
 				u.setMouseClickedBeforeStateSwitch(true);
 				cout << "Przelaczanie okna z DEPLOYING do GAME" << endl;
 			}

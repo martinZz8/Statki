@@ -19,6 +19,7 @@ class Board
 public:
 	Board(Utils& utils, float offset_x, float offset_y);
 	vector <int> numbers_of_not_deployed_ships; //vector ilosci statkow, ktore zostaly jeszcze do rozstawienia; indeks+1 wskazuje jakiej dlugosci jest statek
+	vector <int> numbers_of_not_destroyed_ships; //vector ilosci statkow, ktore nie zostaly jeszcze zniszczone; indeks+1 wzkazuje jakiej dlugosci jest statek
 	float getXOffset();
 	float getYOffset();
 	float getWidth();
@@ -34,6 +35,7 @@ public:
 	void setDeployShipsFlag(); //metoda sprawdzajaca, czy mozna dalej rozstawiac statki na tym boardzie
 	void setFieldsSurrounded(vector <int> indeks_of_ship_fields, vector <Field>& surrounded_fields); //metoda tworzaca vector surrounded danego statku; przyjmuje vector indeksow statku - wywolywane przy stawianiu statku
 	void setNumbersOfNotDeployedShips();
+	void setNumbersOfNotDestroyedShips();
 	int setShipHitted(Field& field); //metoda zwraca 0, gdy udalo sie ustawic fielda shipa na hitted, -1 gdy nie udalo sie ustawic fielda shipa na hitted
 	void setShips(vector <Ship> s);
 	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields
