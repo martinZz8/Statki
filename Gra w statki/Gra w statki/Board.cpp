@@ -223,19 +223,17 @@ int Board::whichShip(float mouse_x, float mouse_y)
 	for (int i = 0; i < ships_size; i++)
 	{
 		//przeszukuje kazde pole z vectora pol w danym statku
-		int indeks = 0;
 		int number_of_fields = ships[i].getNumberOfFields();
 		for (int j = 0; j < number_of_fields; j++)
 		{
-			float l_x = ships[j].getCoordX(indeks); //lewe x
+			float l_x = ships[i].getCoordX(j); //lewe x
 			float r_x = l_x + field_size; //prawe x
-			float u_y = ships[j].getCoordY(indeks); //gorne y
+			float u_y = ships[i].getCoordY(j); //gorne y
 			float d_y = u_y + field_size; //dolne y
 			if (mouse_x >= l_x && mouse_x < r_x && mouse_y >= u_y && mouse_y < d_y)
 			{
 				return i;
 			}
-			indeks++;
 		}
 	}
 	//zwrocenie -1 oznacza, ze pod danymi koordynatami mouse_x i mouse_y nie ma statku
