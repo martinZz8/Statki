@@ -5,36 +5,52 @@ Ship::Ship(Utils& utils, vector<Field> ship_f, vector<Field> surr_f) :u(utils), 
 	ship_destroyed_flag = false;
 }
 
-void Ship::setShipDestroyedFlag()
+void Ship::setShipDestroyedFlag(vector <int>& numbers_of_not_destroyed_ships)
 {
 	int number_of_hits = 0;
-	for (Field f : ship_fields)
+	int size_of_vector = ship_fields.size();
+	for (int indeks = 0; indeks < size_of_vector; indeks++)
 	{
-		if (f.getHit() == true)
+		if (ship_fields[indeks].getHit() == true)
 			number_of_hits++;
 	}
-	if (number_of_hits == ship_fields.size())
+
+	if (number_of_hits == size_of_vector)
+	{
+		numbers_of_not_destroyed_ships[size_of_vector - 1]--;
 		ship_destroyed_flag = true;
+	}
 	else
-		ship_destroyed_flag = false;
+		ship_destroyed_flag = false;	
 }
 
-int Ship::setShipHitted(Field& field)
+int Ship::setShipHitted(Field& field, vector <int>& numbers_of_not_destroyed_ships)
 {
-	for (Field ship_field : ship_fields)
+	int size_of_vector_1 = ship_fields.size();
+	for (int indeks = 0; indeks < size_of_vector_1; indeks++)
 	{
-		if (ship_field == field)
+		if (ship_fields[indeks] == field)
 		{
-			if (field.getHit() == false)
+			if (ship_fields[indeks].getHit() == false)
 			{
-				ship_field.setHit(true);
-				return 0;
+				ship_fields[indeks].setHit(true);
+				setShipDestroyedFlag(numbers_of_not_destroyed_ships);
+				return 0; //trafiono ten field statku
 			}
-			else
-				return 1;
-		}	
+			return 1; //juz wczesniej trafiony field statku
+		}
 	}
-	return -1;
+
+	if (ship_destroyed_flag == true && u.getHintsOn() == true)
+	{
+		int size_of_vector_2 = surrounded_fields.size();
+		for (int indeks = 0; indeks < size_of_vector_2; indeks++)
+		{
+			if (surrounded_fields[indeks] == field)
+				return 1; //trafiono surrounded field
+		}
+	}
+	return -1; //nie trafionio tego statku
 }
 
 void Ship::copyShip(vector<Field>& new_ship_fields, vector<Field>& new_surrounded_fields)
@@ -107,9 +123,34 @@ int Ship::getNumberOfFields()
 	return ship_fields.size();
 }
 
+int Ship::getNumberOfHittedFields()
+{
+	int number_of_hitted_fields = 0;
+	int size_of_vector = ship_fields.size();
+	for (int indeks = 0; indeks < size_of_vector; indeks++)
+	{
+		if (ship_fields[indeks].getHit() == true)
+			number_of_hitted_fields++;
+	}
+	return number_of_hitted_fields;
+}
+
 bool Ship::getShipDestroyedFlag()
 {
 	return ship_destroyed_flag;
+}
+
+void Ship::getShipFields(vector<float>& coord_x, vector<float>& coord_y)
+{
+	int size_of_vector = ship_fields.size();
+	for (int indeks = 0; indeks < size_of_vector; indeks++)
+	{
+		if (ship_fields[indeks].getHit() == true)
+		{
+			coord_x.push_back(ship_fields[indeks].getCoordX());
+			coord_y.push_back(ship_fields[indeks].getCoordY());
+		}
+	}
 }
 
 vector<Field>& Ship::getShipFields()

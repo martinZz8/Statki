@@ -51,6 +51,21 @@ float Board::getShipY(int indeks)
 	return ships[indeks].getCoordY(0);
 }
 
+bool Board::getShipsDestroyedFlag(int indeks)
+{
+	return ships[indeks].getShipDestroyedFlag();
+}
+
+int Board::getNumbersOfShipHittedFields(int indeks)
+{
+	return ships[indeks].getNumberOfHittedFields();
+}
+
+void Board::getCoordsOfShipHittedFields(int indeks, vector<float>& coord_x, vector<float>& coord_y)
+{
+	ships[indeks].getShipFields(coord_x, coord_y);
+}
+
 vector<Ship> Board::getShips()
 {
 	return ships;
@@ -216,17 +231,53 @@ void Board::setNumbersOfNotDestroyedShips()
 	numbers_of_not_destroyed_ships.push_back(four_masted);
 }
 
-int Board::setShipHitted(Field& field)
+int Board::setShipHitted(float mouse_x, float mouse_y)
 {
-	for (Ship s : ships)
+	int indeks_of_field = whichField(mouse_x, mouse_y);
+	if (indeks_of_field == -1)
+		return 1; //trafiono poza plansze
+	int size_of_vector = ships.size();
+	for (int indeks = 0; indeks < size_of_vector; indeks++)
 	{
-		int i = s.setShipHitted(field);
-		if (i == 0)
-			return 0;
-		else if (i == 1)
-			return -1;
+		int result = ships[indeks].setShipHitted(fields[indeks_of_field], numbers_of_not_destroyed_ships);
+		if (result == 0)
+			return 0; //trafiono field statku
+		else if (result == 1)
+			return 1; //trafiono juz wczesniej trafiony field statku albo w surrounded fielda przy zniszczonym statku i hints_on == true
 	}
-	return -1;
+
+	if (fields[indeks_of_field].getMiss() == false)
+	{
+		fields[indeks_of_field].setMiss(true);
+		return -1; //nie trafiono zadnego statku
+	}
+	return 1; //trafiono field boardu, ktory byl juz wczesniej trafiony jako pudlo
+}
+
+int Board::setShipHitted(float mouse_x, float mouse_y, int& indeks_of_last_hitted_ship)
+{
+	int indeks_of_field = whichField(mouse_x, mouse_y);
+	if (indeks_of_field == -1)
+		return 1; //trafiono poza plansze
+	int size_of_vector = ships.size();
+	for (int indeks = 0; indeks < size_of_vector; indeks++)
+	{
+		int result = ships[indeks].setShipHitted(fields[indeks_of_field], numbers_of_not_destroyed_ships);
+		if (result == 0)
+		{
+			indeks_of_last_hitted_ship = indeks;
+			return 0; //trafiono field statku
+		}
+		else if (result == 1)
+			return 1; //trafiono juz wczesniej trafiony field statku albo w surrounded fielda przy zniszczonym statku i hints_on == true
+	}
+
+	if (fields[indeks_of_field].getMiss() == false)
+	{
+		fields[indeks_of_field].setMiss(true);
+		return -1; //nie trafiono zadnego statku
+	}
+	return 1; //trafiono field boardu, ktory byl juz wczesniej trafiony jako pudlo
 }
 
 void Board::setShips(vector<Ship> s)

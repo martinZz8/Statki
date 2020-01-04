@@ -450,6 +450,7 @@ void Deploying::mouseSwitches()
 			if (done_deploying_b1 == true && done_deploying_b2 == true)
 			{
 				*s = g;
+				g->choose_who_starts();
 				moving_ship_mode_on = false;
 				b1.setNumbersOfNotDestroyedShips();
 				b2.setNumbersOfNotDestroyedShips();

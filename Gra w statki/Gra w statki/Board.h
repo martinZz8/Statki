@@ -28,6 +28,9 @@ public:
 	bool getDeployShipsFlag();
 	float getShipX(int indeks);
 	float getShipY(int indeks);
+	bool getShipsDestroyedFlag(int indeks);
+	int getNumbersOfShipHittedFields(int indeks);
+	void getCoordsOfShipHittedFields(int indeks, vector <float>& coord_x, vector <float>& coord_y);
 	vector <Ship> getShips(); //metoda zwracajaca vector shipów; stosowana przy kopiowaniu w deploying
 	void paintBoard(bool visible_ships, bool const_visible_surrounding); //metoda rysujaca plansze; visible_ships == true - rysuje statki, const_visible_surrounding == true - rysuje surrounded fieldsy caly czas (nawet, gdy statek nie jest zniszczony)
 	void setFields(); //metoda ustawiajaca koordynaty kazdego pola znajdujacego sie w vectorze pol
@@ -36,7 +39,8 @@ public:
 	void setFieldsSurrounded(vector <int> indeks_of_ship_fields, vector <Field>& surrounded_fields); //metoda tworzaca vector surrounded danego statku; przyjmuje vector indeksow statku - wywolywane przy stawianiu statku
 	void setNumbersOfNotDeployedShips();
 	void setNumbersOfNotDestroyedShips();
-	int setShipHitted(Field& field); //metoda zwraca 0, gdy udalo sie ustawic fielda shipa na hitted, -1 gdy nie udalo sie ustawic fielda shipa na hitted
+	int setShipHitted(float mouse_x, float mouse_y); //metoda zwraca 0, gdy udalo sie ustawic fielda shipa na hitted, -1 gdy nie udalo sie ustawic fielda shipa na hitted; 1, gdy dany field shippa jest juz trafiony albo dany field boardu jest juz trafiony jako missed (przy opcji hints_on == true)
+	int setShipHitted(float mouse_x, float mouse_y, int& indeks_of_last_hitted_ship); //metoda zwraca 0, gdy udalo sie ustawic fielda shipa na hitted, -1 gdy nie udalo sie ustawic fielda shipa na hitted; 1, gdy dany field shippa jest juz trafiony albo dany field boardu jest juz trafiony jako missed (przy opcji hints_on == true)
 	void setShips(vector <Ship> s);
 	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships albo -1, gdy nie ma takiego statku
