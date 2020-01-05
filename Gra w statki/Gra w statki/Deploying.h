@@ -46,8 +46,8 @@ public:
 	void setNUmbersOfNotDeployedShips();
 	void tick(); //metoda wykonujaca obliczenia
 	void render(); //metoda wykonujaca rysowanie
-	int getWindowID(); //metoda zwracajaca indeks okna;
-	void classicShipSwitch(vector <int>& numbers_of_not_deployed_ships); //NOWA METODA
+	int getWindowID(); //metoda zwracajaca indeks okna
+	void classicShipSwitch(vector <int>& numbers_of_not_deployed_ships);
 	void classicKeyboardSwitches();
 	void mouseSwitches();
 	void classicPlayer1Deploy();

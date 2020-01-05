@@ -27,7 +27,7 @@ public:
 	void setStates(Menu* menu);
 	void tick(); //metoda wykonujaca obliczenia
 	void render(); //metoda wykonujaca rysowanie
-	int getWindowID(); //metoda zwracajaca indeks okna;
+	int getWindowID(); //metoda zwracajaca indeks okna
 	void setBackToMenuGuard(); //ustawienie back_to_menu_guard
 	void mouseSwitches();
 	void paintButtons();

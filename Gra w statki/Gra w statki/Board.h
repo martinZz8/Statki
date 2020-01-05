@@ -40,10 +40,9 @@ public:
 	void setNumbersOfNotDestroyedShips();
 	int setShipHitted(float mouse_x, float mouse_y); //metoda zwraca 0, gdy udalo sie ustawic fielda shipa na hitted, -1 gdy nie udalo sie ustawic fielda shipa na hitted; 1, gdy dany field shippa jest juz trafiony albo dany field boardu jest juz trafiony jako missed (przy opcji hints_on == true)
 	int setShipHitted(float mouse_x, float mouse_y, int& indeks_of_last_hitted_ship); //metoda zwraca 0, gdy udalo sie ustawic fielda shipa na hitted, -1 gdy nie udalo sie ustawic fielda shipa na hitted; 1, gdy dany field shippa jest juz trafiony albo dany field boardu jest juz trafiony jako missed (przy opcji hints_on == true)
-	void setShips(vector <Ship> s);
 	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships albo -1, gdy nie ma takiego statku
-	void paintClassicShip(float mouse_x, float mouse_y); //metoda ryzsujaca statek dla standardowych opcji statków
+	void paintClassicShip(float mouse_x, float mouse_y); //metoda rysujaca statek dla standardowych opcji statków
 	int deployClassicShip(float mouse_x, float mouse_y, int ship_orientation, int ship_size); //metoda rozstawiajaca calssic ship; zwraca 0, gdy rozstawianie sie powiedzie, zwraca -1 gdy rozstawianie sie nie powiedzie
 	int deployAdvancedShip(float mouse_x, float mouse_y, vector <Field>& created_advanced_ship, bool player_deploy); //metoda rozstawiajaca advanced ship, player_deploy - zmienna wskazujaca, czy rozstawia gracz czy komputer; zwraca 0, gdy sie powiedzie, zwraca -1 gdy sie nie powiedzie, zwraca 1 gdy (przy player_deploy == true) myszka znajduje sie nadal na tym samym fieldzie co ostatnio dodany do vectora created_advanced_ship albo (przy player_deploy == false) wylosowano field, ktory juz nalezy do vectora created_advanced_ship badz lezy za daleko od danego fielda badz lezy w zabronionym miejscu (aby nie marnowac juz dobrze wylosowanych fieldow)
 	void addAdvancedShip(vector <Field>& created_advanced_ship); //metoda dodaje statek do vectora Shipow
@@ -56,6 +55,5 @@ public:
 	bool isOnOtherShip(Field& to_check_field, vector <Field>& ship_fields);
 	void copyShip(Ship& new_ship, int indeks); //metoda kopiuje statek o zadanym indeksie do shipa new_ship
 	void copyFieldsOfShip(Ship& ship, vector <Field>& fields);
-	void moveShipFields(int indeks, float offset_x, float offset_y); //metoda przesuwajaca fieldy shipa z vectora shipsow o zadanym indeksie o zadane wartosci offset
 	int placeShip(Ship& coppied_ship, int indeks_of_coppied_ship, vector <Field>& fields_of_new_ship); //metoda stawiajaca statek w danym miejscu, gdy jest to mozliwe; zwraca 0, gdy sie powiedzie, -1 gdy sie nie powiedzie
 };

@@ -738,7 +738,7 @@ void Deploying::classicComputerDeploy(Board& b, bool deploy_for_player)
 				cout << "wylosowane x wynosi: " << x << ", natomiast wylosowane y: " << y << endl;
 				condition = b.deployClassicShip(x, y, orientation, indeks + 1);
 				iteration++;
-				if (deploy_for_player == true && iteration > 500) //zakleszczenie, nie mozna znalezc odpowiedniego fielda
+				if (deploy_for_player == true && iteration > 300) //zakleszczenie, nie mozna znalezc odpowiedniego fielda
 				{
 					warning_sample_play_flag = true;
 					return;
@@ -795,9 +795,11 @@ void Deploying::advancedComputerDeploy(Board& b, bool deploy_for_player)
 
 	for (int indeks = b.numbers_of_not_deployed_ships.size() - 1; indeks >= 0; indeks--)
 	{
+		int clearing = 0;
 		while (b.numbers_of_not_deployed_ships[indeks] > 0)
 		{
 			int iteration = 0;
+			clearing = 0;
 			int condition;
 			do
 			{
@@ -822,14 +824,21 @@ void Deploying::advancedComputerDeploy(Board& b, bool deploy_for_player)
 				}
 				cout << "wylosowane x wynosi: " << x << ", natomiast wylosowane y: " << y << endl;
 				condition = b.deployAdvancedShip(x, y, created_advanced_ship, false);
+				iteration++;
 				if (condition == -1 && created_advanced_ship.empty() == false)
 					created_advanced_ship.clear();
-				if (deploy_for_player == true && iteration > 500) //zakleszczenie, nie mozna znalezc odpowiedniego fielda
+				if (deploy_for_player == true && iteration > 100) //zakleszczenie, nie mozna znalezc odpowiedniego fielda
 				{
+					cout << "Czyszczenie" << endl;
+					iteration = 0;
+					clearing++;
 					if(created_advanced_ship.empty() == false)
 						created_advanced_ship.clear();
-					warning_sample_play_flag = true;
-					return;
+					if (clearing == 15)
+					{
+						warning_sample_play_flag = true;
+						return;
+					}
 				}
 			} while (created_advanced_ship.size() < (indeks + 1));
 			b.addAdvancedShip(created_advanced_ship);

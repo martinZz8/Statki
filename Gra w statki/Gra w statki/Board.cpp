@@ -275,15 +275,6 @@ int Board::setShipHitted(float mouse_x, float mouse_y, int& indeks_of_last_hitte
 	return 1; //trafiono field boardu, ktory byl juz wczesniej trafiony jako pudlo
 }
 
-void Board::setShips(vector<Ship> s)
-{
-	ships.clear();
-	for (Ship new_ship : s)
-	{
-		ships.push_back(new_ship);
-	}
-}
-
 int Board::whichField(float mouse_x, float mouse_y)
 {
 	int fields_size = fields.size();
@@ -1049,11 +1040,6 @@ void Board::copyShip(Ship& new_ship, int indeks)
 void Board::copyFieldsOfShip(Ship& ship, vector<Field>& fields)
 {
 	ship.copyShipFields(fields);
-}
-
-void Board::moveShipFields(int indeks, float offset_x, float offset_y)
-{
-	ships[indeks].moveShipFields(offset_x, offset_y);
 }
 
 int Board::placeShip(Ship& coppied_ship, int indeks_of_coppied_ship, vector <Field>& fields_of_new_ship)

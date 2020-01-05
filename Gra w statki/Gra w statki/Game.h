@@ -34,7 +34,7 @@ public:
 	void setStates(Menu* menu, Deploying* deploying);
 	void tick();
 	void render();
-	int getWindowID(); //metoda zwracajaca indeks okna;
+	int getWindowID(); //metoda zwracajaca indeks okna
 	int playerShoot(Board& b); //metoda oddajaca strzal gracza do boardu b; zwraca 0 gdy strzal sie powiodl; zwraca -1 gdy strzal zostal nie trafiony; zwraca 1 gdy strzal zostal oddany w zabronione miejsce (wtedy mozna oddac strzal jeszcze raz)
 	int classicComputerPvCShoot(Board& b); //metoda oddajaca strzal komputera w trybie klasycznym do boardu b; zwraca -1 gdy strzal zostal nie trafiony; zwraca 1 gdy strzal zostal oddany w zabronione miejsce (wtedy mozna oddac strzal jeszcze raz)
 	int advancedComputerPvCShoot(Board& b); //metoda oddajaca strzal komputera w trybie zaawansowanym do boardu b; zwraca -1 gdy strzal zostal nie trafiony; zwraca 1 gdy strzal zostal oddany w zabronione miejsce (wtedy mozna oddac strzal jeszcze raz)

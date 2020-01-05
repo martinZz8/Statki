@@ -79,13 +79,15 @@ void Game::tick()
 				int result = classicComputerPvCShoot(b1);
 				if (result == -1)
 				{
-					u.playSample(AUDIO_MISSED_SHOT);
+					if (u.getVolumeOn() == true)
+						u.playSample(AUDIO_MISSED_SHOT);
 					player1_turn_flag = true;
 				}
 				else if (result == 0)
 				{
 					who_won_game = check_end_of_game();
-					u.playSample(AUDIO_HITTED_SHIP);
+					if (u.getVolumeOn() == true)
+						u.playSample(AUDIO_HITTED_SHIP);
 				}	
 			}
 			else if (u.getAdvancedGameMode() == true)
@@ -94,13 +96,15 @@ void Game::tick()
 				int result = advancedComputerPvCShoot(b1);
 				if (result == -1)
 				{
-					u.playSample(AUDIO_MISSED_SHOT);
+					if (u.getVolumeOn() == true)
+						u.playSample(AUDIO_MISSED_SHOT);
 					player1_turn_flag = true;
 				}
 				else if (result == 0)
 				{
 					who_won_game = check_end_of_game();
-					u.playSample(AUDIO_HITTED_SHIP);
+					if (u.getVolumeOn() == true)
+						u.playSample(AUDIO_HITTED_SHIP);
 				}	
 			}
 		}
@@ -409,47 +413,50 @@ void Game::mouseSwitches()
 
 void Game::playAudio()
 {
-	/*Audio dotyczace highlightow*/
-	bool highlighted = false;
-	for (int indeks = BUTTON_GAME_BACK; indeks <= BUTTON_GAME_BACK; indeks++)
+	if (u.getVolumeOn() == true)
 	{
-		if (buttons.getHighlighted(indeks) == true)
+		/*Audio dotyczace highlightow*/
+		bool highlighted = false;
+		for (int indeks = BUTTON_GAME_BACK; indeks <= BUTTON_GAME_BACK; indeks++)
 		{
-			highlighted = true;
-			break;
+			if (buttons.getHighlighted(indeks) == true)
+			{
+				highlighted = true;
+				break;
+			}
 		}
-	}
-	if (highlighted == true && audio_play_guard == true)
-	{
-		u.playSample(AUDIO_BUTTON_HIGHLIGHT);
-		audio_play_guard = false;
-	}
+		if (highlighted == true && audio_play_guard == true)
+		{
+			u.playSample(AUDIO_BUTTON_HIGHLIGHT);
+			audio_play_guard = false;
+		}
 
-	/*Audio dotyczace warningow*/
-	if (warning_sample_play_flag == true && warning_sample_play_guard == true)
-	{
-		u.playSample(AUDIO_ERROR);
-		warning_sample_play_guard = false;
-	}
+		/*Audio dotyczace warningow*/
+		if (warning_sample_play_flag == true && warning_sample_play_guard == true)
+		{
+			u.playSample(AUDIO_ERROR);
+			warning_sample_play_guard = false;
+		}
 
-	/*Audio dotyczace trafienia statku*/
-	if (ship_hitted_sample_play_flag == true && audio_play_guard == true)
-	{
-		u.playSample(AUDIO_HITTED_SHIP);
-		audio_play_guard = false;
-	}
+		/*Audio dotyczace trafienia statku*/
+		if (ship_hitted_sample_play_flag == true && audio_play_guard == true)
+		{
+			u.playSample(AUDIO_HITTED_SHIP);
+			audio_play_guard = false;
+		}
 
-	/*Audio dotyczace zmissowania statku*/
-	if (ship_missed_sample_play_flag == true && audio_play_guard == true)
-	{
-		u.playSample(AUDIO_MISSED_SHOT);
-		audio_play_guard = false;
-	}
+		/*Audio dotyczace zmissowania statku*/
+		if (ship_missed_sample_play_flag == true && audio_play_guard == true)
+		{
+			u.playSample(AUDIO_MISSED_SHOT);
+			audio_play_guard = false;
+		}
 
-	if (highlighted == false && ship_hitted_sample_play_flag == false && ship_missed_sample_play_flag == false && audio_play_guard == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
-		audio_play_guard = true;
-	if (warning_sample_play_flag == false && warning_sample_play_guard == false)
-		warning_sample_play_guard = true;
+		if (highlighted == false && ship_hitted_sample_play_flag == false && ship_missed_sample_play_flag == false && audio_play_guard == false) //kiedy puscimy przycisk myszy mozna bedzie znowu odtworzyc sampla
+			audio_play_guard = true;
+		if (warning_sample_play_flag == false && warning_sample_play_guard == false)
+			warning_sample_play_guard = true;
+	}
 }
 
 void Game::paintText()

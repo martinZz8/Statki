@@ -11,7 +11,6 @@ Utils::Utils()
 	running = true;
 	mouse1_clicked = false;
 	mouse2_clicked = false;
-	key_space_pressed = false;
 	key_up_pressed = false;
 	key_down_pressed = false;
 	key_left_pressed = false;
@@ -94,11 +93,6 @@ bool Utils::getMouse1Clicked()
 bool Utils::getMouse2Clicked()
 {
 	return mouse2_clicked;
-}
-
-bool Utils::getKeySpacePressed()
-{
-	return key_space_pressed;
 }
 
 bool Utils::getKeyUpPressed()
@@ -254,11 +248,6 @@ void Utils::setMouse1Clicked(bool b)
 void Utils::setMouse2Clicked(bool b)
 {
 	mouse2_clicked = b;
-}
-
-void Utils::setKeySpacePressed(bool b)
-{
-	key_space_pressed = b;
 }
 
 void Utils::setKeyUpPressed(bool b)

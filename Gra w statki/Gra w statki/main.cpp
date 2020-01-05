@@ -98,10 +98,6 @@ int main()
 		ALLEGRO_KEYBOARD_STATE keyState;
 		al_get_keyboard_state(&keyState);
 
-		if (al_key_down(&keyState, ALLEGRO_KEY_SPACE))
-			u.setKeySpacePressed(true);
-		else
-			u.setKeySpacePressed(false);
 		if (al_key_down(&keyState, ALLEGRO_KEY_UP))
 			u.setKeyUpPressed(true);
 		else

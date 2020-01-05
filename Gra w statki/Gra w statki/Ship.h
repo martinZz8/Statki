@@ -18,14 +18,12 @@ public:
 	void setShipFields(vector <Field>& new_ship_f);
 	void setSurroundedFields(vector <Field>& new_surr_f);
 	void setShip(Ship& ship);
-	void moveShipFields(float offset_x, float offset_y);
 	float getCoordX(int indeks_vfields); //zwraca koordynat x pola o danym indeksie z vectora pol
 	float getCoordY(int indeks_vfields);//zwraca koordynat y pola o danym indeksie z vectora pol
 	int getNumberOfFields(); //zwraca ilosc fieldow przyporzadkowanych do tego statku
 	int getNumberOfHittedFields(); //zwraca ilosc fieldow statku, ktore sa trafione
 	bool getShipDestroyedFlag();
 	void getShipFields(vector <float>& coord_x, vector <float>& coord_y);
-	vector <Field>& getShipFields();
 	void paintShip(bool visible_ships, bool const_visible_surrounding); //metoda malujaca statek
 	bool isOnShip(Field& checked_field); //metoda sprawdza, czy to_check_field jest shipem (jest taki sam jak ktorys z fieldow z vectora ship_fields); true - tak, false - nie
 	bool isOnSurrounding(Field& checked_surrounding_field);//metoda sprawdza, czy to_check_surrounding_field jest surrounding (jest taki sam jak ktorys z fieldow z vectora surrounding_fields); true - tak, false - nie

@@ -82,7 +82,6 @@ class Utils
 	bool mouse_2_click_guard; //true - mozna kliknac, false - nie mozna kliknac
 	bool mouse1_clicked;                    /*                                      */
 	bool mouse2_clicked;                    /*                                      */
-	bool key_space_pressed;                 /*                                      */
 	bool key_up_pressed;                    /*   true-klikniete, false-puszczone    */
 	bool key_down_pressed;                  /*                                      */
 	bool key_left_pressed;                  /*                                      */
@@ -121,7 +120,6 @@ public:
 	bool getMouse2ClickGuard();
 	bool getMouse1Clicked();
 	bool getMouse2Clicked();
-	bool getKeySpacePressed();
 	bool getKeyUpPressed();
 	bool getKeyDownPressed();
 	bool getKeyLeftPressed();
@@ -153,7 +151,6 @@ public:
 	void setMouse2ClickGuard(bool g);
 	void setMouse1Clicked(bool b);
 	void setMouse2Clicked(bool b);
-	void setKeySpacePressed(bool b);
 	void setKeyUpPressed(bool b);
 	void setKeyDownPressed(bool b);
 	void setKeyLeftPressed(bool b);

@@ -93,17 +93,6 @@ void Ship::setShip(Ship& ship)
 	setSurroundedFields(ship.surrounded_fields);
 }
 
-void Ship::moveShipFields(float offset_x, float offset_y)
-{
-	for (Field f : ship_fields)
-	{
-		float last_x = f.getCoordX();
-		float last_y = f.getCoordY();
-		f.setCoordX(last_x + offset_x);
-		f.setCoordY(last_y + offset_y);
-	}
-}
-
 float Ship::getCoordX(int indeks_vfields)
 {
 	if (indeks_vfields < ship_fields.size())
@@ -151,11 +140,6 @@ void Ship::getShipFields(vector<float>& coord_x, vector<float>& coord_y)
 			coord_y.push_back(ship_fields[indeks].getCoordY());
 		}
 	}
-}
-
-vector<Field>& Ship::getShipFields()
-{
-	return ship_fields;
 }
 
 void Ship::paintShip(bool visible_ships, bool const_visible_surrounding)
