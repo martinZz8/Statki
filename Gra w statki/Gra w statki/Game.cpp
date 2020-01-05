@@ -462,39 +462,39 @@ void Game::playAudio()
 void Game::paintText()
 {
 	/**Pod boardem nr 1**/
-	u.drawText("4 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 80, 500);
-	u.drawText("3 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 160, 500);
-	u.drawText("2 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 240, 500);
-	u.drawText("1 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 320, 500);
-	u.drawText("POZOSTALE STATKI", FONT_SIZE_SMALL, 183, 234, 243, 80, 480);
+	u.drawText("4 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 90, 500);
+	u.drawText("3 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 170, 500);
+	u.drawText("2 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 250, 500);
+	u.drawText("1 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 330, 500);
+	u.drawText("POZOSTALE STATKI", FONT_SIZE_SMALL, 183, 234, 243, 90, 480);
 
 	/*Wypisanie liczb na ekranie*/
 	string number;
 	number = to_string(b1.numbers_of_not_destroyed_ships[3]);
-	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 103, 520);
+	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 113, 520);
 	number = to_string(b1.numbers_of_not_destroyed_ships[2]);
-	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 183, 520);
+	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 193, 520);
 	number = to_string(b1.numbers_of_not_destroyed_ships[1]);
-	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 263, 520);
+	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 273, 520);
 	number = to_string(b1.numbers_of_not_destroyed_ships[0]);
-	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 343, 520);
+	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 353, 520);
 
 	/**Pod boardem nr 2**/
-	u.drawText("4 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 500, 500);
-	u.drawText("3 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 580, 500);
-	u.drawText("2 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 660, 500);
-	u.drawText("1 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 740, 500);
-	u.drawText("POZOSTALE STATKI", FONT_SIZE_SMALL, 183, 234, 243, 500, 480);
+	u.drawText("4 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 510, 500);
+	u.drawText("3 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 590, 500);
+	u.drawText("2 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 670, 500);
+	u.drawText("1 MASZT", FONT_SIZE_SMALL, 183, 234, 243, 750, 500);
+	u.drawText("POZOSTALE STATKI", FONT_SIZE_SMALL, 183, 234, 243, 510, 480);
 
 	/*Wypisanie liczb na ekranie*/
 	number = to_string(b2.numbers_of_not_destroyed_ships[3]);
-	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 523, 520);
+	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 533, 520);
 	number = to_string(b2.numbers_of_not_destroyed_ships[2]);
-	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 603, 520);
+	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 613, 520);
 	number = to_string(b2.numbers_of_not_destroyed_ships[1]);
-	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 683, 520);
+	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 693, 520);
 	number = to_string(b2.numbers_of_not_destroyed_ships[0]);
-	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 763, 520);
+	u.drawText(number.c_str(), FONT_SIZE_SMALL, 183, 234, 243, 773, 520);
 
 	if (u.getPvCGameMode() == true)
 	{
@@ -542,7 +542,8 @@ void Game::paintText()
 
 void Game::paintBorders()
 {
-
+	u.drawBorders(80, 478, 400, 63, 3, 183, 234, 243);
+	u.drawBorders(500, 478, 400, 63, 3, 183, 234, 243);
 }
 
 void Game::paintButtons()

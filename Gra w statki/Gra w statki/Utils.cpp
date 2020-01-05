@@ -29,7 +29,6 @@ Utils::Utils()
 	display_y = 600;
 	timer = 1.0 / 60;
 	board_size = 400;
-	mini_board_size = 150;
 	field_size = 40;
 	number_of_fields = board_size / field_size;
 	number_of_one_masted_ships = 4;

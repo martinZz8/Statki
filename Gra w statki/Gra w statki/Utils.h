@@ -101,7 +101,6 @@ class Utils
 	float display_y;
 	double timer;
 	float board_size;
-	float mini_board_size;
 	float field_size;
 	int number_of_fields;
 	int number_of_one_masted_ships; //ilosc jednomasztowcow

@@ -340,7 +340,7 @@ void Deploying::mouseSwitches()
 			warning_sample_play_flag = false;
 		}
 
-		if (u.getMouse2Clicked() == true && mouse_click_guard == true && (done_deploying_b1 == false || (done_deploying_b1 == true && done_deploying_b2 == false))) //przelaczanie moving_ship_mode_on
+		if (u.getMouse2Clicked() == true && u.getMouse1Clicked() == false && mouse_click_guard == true && (done_deploying_b1 == false || (done_deploying_b1 == true && done_deploying_b2 == false))) //przelaczanie moving_ship_mode_on
 		{
 			mouse_click_guard = false;
 			if (moving_ship_mode_on == false)
@@ -462,7 +462,6 @@ void Deploying::mouseSwitches()
 		}
 		else if (u.getClassicGameMode() == true)
 		{
-			//TODO DODAC NOWE OPCJE DZIALANIA PRAWEGO KLAWISZA MYSZY (opcje zmiany polozenia rozstawionego statku)
 			if (u.getMouse1Clicked() == true && mouse_click_guard == true && moving_ship_mode_on == false)
 			{
 				mouse_click_guard = false;
@@ -535,8 +534,7 @@ void Deploying::mouseSwitches()
 				}
 			}
 		}
-
-		if (u.getAdvancedGameMode() == true)
+		else if (u.getAdvancedGameMode() == true) //tutaj byl sam if
 		{
 			if (u.getMouse1Clicked() == true && moving_ship_mode_on == false)
 			{
