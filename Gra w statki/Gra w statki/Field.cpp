@@ -1,16 +1,5 @@
 #include "Field.h"
 
-//Field& Field::operator=(const Field& f)
-//{
-//	u = f.u;
-//	c_x = f.c_x;
-//	c_y = f.c_y;
-//	width = f.width;
-//	hitted_flag = f.hitted_flag;
-//	missed_flag = f.missed_flag;
-//	return *this;
-//}
-
 bool Field::operator==(const Field& f)
 {
 	if (c_x == f.c_x && c_y == f.c_y)

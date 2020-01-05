@@ -10,7 +10,6 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
-//#include <string.h>
 #include <string>
 #include <time.h>
 #include <Windows.h>
@@ -69,7 +68,7 @@ using namespace std;
 #define BUTTON_DEPLOYING_AUTO 24
 #define BUTTON_DEPLOYING_RESET 25
      /*GAME*/
-#define BUTTON_GAME_BACK 26 //OSTATNIO DODANE
+#define BUTTON_GAME_BACK 26
 
 class Utils
 {

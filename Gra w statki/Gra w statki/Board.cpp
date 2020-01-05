@@ -66,11 +66,6 @@ void Board::getCoordsOfShipHittedFields(int indeks, vector<float>& coord_x, vect
 	ships[indeks].getShipFields(coord_x, coord_y);
 }
 
-vector<Ship> Board::getShips()
-{
-	return ships;
-}
-
 void Board::setFields()
 {
 	int iter = 0;

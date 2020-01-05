@@ -13,7 +13,7 @@ class Board
 	float height; //wysokosc
 	float field_size; //rozmiar pola
 	bool deploy_ships_flag; //flaga wskzujaca, czy mozna rozstawiac statki; true - tak, false - nie
-	vector <Field> fields; //vector pol
+	vector <Field> fields; //vector pol planszy
 	vector <Ship> ships; //vector statkow
 
 public:
@@ -31,7 +31,6 @@ public:
 	bool getShipsDestroyedFlag(int indeks);
 	int getNumbersOfShipHittedFields(int indeks);
 	void getCoordsOfShipHittedFields(int indeks, vector <float>& coord_x, vector <float>& coord_y);
-	vector <Ship> getShips(); //metoda zwracajaca vector shipów; stosowana przy kopiowaniu w deploying
 	void paintBoard(bool visible_ships, bool const_visible_surrounding); //metoda rysujaca plansze; visible_ships == true - rysuje statki, const_visible_surrounding == true - rysuje surrounded fieldsy caly czas (nawet, gdy statek nie jest zniszczony)
 	void setFields(); //metoda ustawiajaca koordynaty kazdego pola znajdujacego sie w vectorze pol
 	void setOffset(float x, float y);
@@ -45,7 +44,6 @@ public:
 	int whichField(float mouse_x, float mouse_y); //metoda sprawdzajaca ktore pole jest o zadanych parametrach x i y - zwraca indeks vektora fields
 	int whichShip(float mouse_x, float mouse_y); //metoda sprawdajaca ktory statek posiada zadane parametry x i y - zwraca indeks vectora ships albo -1, gdy nie ma takiego statku
 	void paintClassicShip(float mouse_x, float mouse_y); //metoda ryzsujaca statek dla standardowych opcji statków
-	//TODO - DO DOKONCZENIA METODA NIZEJ (ZROBIC UNIWERSALNE METODY)
 	int deployClassicShip(float mouse_x, float mouse_y, int ship_orientation, int ship_size); //metoda rozstawiajaca calssic ship; zwraca 0, gdy rozstawianie sie powiedzie, zwraca -1 gdy rozstawianie sie nie powiedzie
 	int deployAdvancedShip(float mouse_x, float mouse_y, vector <Field>& created_advanced_ship, bool player_deploy); //metoda rozstawiajaca advanced ship, player_deploy - zmienna wskazujaca, czy rozstawia gracz czy komputer; zwraca 0, gdy sie powiedzie, zwraca -1 gdy sie nie powiedzie, zwraca 1 gdy (przy player_deploy == true) myszka znajduje sie nadal na tym samym fieldzie co ostatnio dodany do vectora created_advanced_ship albo (przy player_deploy == false) wylosowano field, ktory juz nalezy do vectora created_advanced_ship badz lezy za daleko od danego fielda badz lezy w zabronionym miejscu (aby nie marnowac juz dobrze wylosowanych fieldow)
 	void addAdvancedShip(vector <Field>& created_advanced_ship); //metoda dodaje statek do vectora Shipow

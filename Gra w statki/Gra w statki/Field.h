@@ -11,7 +11,6 @@ class Field
 	bool missed_flag; //pole nie trafione przez przeciwnika (false - nie trafione, true - trafione)
 	
 public:
-	//Field& operator=(const Field& f);
 	bool operator==(const Field& f); //porownuje c_x z f.c_x oraz c_y z f.c_y;
 	bool operator!=(const Field& f); //porownuje c_x z f.c_x oraz c_y z f.c_y;
 	Field(Utils& utils, float c_x, float c_y);

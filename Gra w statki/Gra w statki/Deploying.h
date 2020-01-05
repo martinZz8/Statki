@@ -64,6 +64,5 @@ public:
 	void paintCreatedAdvancedShip();
 	void paintTemporaryShip();
 	void playAudio();
-	void copyShips(Board& from, Board& to); //metoda kopiuje vector shipow z "from" do "to"
 
 };

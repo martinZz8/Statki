@@ -1092,9 +1092,3 @@ void Deploying::playAudio()
 			add_advanced_ship_field_sample_guard = true;
 	}
 }
-
-void Deploying::copyShips(Board& from, Board& to)
-{
-	vector <Ship> ships(from.getShips());
-	to.setShips(ships);
-}
