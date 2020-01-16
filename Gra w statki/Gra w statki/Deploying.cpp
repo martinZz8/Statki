@@ -111,7 +111,7 @@ Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board
 	add_advanced_ship_field_sample_flag = false;
 	add_advanced_ship_field_sample_guard = true;
 	resize_ship_guard = true;
-	rotate_ship_guard = true;
+	reorientate_ship_guard = true;
 	mouse_click_guard = true;
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
@@ -291,35 +291,38 @@ void Deploying::classicShipSwitch(vector <int>& numbers_of_not_deployed_ships)
 	}
 	if (u.getKeyUpPressed() == false && u.getKeyDownPressed() == false)
 		resize_ship_guard = true;
-	if (u.getKeyRightPressed() == true && rotate_ship_guard == true)
+	if (u.getKeyRightPressed() == true && reorientate_ship_guard == true)
 	{
 		u.setShipOrientation(u.getShipOrientation() + 1);
 		if (u.getShipOrientation() > 2)
 			u.setShipOrientation(1);
 		cout << "Orientacja: " << u.getShipOrientation() << endl;
-		rotate_ship_guard = false;
+		reorientate_ship_guard = false;
 	}
-	if (u.getKeyLeftPressed() == true && rotate_ship_guard == true)
+	if (u.getKeyLeftPressed() == true && reorientate_ship_guard == true)
 	{
 		u.setShipOrientation(u.getShipOrientation() - 1);
 		if (u.getShipOrientation() < 1)
 			u.setShipOrientation(2);
 		cout << "Orientacja: " << u.getShipOrientation() << endl;
-		rotate_ship_guard = false;
+		reorientate_ship_guard = false;
 	}
 	if (u.getKeyRightPressed() == false && u.getKeyLeftPressed() == false)
-		rotate_ship_guard = true;
+		reorientate_ship_guard = true;
 }
 
 void Deploying::classicKeyboardSwitches()
 {
-	if (b1.getDeployShipsFlag() == true)
+	if (moving_ship_mode_on == false)
 	{
-		classicShipSwitch(b1.numbers_of_not_deployed_ships);
-	}
-	else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true)
-	{
-		classicShipSwitch(b2.numbers_of_not_deployed_ships);
+		if (b1.getDeployShipsFlag() == true)
+		{
+			classicShipSwitch(b1.numbers_of_not_deployed_ships);
+		}
+		else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true)
+		{
+			classicShipSwitch(b2.numbers_of_not_deployed_ships);
+		}
 	}
 }
 
@@ -643,6 +646,7 @@ void Deploying::mouseSwitches()
 					else if (done_deploying_b2 == false)
 						movePlayerShip(b2);
 				}
+		
 			}
 			else if (u.getMouse1Clicked() == false && moving_ship_mode_on == true && indeks_of_coppied_ship != -1)
 			{
@@ -884,7 +888,6 @@ void Deploying::movePlayerShip(Board& b)
 int Deploying::placeMovedPlayerShip(Board& b)
 {
 	int result = b.placeShip(coppied_ship, indeks_of_coppied_ship, fields_of_temporary_ship);
-	coppied_ship.clearShipFields();
 	indeks_of_coppied_ship = -1;
 	fields_of_temporary_ship.clear();
 	difference_x.clear();

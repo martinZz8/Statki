@@ -30,7 +30,7 @@ class Deploying :public State
 	bool add_advanced_ship_field_sample_flag; //zmienna zawierajaca informacje, czy grac audio dodawania fielda do advanced statku; true - tak, false - nie
 	bool add_advanced_ship_field_sample_guard; //true - mozna grac, false - nie mozna grac
 	bool resize_ship_guard; //true - mozna zmienic rozmiar, false - nie mozna zmienci rozmiaru
-	bool rotate_ship_guard; //true - mozna zmienic polozenie, false - nie mozna zmienic polozenia
+	bool reorientate_ship_guard; //true - mozna zmienic polozenie, false - nie mozna zmienic polozenia
 	bool mouse_click_guard; //true - mozna kliknac, false - nie mozna kliknac
 	bool done_deploying_b1; //true- rozstawiono finalnie board1, false - nie rozstawiono finalnie board1
 	bool done_deploying_b2; //true- rozstawiono finalnie board2, false - nie rozstawiono finalnie board2; jezeli rozstawiono board2, to mozna kliknac przycisk play
