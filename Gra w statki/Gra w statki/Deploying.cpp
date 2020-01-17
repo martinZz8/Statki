@@ -352,7 +352,7 @@ void Deploying::mouseSwitches()
 			else //moving_ship_mode_on == true
 				moving_ship_mode_on = false;
 		}
-		else if (buttons.getActivated(BUTTON_DEPLOYING_BACK) == true && mouse_click_guard == true)
+		else if (buttons.getActivated(BUTTON_DEPLOYING_BACK) == true && mouse_click_guard == true && indeks_of_coppied_ship == -1)
 		{
 			*s = m;
 			mouse_click_guard = false;
@@ -360,7 +360,7 @@ void Deploying::mouseSwitches()
 			u.setMouseClickedBeforeStateSwitch(true);
 			cout << "Przelaczenie z DEPLOYING do MENU" << endl;
 		}
-		else if (buttons.getActivated(BUTTON_DEPLOYING_AUTO) == true && mouse_click_guard == true)
+		else if (buttons.getActivated(BUTTON_DEPLOYING_AUTO) == true && mouse_click_guard == true && indeks_of_coppied_ship == -1)
 		{
 			mouse_click_guard = false;
 			if (u.getClassicGameMode() == true)
@@ -402,7 +402,7 @@ void Deploying::mouseSwitches()
 				}
 			}
 		}
-		else if (buttons.getActivated(BUTTON_DEPLOYING_RESET) == true && mouse_click_guard == true)
+		else if (buttons.getActivated(BUTTON_DEPLOYING_RESET) == true && mouse_click_guard == true && indeks_of_coppied_ship == -1)
 		{
 			mouse_click_guard = false;
 			if (u.getPvPGameMode() == true)
@@ -422,7 +422,7 @@ void Deploying::mouseSwitches()
 					warning_sample_play_flag = true;
 			}
 		}
-		else if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == true && mouse_click_guard == true)
+		else if (buttons.getActivated(BUTTON_DEPLOYING_DONE) == true && mouse_click_guard == true && indeks_of_coppied_ship == -1)
 		{
 			mouse_click_guard = false;
 			if (b2.getDeployShipsFlag() == false && done_deploying_b2 == false)
@@ -448,7 +448,7 @@ void Deploying::mouseSwitches()
 				warning_sample_play_flag = true;
 			}
 		}
-		else if (buttons.getActivated(BUTTON_DEPLOYING_PLAY) == true && mouse_click_guard == true)
+		else if (buttons.getActivated(BUTTON_DEPLOYING_PLAY) == true && mouse_click_guard == true && indeks_of_coppied_ship == -1)
 		{
 			mouse_click_guard = false;
 			if (done_deploying_b1 == true && done_deploying_b2 == true)
@@ -507,12 +507,12 @@ void Deploying::mouseSwitches()
 				if (u.getKeyLeftPressed() == true && rotate_player_ship_guard == true)
 				{
 					rotate_player_ship_guard = false;
-					rotatePlayerShip(90);
+					rotatePlayerShip(-90);
 				}
 				else if (u.getKeyRightPressed() == true && rotate_player_ship_guard == true)
 				{
 					rotate_player_ship_guard = false;
-					rotatePlayerShip(-90);
+					rotatePlayerShip(90);
 				}
 				else if (u.getKeyLeftPressed() == false && u.getKeyRightPressed() == false)
 					rotate_player_ship_guard = true;
@@ -664,12 +664,12 @@ void Deploying::mouseSwitches()
 				if (u.getKeyLeftPressed() == true && rotate_player_ship_guard == true)
 				{
 					rotate_player_ship_guard = false;
-					rotatePlayerShip(90);
+					rotatePlayerShip(-90);
 				}
 				else if (u.getKeyRightPressed() == true && rotate_player_ship_guard == true)
 				{
 					rotate_player_ship_guard = false;
-					rotatePlayerShip(-90);
+					rotatePlayerShip(90);
 				}
 				else if (u.getKeyLeftPressed() == false && u.getKeyRightPressed() == false)
 					rotate_player_ship_guard = true;
@@ -922,6 +922,23 @@ void Deploying::rotatePlayerShip(int angle)
 
 		difference_x.clear();
 		difference_y.clear();
+
+		//szukam, ktorego rogu fielda temporary_shipa jest najblizej myszka
+		float nearest_x = fields_of_temporary_ship[0].getCoordX();
+		float nearest_y = fields_of_temporary_ship[0].getCoordY();
+		float diff_x = nearest_x - x_pivot;
+		float diff_y = nearest_y - y_pivot;
+		int nearest_indeks = 0;
+		for (int i = 1; i < size_of_vector; i++)
+		{
+			if ((abs(fields_of_temporary_ship[i].getCoordX() - x_pivot) < abs(nearest_x)) && (abs(fields_of_temporary_ship[i].getCoordY() - y_pivot) < abs(nearest_y)))
+			{
+				nearest_x = fields_of_temporary_ship[i].getCoordX() - x_pivot;
+				nearest_y = fields_of_temporary_ship[i].getCoordY() - y_pivot;
+				nearest_indeks = i;
+			}	
+		}
+
 		for (int i = 0; i < size_of_vector; i++)
 		{
 			float x_shifted = fields_of_temporary_ship[i].getCoordX() - x_pivot;
@@ -945,8 +962,34 @@ void Deploying::rotatePlayerShip(int angle)
 			else
 				fields_of_temporary_ship[i].setCoordY(rotated_points[1][1]);
 
-			difference_x.push_back(fields_of_temporary_ship[i].getCoordX() - x_pivot);
-			difference_y.push_back(fields_of_temporary_ship[i].getCoordY() - y_pivot);
+		}
+
+		float to_move_x = nearest_x - fields_of_temporary_ship[nearest_indeks].getCoordX();
+		float to_move_y = nearest_y - fields_of_temporary_ship[nearest_indeks].getCoordY();
+		for (int i = 0; i < size_of_vector; i++)
+		{
+			float actual_x = fields_of_temporary_ship[i].getCoordX();
+			float actual_y = fields_of_temporary_ship[i].getCoordY();
+			fields_of_temporary_ship[i].setCoordX(actual_x + to_move_x);
+			//fields_of_temporary_ship[i].setCoordX(fields_of_temporary_ship[i].getCoordX() + (x_pivot - fields_of_temporary_ship[i].getCoordX())); //niepewne
+			fields_of_temporary_ship[i].setCoordY(actual_y + to_move_y);
+			//fields_of_temporary_ship[i].setCoordY(fields_of_temporary_ship[i].getCoordY() + (y_pivot - fields_of_temporary_ship[i].getCoordY())); //niepewne
+		}
+
+		to_move_x = x_pivot - fields_of_temporary_ship[nearest_indeks].getCoordX();
+		to_move_y = y_pivot - fields_of_temporary_ship[nearest_indeks].getCoordY();
+		for (int i = 0; i < size_of_vector; i++)
+		{
+			float actual_x = fields_of_temporary_ship[i].getCoordX();
+			float actual_y = fields_of_temporary_ship[i].getCoordY();
+			fields_of_temporary_ship[i].setCoordX(actual_x + to_move_x);
+			fields_of_temporary_ship[i].setCoordY(actual_y + to_move_y);
+		}
+
+		for (int i = 0; i < size_of_vector; i++)
+		{
+			difference_x.push_back(fields_of_temporary_ship[i].getCoordX() - u.getMouseX());
+			difference_y.push_back(fields_of_temporary_ship[i].getCoordY() - u.getMouseY());
 		}
 	}
 }
