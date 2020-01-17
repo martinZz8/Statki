@@ -112,6 +112,7 @@ Deploying::Deploying(State** state, Utils& utils, Buttons& buttons, Board& board
 	add_advanced_ship_field_sample_guard = true;
 	resize_ship_guard = true;
 	reorientate_ship_guard = true;
+	rotate_player_ship_guard = true;
 	mouse_click_guard = true;
 	done_deploying_b1 = false;
 	done_deploying_b2 = false;
@@ -502,6 +503,19 @@ void Deploying::mouseSwitches()
 					else if (done_deploying_b2 == false)
 						movePlayerShip(b2);
 				}
+
+				if (u.getKeyLeftPressed() == true && rotate_player_ship_guard == true)
+				{
+					rotate_player_ship_guard = false;
+					rotatePlayerShip(90);
+				}
+				else if (u.getKeyRightPressed() == true && rotate_player_ship_guard == true)
+				{
+					rotate_player_ship_guard = false;
+					rotatePlayerShip(-90);
+				}
+				else if (u.getKeyLeftPressed() == false && u.getKeyRightPressed() == false)
+					rotate_player_ship_guard = true;
 			}
 			else if (u.getMouse1Clicked() == false && moving_ship_mode_on == true && indeks_of_coppied_ship != -1)
 			{
@@ -646,6 +660,19 @@ void Deploying::mouseSwitches()
 					else if (done_deploying_b2 == false)
 						movePlayerShip(b2);
 				}
+				
+				if (u.getKeyLeftPressed() == true && rotate_player_ship_guard == true)
+				{
+					rotate_player_ship_guard = false;
+					rotatePlayerShip(90);
+				}
+				else if (u.getKeyRightPressed() == true && rotate_player_ship_guard == true)
+				{
+					rotate_player_ship_guard = false;
+					rotatePlayerShip(-90);
+				}
+				else if (u.getKeyLeftPressed() == false && u.getKeyRightPressed() == false)
+					rotate_player_ship_guard = true;
 		
 			}
 			else if (u.getMouse1Clicked() == false && moving_ship_mode_on == true && indeks_of_coppied_ship != -1)
@@ -881,6 +908,45 @@ void Deploying::movePlayerShip(Board& b)
 		{
 			fields_of_temporary_ship[i].setCoordX(mouse_x + difference_x[i]);
 			fields_of_temporary_ship[i].setCoordY(mouse_y + difference_y[i]);
+		}
+	}
+}
+
+void Deploying::rotatePlayerShip(int angle)
+{
+	if (indeks_of_coppied_ship != -1)
+	{
+		float x_pivot = u.getMouseX();
+		float y_pivot = u.getMouseY();
+		int size_of_vector = fields_of_temporary_ship.size();
+
+		difference_x.clear();
+		difference_y.clear();
+		for (int i = 0; i < size_of_vector; i++)
+		{
+			float x_shifted = fields_of_temporary_ship[i].getCoordX() - x_pivot;
+			float y_shifted = fields_of_temporary_ship[i].getCoordY() - y_pivot;
+			float shifted_points[][2] = { { x_shifted, y_shifted }, { x_shifted + u.getFieldSize(), y_shifted + u.getFieldSize() } };
+			float rotated_points[2][2];
+
+			for (int j = 0; j < 2; j++)
+			{
+				rotated_points[j][0] = x_pivot + (shifted_points[j][0] * COS(angle) - shifted_points[j][1] * SIN(angle)); //obrocone x
+				rotated_points[j][1] = x_pivot + (shifted_points[j][0] * SIN(angle) + shifted_points[j][1] * COS(angle)); //obrocone y
+			}
+
+			if (rotated_points[0][0] < rotated_points[1][0]) //porownywanie x
+				fields_of_temporary_ship[i].setCoordX(rotated_points[0][0]);
+			else
+				fields_of_temporary_ship[i].setCoordX(rotated_points[1][0]);
+			
+			if (rotated_points[0][1] < rotated_points[1][1]) //porownywanie y
+				fields_of_temporary_ship[i].setCoordY(rotated_points[0][1]);
+			else
+				fields_of_temporary_ship[i].setCoordY(rotated_points[1][1]);
+
+			difference_x.push_back(fields_of_temporary_ship[i].getCoordX() - x_pivot);
+			difference_y.push_back(fields_of_temporary_ship[i].getCoordY() - y_pivot);
 		}
 	}
 }

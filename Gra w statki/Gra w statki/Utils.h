@@ -13,8 +13,12 @@
 #include <string>
 #include <time.h>
 #include <Windows.h>
+#include <math.h>
 
 using namespace std;
+
+#define SIN(x) sin(x * 3.141592653589/180)
+#define COS(x) cos(x * 3.141592653589/180)
 
 /***WINDOW***/
 #define WINDOW_MENU 0
