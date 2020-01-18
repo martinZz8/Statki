@@ -261,7 +261,6 @@ void Deploying::classicShipSwitch(vector <int>& numbers_of_not_deployed_ships)
 			break;
 		}
 		u.setShipSize(i + 1);
-		cout << "Rozmiar: " << u.getShipSize() << endl;
 		resize_ship_guard = false;
 	}
 	if (u.getKeyDownPressed() == true && resize_ship_guard == true)
@@ -287,7 +286,6 @@ void Deploying::classicShipSwitch(vector <int>& numbers_of_not_deployed_ships)
 			break;
 		}
 		u.setShipSize(i + 1);
-		cout << "Rozmiar: " << u.getShipSize() << endl;
 		resize_ship_guard = false;
 	}
 	if (u.getKeyUpPressed() == false && u.getKeyDownPressed() == false)
@@ -297,7 +295,6 @@ void Deploying::classicShipSwitch(vector <int>& numbers_of_not_deployed_ships)
 		u.setShipOrientation(u.getShipOrientation() + 1);
 		if (u.getShipOrientation() > 2)
 			u.setShipOrientation(1);
-		cout << "Orientacja: " << u.getShipOrientation() << endl;
 		reorientate_ship_guard = false;
 	}
 	if (u.getKeyLeftPressed() == true && reorientate_ship_guard == true)
@@ -305,7 +302,6 @@ void Deploying::classicShipSwitch(vector <int>& numbers_of_not_deployed_ships)
 		u.setShipOrientation(u.getShipOrientation() - 1);
 		if (u.getShipOrientation() < 1)
 			u.setShipOrientation(2);
-		cout << "Orientacja: " << u.getShipOrientation() << endl;
 		reorientate_ship_guard = false;
 	}
 	if (u.getKeyRightPressed() == false && u.getKeyLeftPressed() == false)
@@ -358,7 +354,6 @@ void Deploying::mouseSwitches()
 			mouse_click_guard = false;
 			restoreDefaults();
 			u.setMouseClickedBeforeStateSwitch(true);
-			cout << "Przelaczenie z DEPLOYING do MENU" << endl;
 		}
 		else if (buttons.getActivated(BUTTON_DEPLOYING_AUTO) == true && mouse_click_guard == true && indeks_of_coppied_ship == -1)
 		{
@@ -459,7 +454,6 @@ void Deploying::mouseSwitches()
 				b1.setNumbersOfNotDestroyedShips();
 				b2.setNumbersOfNotDestroyedShips();
 				u.setMouseClickedBeforeStateSwitch(true);
-				cout << "Przelaczanie okna z DEPLOYING do GAME" << endl;
 			}
 			else
 				warning_sample_play_flag = true;
@@ -473,7 +467,6 @@ void Deploying::mouseSwitches()
 				{
 					if (b1.getDeployShipsFlag() == true) //plaer1 moze rozstawiac statki
 					{
-						cout << "Gracz klika myszka w classicu" << endl;
 						classicPlayer1Deploy();
 					}
 					//ROZTSAWIANIE PLANSZY KOMPUTERA JEST W TICKU
@@ -482,12 +475,10 @@ void Deploying::mouseSwitches()
 				{
 					if (b1.getDeployShipsFlag() == true) //player1 moze rozstawiac statki
 					{
-						cout << "Gracz 1 klika myszka w classicu" << endl;
 						classicPlayer1Deploy();
 					}
 					else if (b2.getDeployShipsFlag() == true && done_deploying_b1 == true) //player2 moze rozstawiac statki
 					{
-						cout << "Gracz 2 klika myszka w classicu" << endl;
 						classicPlayer2Deploy();
 					}
 				}
@@ -858,7 +849,6 @@ void Deploying::advancedComputerDeploy(Board& b, bool deploy_for_player)
 					created_advanced_ship.clear();
 				if (deploy_for_player == true && iteration > 100) //zakleszczenie, nie mozna znalezc odpowiedniego fielda
 				{
-					cout << "Czyszczenie" << endl;
 					iteration = 0;
 					clearing++;
 					if(created_advanced_ship.empty() == false)

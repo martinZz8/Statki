@@ -80,7 +80,6 @@ void Board::setFields()
 			Field field(u, x1, y1);
 			fields.push_back(field);
 			iter++;
-			cout << "Iter: " << iter << endl;
 		}
 }
 
@@ -171,7 +170,6 @@ void Board::setFieldsSurrounded(vector <int> indeks_of_ship_fields, vector <Fiel
 				if (can_be_added == true)
 				{
 					surrounded_fields.push_back(fields[new_indeks]);
-					cout << "Dodalem surrounded fielda" << endl;
 				}
 			}
 			if (offset == -9)

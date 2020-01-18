@@ -348,7 +348,6 @@ void Game::mouseSwitches()
 			who_won_game = 0;
 			indeks_of_last_hitted_ship = -1;
 			u.setMouseClickedBeforeStateSwitch(true);
-			cout << "Przelaczenie z GAME do MENU" << endl;
 		}
 		else if (u.getMouse1Clicked() == true && mouse_click_guard == true && who_won_game == 0)
 		{

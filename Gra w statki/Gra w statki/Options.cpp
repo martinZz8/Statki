@@ -69,7 +69,6 @@ void Options::mouseSwitches()
 			{
 				*s = m;
 				u.setMouseClickedBeforeStateSwitch(true);
-				cout << "Przelaczenie z OPTIONS do MENU" << endl;
 			}
 			else
 				warning_sample_play_flag = true;

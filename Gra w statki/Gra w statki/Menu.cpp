@@ -48,13 +48,11 @@ void Menu::mouseSwitches()
 			*s = d;
 			d->setNUmbersOfNotDeployedShips();
 			u.setMouseClickedBeforeStateSwitch(true);
-			cout << "Przelaczenie z MENU do DEPLOYING" << endl;
 		}
 		else if (buttons.getActivated(BUTTON_MENU_OPTIONS) == true)
 		{
 			*s = o;
 			u.setMouseClickedBeforeStateSwitch(true);
-			cout << "Przelaczenie z  MENU do  OPTIONS" << endl;
 		}
 		else if (buttons.getActivated(BUTTON_MENU_EXIT) == true)
 		{

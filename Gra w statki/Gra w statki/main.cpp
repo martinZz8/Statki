@@ -70,7 +70,6 @@ int main()
 		{
 			u.setMouseX(event.mouse.x);
 			u.setMouseY(event.mouse.y);
-			cout << "X: " << u.getMouseX() << "\t" << "Y: " << u.getMouseY() << endl;
 		}
 		if (event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && event.mouse.button & 1 && u.getMouse1ClickGuard() == true)
 		{
