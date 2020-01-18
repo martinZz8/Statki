@@ -124,8 +124,8 @@ void Game::render()
 	}
 	else //end_of_game_flag == true
 	{
-		b1.paintBoard(true, true);
-		b2.paintBoard(true, true);
+		b1.paintBoard(true, false); //bylo true true
+		b2.paintBoard(true, false); //bylo true true
 	}
 	paintText();
 
@@ -240,9 +240,10 @@ int Game::classicComputerPvCShoot(Board& b)
 			x = (rand() % mod_x) + l_x;
 			y = (rand() % mod_y) + u_y;
 		}
-
+		cout << "Dziala petla" << endl;
 		result = b.setShipHitted(x, y, indeks_of_last_hitted_ship);
 	} while (result == 1);
+	cout << "Oddano strzal" << endl;
 	return result;
 }
 
