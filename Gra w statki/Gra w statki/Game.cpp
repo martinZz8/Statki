@@ -157,64 +157,62 @@ int Game::classicComputerPvCShoot(Board& b)
 				vector <float> coord_y;
 				b.getCoordsOfShipHittedFields(indeks_of_last_hitted_ship, coord_x, coord_y);
 				int number_of_hitted_fields = b.getNumbersOfShipHittedFields(indeks_of_last_hitted_ship);
-				do
+				
+				if (number_of_hitted_fields == 1) //losujemy fielda na lewo, prawo, w gore albo w dol
 				{
-					if (number_of_hitted_fields == 1) //losujemy fielda na lewo, prawo, w gore albo w dol
+					int number = (rand() % 4) + 1;
+					if (number == 1) //w lewo
 					{
-						int number = (rand() % 4) + 1;
-						if (number == 1) //w lewo
-						{
-							x = coord_x[0] - field_size;
-							y = coord_y[0];
-						}
-						else if (number == 2) //w prawo
-						{
-							x = coord_x[0] + field_size;
-							y = coord_y[0];
-						}
-						else if (number == 3) //w gore
+						x = coord_x[0] - field_size;
+						y = coord_y[0];
+					}
+					else if (number == 2) //w prawo
+					{
+						x = coord_x[0] + field_size;
+						y = coord_y[0];
+					}
+					else if (number == 3) //w gore
+					{
+						x = coord_x[0];
+						y = coord_y[0] - field_size;
+					}
+					else //number == 4 w dol
+					{
+						x = coord_x[0];
+						y = coord_y[0] + field_size;
+					}
+				}
+				else //number_of_hitted_fields >= 2
+				{
+					int random = (rand() % 2) + 1;
+					float difference_x = coord_x[0] - coord_x[1];
+					if (difference_x == 0) //pionowo
+					{
+						if (random == 1) //do gory
 						{
 							x = coord_x[0];
 							y = coord_y[0] - field_size;
 						}
-						else //number == 4 w dol
+						else //do dolu
 						{
-							x = coord_x[0];
-							y = coord_y[0] + field_size;
+							x = coord_x[number_of_hitted_fields - 1];
+							y = coord_y[number_of_hitted_fields - 1] + field_size;
 						}
 					}
-					else //number_of_hitted_fields >= 2
+					else //poziomo
 					{
-						int random = (rand() % 2) + 1;
-						float difference_x = coord_x[0] - coord_x[1];
-						if (difference_x == 0) //pionowo
+						if (random == 1) //w lewo
 						{
-							if (random == 1) //do gory
-							{
-								x = coord_x[0];
-								y = coord_y[0] - field_size;
-							}
-							else //do dolu
-							{
-								x = coord_x[number_of_hitted_fields - 1];
-								y = coord_y[number_of_hitted_fields - 1] + field_size;
-							}
+							x = coord_x[0] - field_size;
+							y = coord_y[0];
 						}
-						else //poziomo
+						else //w prawo
 						{
-							if (random == 1) //w lewo
-							{
-								x = coord_x[0] - field_size;
-								y = coord_y[0];
-							}
-							else //w prawo
-							{
-								x = coord_x[number_of_hitted_fields - 1] + field_size;
-								y = coord_y[number_of_hitted_fields - 1];
-							}
+							x = coord_x[number_of_hitted_fields - 1] + field_size;
+							y = coord_y[number_of_hitted_fields - 1];
 						}
 					}
-				} while ((x < b.getXOffset() || x >= b.getXOffset() + u.getBoardSize()) && (y < b.getYOffset() || y >= b.getYOffset() + u.getBoardSize()));
+				}
 			}
 			else //wylosowanie komputera po znisczonym statku
 			{
@@ -240,10 +238,8 @@ int Game::classicComputerPvCShoot(Board& b)
 			x = (rand() % mod_x) + l_x;
 			y = (rand() % mod_y) + u_y;
 		}
-		cout << "Dziala petla" << endl;
 		result = b.setShipHitted(x, y, indeks_of_last_hitted_ship);
 	} while (result == 1);
-	cout << "Oddano strzal" << endl;
 	return result;
 }
 
