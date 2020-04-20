@@ -190,26 +190,64 @@ int Game::classicComputerPvCShoot(Board& b)
 					{
 						if (random == 1) //do gory
 						{
-							x = coord_x[0];
-							y = coord_y[0] - field_size;
+							//jezeli dostawialismy do dolu
+							if ((coord_y[1] - coord_y[0]) > 0)
+							{
+								x = coord_x[0];
+								y = coord_y[0] - field_size;
+							}
+							else //jezeli dostawialismy do gory
+							{
+								x = coord_x[number_of_hitted_fields - 1];
+								y = coord_y[number_of_hitted_fields - 1] - field_size;
+							}
 						}
 						else //do dolu
 						{
-							x = coord_x[number_of_hitted_fields - 1];
-							y = coord_y[number_of_hitted_fields - 1] + field_size;
+							//jezeli dostawialismy do dolu
+							if ((coord_y[1] - coord_y[0]) > 0)
+							{
+								x = coord_x[number_of_hitted_fields - 1];
+								y = coord_y[number_of_hitted_fields - 1] + field_size;
+							}
+							else //jezeli dostawialismy do gory
+							{
+								x = coord_x[0];
+								y = coord_y[0] + field_size;
+							}
+							
 						}
 					}
 					else //poziomo
 					{
 						if (random == 1) //w lewo
 						{
-							x = coord_x[0] - field_size;
-							y = coord_y[0];
+							//jezeli dostawialismy w prawo
+							if ((coord_x[1] - coord_x[0]) > 0)
+							{
+								x = coord_x[0] - field_size;
+								y = coord_y[0];
+							}
+							else //jezeli dostawialismy w lewo
+							{
+								x = coord_x[number_of_hitted_fields - 1] - field_size;
+								y = coord_y[number_of_hitted_fields - 1];
+							}
+							
 						}
 						else //w prawo
 						{
-							x = coord_x[number_of_hitted_fields - 1] + field_size;
-							y = coord_y[number_of_hitted_fields - 1];
+							//jezeli dostawialismy w prawo
+							if ((coord_x[1] - coord_x[0]) > 0)
+							{
+								x = coord_x[number_of_hitted_fields - 1] + field_size;
+								y = coord_y[number_of_hitted_fields - 1];
+							}
+							else //jezeli dostawialismy w lewo
+							{
+								x = coord_x[0] + field_size;
+								y = coord_y[0];
+							}
 						}
 					}
 				}
